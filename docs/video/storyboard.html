@@ -1,0 +1,284 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ERASÓ · Storyboard do vídeo</title>
+<style>
+:root{--sand:#F7F2E8;--sand2:#EFE7D7;--ink:#022C17;--fl:#004F29;--gr:#0C884A;--br:#F76100;--mut:#4d5b52;--line:#d9d0bd;--card:#fffdf8}
+*{box-sizing:border-box}body{margin:0;background:var(--sand);color:var(--ink);font:16px/1.5 "Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+header.top{padding:40px 0 18px}h1{font:700 clamp(26px,4vw,40px)/1.1 Lexend,system-ui,sans-serif;margin:0 0 8px;letter-spacing:-.01em}
+.lead{max-width:70ch;color:var(--mut);margin:0 0 14px}.badge{display:inline-block;background:var(--br);color:#fff;font-weight:600;font-size:13px;padding:3px 10px;border-radius:99px;margin-right:8px}
+h2{font:600 24px/1.2 Lexend,system-ui,sans-serif;margin:44px 0 12px}
+.strip{display:flex;border-radius:12px;overflow:hidden;gap:2px;margin:8px 0 0}.seg{color:#fff;text-decoration:none;padding:10px 12px;min-width:0;display:flex;flex-direction:column;gap:0}.seg b{font-size:13px}.seg span{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.seg em{font-size:12px;font-style:normal;opacity:.85}
+.ticks{position:relative;height:34px;margin:2px 0 0}.tick{position:absolute;top:0;transform:translateX(-50%);text-decoration:none;color:var(--ink);font-size:11px;display:flex;flex-direction:column;align-items:center;font-variant-numeric:tabular-nums}.tick i{width:2px;height:10px;background:var(--ink);opacity:.5}.tick span{margin-top:1px}
+section{margin-top:28px}.sh{display:grid;grid-template-columns:14px 1fr;column-gap:10px;align-items:center;margin-bottom:12px}.sh .dot{width:14px;height:14px;border-radius:50%}.sh h3{font:600 20px/1.2 Lexend,system-ui,sans-serif;margin:0}.sh h3 small{font:500 14px "Instrument Sans",system-ui;color:var(--mut);margin-left:6px}.sh p{grid-column:2;margin:2px 0 0;color:var(--mut);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px}
+.mf{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;scroll-margin-top:12px}
+.thumb{position:relative;aspect-ratio:16/9;background:var(--sand);overflow:hidden;border-bottom:1px solid var(--line);container-type:inline-size}
+.scale{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;transform:scale(calc(100cqw / 1920px))}
+.tc{position:absolute;left:8px;top:8px;background:rgba(2,44,23,.88);color:#fff;font:600 12px/1 ui-monospace,Consolas,monospace;padding:4px 7px;border-radius:6px}
+.meta{padding:12px 14px 14px}.meta h4{margin:0 0 6px;font:600 16px/1.3 Lexend,system-ui,sans-serif}.meta h4 b{color:var(--br);margin-right:4px}.meta p{margin:6px 0 0;font-size:14px;color:#25382d}
+.chips2{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px!important}.tp,.cap-id,.cam{font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+.tp.real{background:#e4f3ea;border-color:#b4dcc4}.tp.realov{background:#e4f3ea;border-color:#b4dcc4}.tp.marca{background:#fbe9dc;border-color:#f2c4a4}.cap-id{font-family:ui-monospace,Consolas,monospace}.cam{color:var(--mut);font-variant-numeric:tabular-nums}
+.ease{color:var(--mut)!important;font-size:13px!important}.legenda{font-weight:600;color:var(--fl)!important}
+/* palco */
+.stage{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;background:radial-gradient(120% 90% at 50% 40%,#F9F5EC 0%,#F2EBDB 100%)}
+.world{position:absolute;left:0;top:0;transform-origin:0 0}
+.win{position:absolute;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px rgba(2,44,23,.12),0 30px 80px rgba(2,44,23,.18)}.win img,.ph img{display:block;width:100%;height:100%}
+.ph{position:absolute;border-radius:34px;overflow:hidden;box-shadow:0 0 0 10px #111311,0 30px 80px rgba(2,44,23,.28)}
+.cur{position:absolute;transform-origin:3px 2px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}.chips{position:absolute;display:flex;gap:4px;transform-origin:0 0}.chips i{width:34px;height:42px;border-radius:5px;background:#fff;border:2px solid var(--fl);box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.ring{position:absolute;border:solid var(--br);border-radius:50%;background:rgba(247,97,0,.14)}.ring.tap{border-color:#fff;background:rgba(255,255,255,.28);box-shadow:0 0 0 3px rgba(17,19,17,.55)}
+.flylogo{position:absolute;display:block}
+.node{position:absolute;width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%}.node.o{background:var(--br)}.node.g{background:var(--gr)}.node.ghost{background:transparent;border:4px solid var(--gr);opacity:.4}.node.faint{opacity:.25}
+.line{position:absolute;height:6px;border-radius:3px;background:var(--ink)}.line.faint{opacity:.25}.line.solid{background:var(--gr)}
+.biglogo{position:absolute;display:block}.tagline{position:absolute;left:0;right:0;text-align:center;font:600 46px/1.2 Lexend,system-ui,sans-serif;color:var(--fl)}
+.foot{position:absolute;left:0;right:0;bottom:90px;display:flex;flex-direction:column;align-items:center;gap:6px;font:500 26px/1.3 "Instrument Sans",system-ui,sans-serif;color:var(--mut)}.foot .ph{position:static;box-shadow:none;border-radius:0;font:500 24px ui-monospace,Consolas,monospace;color:var(--br);width:auto;height:auto}
+.cap{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);background:var(--sand);border:1px solid var(--line);color:var(--ink);font:600 34px/1.2 Lexend,system-ui,sans-serif;padding:14px 30px;border-radius:99px;box-shadow:0 8px 28px rgba(2,44,23,.16);white-space:nowrap}
+.schip{position:absolute;left:36px;bottom:36px;font:600 20px "Instrument Sans",system-ui,sans-serif;color:var(--mut);background:rgba(247,242,232,.9);border:1px solid var(--line);padding:6px 14px;border-radius:99px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}.box h3{margin:0 0 8px;font:600 17px Lexend,system-ui,sans-serif}.box ul{margin:0;padding-left:18px}.box li{margin:6px 0;font-size:15px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px}th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}th{background:var(--sand2);font-weight:600}tr:last-child td{border-bottom:0}td:first-child{font-weight:600;white-space:nowrap}
+.sheet{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}.sheet figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px}.sheet img{display:block;width:100%;height:150px;object-fit:contain;background:#eee;border-radius:6px}.sheet figcaption{font:12px ui-monospace,Consolas,monospace;margin-top:6px;color:var(--mut)}
+.note{background:#fff7ef;border:1px solid #f2c4a4;border-radius:12px;padding:12px 16px;margin:14px 0;font-size:15px}
+footer{padding:36px 0 60px;color:var(--mut);font-size:14px}
+@media (max-width:520px){.grid{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+<header class="top"><span class="badge">Para aprovação</span><span class="badge" style="background:var(--fl)">Etapa 2 · Vídeo</span>
+<h1>Storyboard e Motion Frames — vídeo de demonstração do ERASÓ</h1>
+<p class="lead">27 Motion Frames em 8 cenas, 62 s, 1920×1080 a 30 fps. Cada miniatura usa os pixels <b>reais</b> do protótipo capturado (nenhuma tela foi redesenhada) e mostra exatamente o que a câmera enquadra. <b>Nenhuma animação foi produzida ainda</b> — aguardo sua aprovação.</p>
+<div class="strip"><a href="#S0" class="seg" style="flex:6;background:#F76100"><b>S0</b><span>Abertura</span><em>0–6 s</em></a><a href="#S1" class="seg" style="flex:6;background:#0C884A"><b>S1</b><span>Entrando no app</span><em>6–12 s</em></a><a href="#S2" class="seg" style="flex:8;background:#004F29"><b>S2</b><span>Selecionando arquivos</span><em>12–20 s</em></a><a href="#S3" class="seg" style="flex:7;background:#0C884A"><b>S3</b><span>Escolhendo o destino</span><em>20–27 s</em></a><a href="#S4" class="seg" style="flex:8;background:#F76100"><b>S4</b><span>Envio e pedido</span><em>27–35 s</em></a><a href="#S5" class="seg" style="flex:10;background:#004F29"><b>S5</b><span>Transferência</span><em>35–45 s</em></a><a href="#S6" class="seg" style="flex:10;background:#0C884A"><b>S6</b><span>Conclusão</span><em>45–55 s</em></a><a href="#S7" class="seg" style="flex:7;background:#022C17"><b>S7</b><span>Fecho</span><em>55–62 s</em></a></div><div class="ticks"><a href="#MF-01" class="tick" style="left:0%" title="MF-01 · 00:00.0"><i></i><span>01</span></a><a href="#MF-02" class="tick" style="left:1.935483870967742%" title="MF-02 · 00:01.2"><i></i><span>02</span></a><a href="#MF-03" class="tick" style="left:3.870967741935484%" title="MF-03 · 00:02.4"><i></i><span>03</span></a><a href="#MF-04" class="tick" style="left:6.451612903225806%" title="MF-04 · 00:04.0"><i></i><span>04</span></a><a href="#MF-05" class="tick" style="left:8.38709677419355%" title="MF-05 · 00:05.2"><i></i><span>05</span></a><a href="#MF-06" class="tick" style="left:9.67741935483871%" title="MF-06 · 00:06.0"><i></i><span>06</span></a><a href="#MF-07" class="tick" style="left:12.903225806451612%" title="MF-07 · 00:08.0"><i></i><span>07</span></a><a href="#MF-08" class="tick" style="left:19.35483870967742%" title="MF-08 · 00:12.0"><i></i><span>08</span></a><a href="#MF-09" class="tick" style="left:22.58064516129032%" title="MF-09 · 00:14.0"><i></i><span>09</span></a><a href="#MF-10" class="tick" style="left:26.61290322580645%" title="MF-10 · 00:16.5"><i></i><span>10</span></a><a href="#MF-11" class="tick" style="left:32.25806451612903%" title="MF-11 · 00:20.0"><i></i><span>11</span></a><a href="#MF-12" class="tick" style="left:35.483870967741936%" title="MF-12 · 00:22.0"><i></i><span>12</span></a><a href="#MF-13" class="tick" style="left:38.70967741935484%" title="MF-13 · 00:24.0"><i></i><span>13</span></a><a href="#MF-14" class="tick" style="left:43.54838709677419%" title="MF-14 · 00:27.0"><i></i><span>14</span></a><a href="#MF-15" class="tick" style="left:47.58064516129033%" title="MF-15 · 00:29.5"><i></i><span>15</span></a><a href="#MF-16" class="tick" style="left:50%" title="MF-16 · 00:31.0"><i></i><span>16</span></a><a href="#MF-17" class="tick" style="left:53.2258064516129%" title="MF-17 · 00:33.0"><i></i><span>17</span></a><a href="#MF-18" class="tick" style="left:54.83870967741935%" title="MF-18 · 00:34.0"><i></i><span>18</span></a><a href="#MF-19" class="tick" style="left:56.451612903225815%" title="MF-19 · 00:35.0"><i></i><span>19</span></a><a href="#MF-20" class="tick" style="left:62.096774193548384%" title="MF-20 · 00:38.5"><i></i><span>20</span></a><a href="#MF-21" class="tick" style="left:66.12903225806451%" title="MF-21 · 00:41.0"><i></i><span>21</span></a><a href="#MF-22" class="tick" style="left:72.58064516129032%" title="MF-22 · 00:45.0"><i></i><span>22</span></a><a href="#MF-23" class="tick" style="left:75.80645161290323%" title="MF-23 · 00:47.0"><i></i><span>23</span></a><a href="#MF-24" class="tick" style="left:79.83870967741935%" title="MF-24 · 00:49.5"><i></i><span>24</span></a><a href="#MF-25" class="tick" style="left:88.70967741935483%" title="MF-25 · 00:55.0"><i></i><span>25</span></a><a href="#MF-26" class="tick" style="left:91.93548387096774%" title="MF-26 · 00:57.0"><i></i><span>26</span></a><a href="#MF-27" class="tick" style="left:95.96774193548387%" title="MF-27 · 00:59.5"><i></i><span>27</span></a></div></header>
+
+<h2>Auditoria: fluxos reais usados</h2>
+<table><thead><tr><th>Fluxo</th><th>O que a interface real mostra</th><th>Capturas</th></tr></thead><tbody><tr><td>Descoberta de aparelhos</td><td>pulso e chegada dos cartões na grade</td><td>D01, D02</td></tr><tr><td>Adicionar arquivos</td><td>overlay de soltar e bandeja com 3 itens (132,9 MB)</td><td>D03, D04</td></tr><tr><td>Escolher destino</td><td>aba “Meus aparelhos”, cartão Arara Atenta, hover</td><td>D05, D06</td></tr><tr><td>Envio</td><td>painel com trilha origem→destino; aguardando; aceitou</td><td>D07, D08</td></tr><tr><td>Recebimento (celular)</td><td>tela inicial, folha de pedido, Aceitar</td><td>P01, P02</td></tr><tr><td>Progresso</td><td>dock “Enviando/Recebendo” com barra e percentual</td><td>D09, D10, P03, P04</td></tr><tr><td>Conclusão</td><td>dock “Tudo certo”, aviso “Recebido … salvo em Downloads”</td><td>D11, D12, P05</td></tr></tbody></table>
+<p class="lead" style="margin-top:10px">17 estados capturados do protótipo real (notebook 1280×720 @2x e celular 375×812 @3x), com mouse e cliques de verdade e a geometria de cada elemento medida. Os dados (nomes de aparelhos e arquivos) são simulados pelo próprio protótipo. Na produção, os tempos a partir do envio seguem a velocidade real do protótipo (ver PRODUCAO_RELATORIO.md).</p>
+
+<h2>Motion Frames por cena</h2>
+<section id="S0"><header class="sh"><span class="dot" style="background:#F76100"></span><h3>S0 · Abertura <small>0–6 s</small></h3><p>Apresentar a identidade ERASÓ: a trilha (origem laranja → destino verde), a logo oficial e a assinatura “De uma ponta à outra.”</p></header><div class="grid"><article class="mf" id="MF-01">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(0.0px,0.0px) scale(1)"></div><div class="node o" style="left:700px;top:540px"></div></div></div><span class="tc">00:00.0 · 1.2 s</span></div>
+  <div class="meta">
+    <h4><b>MF-01</b> Origem</h4>
+    <p class="chips2"><span class="tp marca">composição de marca</span><span class="cam">câmera 1.00× · 960, 540</span></p>
+    <p>Fundo areia vazio. Um ponto laranja (origem da trilha) nasce em escala 0 → 1.</p>
+    <p class="ease">Curva: settle · cubic-bezier(.34,1.3,.64,1)</p>
+    
+  </div></article><article class="mf" id="MF-02">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(0.0px,0.0px) scale(1)"></div><div class="line" style="left:700px;top:538px;width:322.4px"></div><div class="node o" style="left:700px;top:540px"></div><div class="node g ghost" style="left:1220px;top:540px"></div></div></div><span class="tc">00:01.2 · 1.2 s</span></div>
+  <div class="meta">
+    <h4><b>MF-02</b> A trilha se desenha</h4>
+    <p class="chips2"><span class="tp marca">composição de marca</span><span class="cam">câmera 1.00× · 960, 540</span></p>
+    <p>A linha verde-floresta avança da origem laranja até o destino verde; o nó de destino acende ao chegar.</p>
+    <p class="ease">Curva: enter · cubic-bezier(.16,1,.3,1)</p>
+    
+  </div></article><article class="mf" id="MF-03">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(0.0px,0.0px) scale(1)"></div><div class="line faint" style="left:560px;top:757px;width:800px"></div><div class="node o faint" style="left:560px;top:760px"></div><div class="node g faint" style="left:1360px;top:760px"></div><img class="biglogo" src="../design/assets/eras%C3%B3-logo-horizontal.png" alt="" style="left:580px;top:330px;width:760px"></div></div><span class="tc">00:02.4 · 1.6 s</span></div>
+  <div class="meta">
+    <h4><b>MF-03</b> A logo se revela</h4>
+    <p class="chips2"><span class="tp marca">composição de marca</span><span class="cam">câmera 1.00× · 960, 540</span></p>
+    <p>A logo oficial (PNG) é revelada por uma máscara que percorre o caminho da trilha, da esquerda para a direita; a trilha esmaece para 25%.</p>
+    <p class="ease">Curva: enter · 700 ms</p>
+    
+  </div></article><article class="mf" id="MF-04">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(0.0px,0.0px) scale(1)"></div><div class="line faint" style="left:560px;top:757px;width:800px"></div><div class="node o faint" style="left:560px;top:760px"></div><div class="node g faint" style="left:1360px;top:760px"></div><img class="biglogo" src="../design/assets/eras%C3%B3-logo-horizontal.png" alt="" style="left:580px;top:330px;width:760px"></div></div><span class="tc">00:04.0 · 1.2 s</span></div>
+  <div class="meta">
+    <h4><b>MF-04</b> Assinatura</h4>
+    <p class="chips2"><span class="tp marca">composição de marca</span><span class="cam">câmera 1.00× · 960, 540</span></p>
+    <p>A assinatura “De uma ponta à outra.” — que já faz parte da logo oficial — é revelada por uma segunda máscara, com a linha laranja→verde crescendo. Segura 0,8 s de respiro.</p>
+    <p class="ease">Curva: enter · 450 ms</p>
+    
+  </div></article><article class="mf" id="MF-05">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(132.0px,-137.3px) scale(1.15)"><div class="win" style="left:48px;top:178px;width:1344px;height:756px;opacity:0.55"><img src="capturas/D01-descoberta-buscando.png" alt=""></div><img class="flylogo" src="../design/assets/eras%C3%B3-logo-horizontal.png" alt="" style="left:62.7px;top:199px;width:229.95000000000002px"></div></div></div><span class="tc">00:05.2 · 0.8 s</span></div>
+  <div class="meta">
+    <h4><b>MF-05</b> A logo viaja para o app</h4>
+    <p class="chips2"><span class="tp marca">composição de marca</span><span class="cap-id">D01</span><span class="cam">câmera 1.15× · 720, 589</span></p>
+    <p>Elemento compartilhado: a logo encolhe e voa até o lugar exato da marca na barra lateral enquanto a janela do app sobe 28 px e ganha opacidade.</p>
+    <p class="ease">Curva: standard · cubic-bezier(.2,0,0,1) · 800 ms</p>
+    
+  </div></article></div></section><section id="S1"><header class="sh"><span class="dot" style="background:#0C884A"></span><h3>S1 · Entrando no app <small>6–12 s</small></h3><p>A logo pousa no app; o ERASÓ procura e encontra aparelhos por perto.</p></header><div class="grid"><article class="mf" id="MF-06">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(132.0px,-137.3px) scale(1.15)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D01-descoberta-buscando.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Procurando aparelhos por perto</div></div></div><span class="tc">00:06.0 · 2.0 s</span></div>
+  <div class="meta">
+    <h4><b>MF-06</b> Procurando aparelhos</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D01</span><span class="cam">câmera 1.15× · 720, 589</span></p>
+    <p>Plano geral da janela. A interface real anima sozinha: pulso de descoberta e cartões chegando.</p>
+    <p class="ease">Curva: câmera parada · UI em tempo real</p>
+    <p class="legenda">Legenda: “Procurando aparelhos por perto”</p>
+  </div></article><article class="mf" id="MF-07">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(21.5px,-274.4px) scale(1.32)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D02-descoberta-concluida.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Aparelhos por perto aparecem na tela</div></div></div><span class="tc">00:08.0 · 4.0 s</span></div>
+  <div class="meta">
+    <h4><b>MF-07</b> Aparelhos encontrados</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D02</span><span class="cam">câmera 1.32× · 711, 617</span></p>
+    <p>Câmera avança 1,0 s (zoom suave) da janela inteira para “Este aparelho” + grade de aparelhos; segura.</p>
+    <p class="ease">Curva: enter · 1000 ms</p>
+    <p class="legenda">Legenda: “Aparelhos por perto aparecem na tela”</p>
+  </div></article></div></section><section id="S2"><header class="sh"><span class="dot" style="background:#004F29"></span><h3>S2 · Selecionando arquivos <small>12–20 s</small></h3><p>Soltar três arquivos na janela e ver a bandeja “3 itens · 132,9 MB”.</p></header><div class="grid"><article class="mf" id="MF-08">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-374.5px,-58.2px) scale(1.57)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D03-soltar-arquivos.png" alt=""></div><svg class="cur" style="left:820.2px;top:396.9px;transform:scale(0.860)" width="30" height="30" viewBox="0 0 30 30"><path d="M3 2v21l5.6-5 3.6 8.4 4-1.7-3.6-8.2H21z" fill="#111311" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg><div class="chips" style="left:832.9388535031848px;top:413.4605095541401px;transform:scale(0.764)"><i></i><i></i><i></i></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Arraste os arquivos para a janela</div></div></div><span class="tc">00:12.0 · 2.0 s</span></div>
+  <div class="meta">
+    <h4><b>MF-08</b> Soltar arquivos</h4>
+    <p class="chips2"><span class="tp realov">interface real + cursor</span><span class="cap-id">D03</span><span class="cam">câmera 1.57× · 850, 381</span></p>
+    <p>Cursor entra com três arquivos; a área real mostra “Solte para adicionar”.</p>
+    <p class="ease">Curva: cursor: arco bezier 900 ms · enter</p>
+    <p class="legenda">Legenda: “Arraste os arquivos para a janela”</p>
+  </div></article><article class="mf" id="MF-09">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-298.0px,-183.7px) scale(1.48)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D04-selecao-3-itens.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">3 itens · 132,9 MB prontos para enviar</div></div></div><span class="tc">00:14.0 · 2.5 s</span></div>
+  <div class="meta">
+    <h4><b>MF-09</b> Bandeja com 3 itens</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D04</span><span class="cam">câmera 1.48× · 850, 489</span></p>
+    <p>Os itens entram em cascata (animação real do app). Câmera aproxima da bandeja.</p>
+    <p class="ease">Curva: enter · 900 ms</p>
+    <p class="legenda">Legenda: “3 itens · 132,9 MB prontos para enviar”</p>
+  </div></article><article class="mf" id="MF-10">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-400.0px,-784.8px) scale(1.6)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D04-selecao-3-itens.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Escolha para onde enviar</div></div></div><span class="tc">00:16.5 · 3.5 s</span></div>
+  <div class="meta">
+    <h4><b>MF-10</b> Para onde enviar?</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D04</span><span class="cam">câmera 1.60× · 850, 828</span></p>
+    <p>Câmera desce da bandeja para o cabeçalho de destino e a grade, sem corte.</p>
+    <p class="ease">Curva: standard · 1100 ms</p>
+    <p class="legenda">Legenda: “Escolha para onde enviar”</p>
+  </div></article></div></section><section id="S3"><header class="sh"><span class="dot" style="background:#0C884A"></span><h3>S3 · Escolhendo o destino <small>20–27 s</small></h3><p>Abrir “Meus aparelhos”, passar o cursor em Arara Atenta e clicar.</p></header><div class="grid"><article class="mf" id="MF-11">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-374.5px,-650.1px) scale(1.57)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D05-meus-aparelhos.png" alt=""></div><svg class="cur" style="left:499.5525px;top:612px;transform:scale(0.860)" width="30" height="30" viewBox="0 0 30 30"><path d="M3 2v21l5.6-5 3.6 8.4 4-1.7-3.6-8.2H21z" fill="#111311" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Meus aparelhos</div></div></div><span class="tc">00:20.0 · 2.0 s</span></div>
+  <div class="meta">
+    <h4><b>MF-11</b> Meus aparelhos</h4>
+    <p class="chips2"><span class="tp realov">interface real + cursor</span><span class="cap-id">D05</span><span class="cam">câmera 1.57× · 850, 758</span></p>
+    <p>Cursor clica na aba “Meus aparelhos”; a grade troca (animação real).</p>
+    <p class="ease">Curva: cursor: 700 ms · UI real</p>
+    <p class="legenda">Legenda: “Meus aparelhos”</p>
+  </div></article><article class="mf" id="MF-12">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-60.8px,-1191.4px) scale(2.2)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D06-hover-destino.png" alt=""></div><svg class="cur" style="left:464.325px;top:754.8000000000001px;transform:scale(0.614)" width="30" height="30" viewBox="0 0 30 30"><path d="M3 2v21l5.6-5 3.6 8.4 4-1.7-3.6-8.2H21z" fill="#111311" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Selecione Arara Atenta</div></div></div><span class="tc">00:22.0 · 2.0 s</span></div>
+  <div class="meta">
+    <h4><b>MF-12</b> Passar o cursor</h4>
+    <p class="chips2"><span class="tp realov">interface real + cursor</span><span class="cap-id">D06</span><span class="cam">câmera 2.20× · 464, 787</span></p>
+    <p>Câmera aproxima do cartão de Arara Atenta; o estado de hover é o do app real.</p>
+    <p class="ease">Curva: enter · 900 ms</p>
+    <p class="legenda">Legenda: “Selecione Arara Atenta”</p>
+  </div></article><article class="mf" id="MF-13">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-60.8px,-1191.4px) scale(2.2)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D06-hover-destino.png" alt=""></div><svg class="cur" style="left:464.325px;top:754.8000000000001px;transform:scale(0.614)" width="30" height="30" viewBox="0 0 30 30"><path d="M3 2v21l5.6-5 3.6 8.4 4-1.7-3.6-8.2H21z" fill="#111311" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg><div class="ring ring" style="left:451.59772727272724px;top:742.0727272727273px;width:25.454545454545453px;height:25.454545454545453px;border-width:1.3636363636363635px"></div></div><div class="schip">Protótipo · dados simulados</div></div></div><span class="tc">00:24.0 · 3.0 s</span></div>
+  <div class="meta">
+    <h4><b>MF-13</b> Clique</h4>
+    <p class="chips2"><span class="tp realov">interface real + cursor</span><span class="cap-id">D06</span><span class="cam">câmera 2.20× · 464, 787</span></p>
+    <p>Anel laranja de clique (0 → 56 px, some em 450 ms). O app responde abrindo o painel de envio.</p>
+    <p class="ease">Curva: anel: standard · 450 ms</p>
+    
+  </div></article></div></section><section id="S4"><header class="sh"><span class="dot" style="background:#F76100"></span><h3>S4 · Envio e pedido <small>27–35 s</small></h3><p>O envio aguarda; no celular chega o pedido; o toque em Aceitar libera a transferência.</p></header><div class="grid"><article class="mf" id="MF-14">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-425.5px,-296.2px) scale(1.63)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D07-envio-aguardando.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Aguardando o aparelho aceitar</div></div></div><span class="tc">00:27.0 · 2.5 s</span></div>
+  <div class="meta">
+    <h4><b>MF-14</b> Aguardando aceitar</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D07</span><span class="cam">câmera 1.63× · 850, 513</span></p>
+    <p>Painel de envio real com a trilha: origem (laranja) → destino (verde) e o texto “Aguardando Arara Atenta aceitar…”.</p>
+    <p class="ease">Curva: câmera: enter 1000 ms</p>
+    <p class="legenda">Legenda: “Aguardando o aparelho aceitar”</p>
+  </div></article><article class="mf" id="MF-15">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-3.5px,-133.7px) scale(1.01)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D07-envio-aguardando.png" alt=""></div><div class="ph" style="left:1520px;top:170px;width:400px;height:866px;opacity:0.75"><img src="capturas/P01-celular-inicio.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">No celular…</div></div></div><span class="tc">00:29.5 · 1.5 s</span></div>
+  <div class="meta">
+    <h4><b>MF-15</b> Do outro lado</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D07</span><span class="cap-id">P01</span><span class="cam">câmera 1.01× · 954, 667</span></p>
+    <p>Câmera recua para o plano geral; o celular desliza da direita (70 px → 0) com a tela inicial real (P01).</p>
+    <p class="ease">Curva: enter · 800 ms</p>
+    <p class="legenda">Legenda: “No celular…”</p>
+  </div></article><article class="mf" id="MF-16">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-1828.5px,-861.0px) scale(1.69)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:0.9"><img src="capturas/D07-envio-aguardando.png" alt=""></div><div class="ph" style="left:1450px;top:170px;width:400px;height:866px;opacity:1"><img src="capturas/P02-celular-pedido.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Arara Atenta recebe o pedido</div></div></div><span class="tc">00:31.0 · 2.0 s</span></div>
+  <div class="meta">
+    <h4><b>MF-16</b> Pedido de recebimento</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D07</span><span class="cap-id">P02</span><span class="cam">câmera 1.69× · 1650, 829</span></p>
+    <p>A folha de pedido sobe (animação real): “Ipê Sereno · Local · Meu aparelho · Verificado — quer te enviar 3 arquivos · 132,9 MB”.</p>
+    <p class="ease">Curva: enter · 700 ms</p>
+    <p class="legenda">Legenda: “Arara Atenta recebe o pedido”</p>
+  </div></article><article class="mf" id="MF-17">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-1828.5px,-861.0px) scale(1.69)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:0.9"><img src="capturas/D07-envio-aguardando.png" alt=""></div><div class="ph" style="left:1450px;top:170px;width:400px;height:866px;opacity:1"><img src="capturas/P02-celular-pedido.png" alt=""></div><div class="ring tap" style="left:1723.2986193293884px;top:968.3652859960553px;width:33.13609467455621px;height:33.13609467455621px;border-width:1.775147928994083px"></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Aceitar com um toque</div></div></div><span class="tc">00:33.0 · 1.0 s</span></div>
+  <div class="meta">
+    <h4><b>MF-17</b> Toque em Aceitar</h4>
+    <p class="chips2"><span class="tp realov">interface real + cursor</span><span class="cap-id">D07</span><span class="cap-id">P02</span><span class="cam">câmera 1.69× · 1650, 829</span></p>
+    <p>Anel de toque (branco com contorno, para contrastar com o botão laranja) sobre “Aceitar”; some em 450 ms.</p>
+    <p class="ease">Curva: anel: standard · 450 ms</p>
+    <p class="legenda">Legenda: “Aceitar com um toque”</p>
+  </div></article><article class="mf" id="MF-18">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-3.5px,-133.7px) scale(1.01)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D08-envio-aceito.png" alt=""></div><div class="ph" style="left:1450px;top:170px;width:400px;height:866px;opacity:1"><img src="capturas/P03-celular-recebendo-a.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Arara Atenta aceitou</div></div></div><span class="tc">00:34.0 · 1.0 s</span></div>
+  <div class="meta">
+    <h4><b>MF-18</b> Arara aceitou</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D08</span><span class="cap-id">P03</span><span class="cam">câmera 1.01× · 954, 667</span></p>
+    <p>Câmera volta ao plano geral; no notebook, “Arara Atenta aceitou”; o celular já mostra “Recebendo”.</p>
+    <p class="ease">Curva: standard · 900 ms</p>
+    <p class="legenda">Legenda: “Arara Atenta aceitou”</p>
+  </div></article></div></section><section id="S5"><header class="sh"><span class="dot" style="background:#004F29"></span><h3>S5 · Transferência <small>35–45 s</small></h3><p>Os dois aparelhos mostram o progresso ao mesmo tempo.</p></header><div class="grid"><article class="mf" id="MF-19">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-3.5px,-133.7px) scale(1.01)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D09-progresso-a.png" alt=""></div><div class="ph" style="left:1450px;top:170px;width:400px;height:866px;opacity:1"><img src="capturas/P03-celular-recebendo-a.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Enviando e recebendo ao mesmo tempo</div></div></div><span class="tc">00:35.0 · 3.5 s</span></div>
+  <div class="meta">
+    <h4><b>MF-19</b> Os dois lados</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D09</span><span class="cap-id">P03</span><span class="cam">câmera 1.01× · 954, 667</span></p>
+    <p>Plano geral: dock “Enviando 1” (≈26%) à esquerda e “Recebendo 1” (≈25%) à direita, em paralelo.</p>
+    <p class="ease">Curva: câmera parada · UI em tempo real</p>
+    <p class="legenda">Legenda: “Enviando e recebendo ao mesmo tempo”</p>
+  </div></article><article class="mf" id="MF-20">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-1618.4px,-1224.4px) scale(2.2)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D10-progresso-b.png" alt=""></div><div class="ph" style="left:1450px;top:170px;width:400px;height:866px;opacity:1"><img src="capturas/P04-celular-recebendo-b.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Acompanhe o progresso</div></div></div><span class="tc">00:38.5 · 2.5 s</span></div>
+  <div class="meta">
+    <h4><b>MF-20</b> Progresso no notebook</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D10</span><span class="cap-id">P04</span><span class="cam">câmera 2.20× · 1172, 802</span></p>
+    <p>Câmera aproxima do dock de transferências do notebook; a barra avança (animação real).</p>
+    <p class="ease">Curva: enter · 900 ms</p>
+    <p class="legenda">Legenda: “Acompanhe o progresso”</p>
+  </div></article><article class="mf" id="MF-21">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-2340.0px,-1362.0px) scale(2)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D10-progresso-b.png" alt=""></div><div class="ph" style="left:1450px;top:170px;width:400px;height:866px;opacity:1"><img src="capturas/P04-celular-recebendo-b.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Recebendo no celular</div></div></div><span class="tc">00:41.0 · 4.0 s</span></div>
+  <div class="meta">
+    <h4><b>MF-21</b> Progresso no celular</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D10</span><span class="cap-id">P04</span><span class="cam">câmera 2.00× · 1650, 951</span></p>
+    <p>Câmera atravessa para o dock do celular (≈67%); segura até o fim da barra.</p>
+    <p class="ease">Curva: standard · 1100 ms</p>
+    <p class="legenda">Legenda: “Recebendo no celular”</p>
+  </div></article></div></section><section id="S6"><header class="sh"><span class="dot" style="background:#0C884A"></span><h3>S6 · Conclusão <small>45–55 s</small></h3><p>“Tudo certo” no notebook; “Recebido … salvo em Downloads” no celular.</p></header><div class="grid"><article class="mf" id="MF-22">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-1618.4px,-1250.8px) scale(2.2)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D11-concluido.png" alt=""></div><div class="ph" style="left:1450px;top:170px;width:400px;height:866px;opacity:1"><img src="capturas/P05-celular-concluido.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Tudo certo</div></div></div><span class="tc">00:45.0 · 2.0 s</span></div>
+  <div class="meta">
+    <h4><b>MF-22</b> Tudo certo no notebook</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D11</span><span class="cap-id">P05</span><span class="cam">câmera 2.20× · 1172, 814</span></p>
+    <p>Dock real muda para “Tudo certo · Concluído 132,9 MB”; a marca na lateral volta ao estado “Pronto”.</p>
+    <p class="ease">Curva: standard · 900 ms</p>
+    <p class="legenda">Legenda: “Tudo certo”</p>
+  </div></article><article class="mf" id="MF-23">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-2340.0px,-1300.0px) scale(2)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D11-concluido.png" alt=""></div><div class="ph" style="left:1450px;top:170px;width:400px;height:866px;opacity:1"><img src="capturas/P05-celular-concluido.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Recebido · salvo em Downloads</div></div></div><span class="tc">00:47.0 · 2.5 s</span></div>
+  <div class="meta">
+    <h4><b>MF-23</b> Recebido no celular</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D11</span><span class="cap-id">P05</span><span class="cam">câmera 2.00× · 1650, 920</span></p>
+    <p>Câmera pousa no aviso real: “Recebido de Ipê Sereno · salvo em Downloads”.</p>
+    <p class="ease">Curva: enter · 900 ms</p>
+    <p class="legenda">Legenda: “Recebido · salvo em Downloads”</p>
+  </div></article><article class="mf" id="MF-24">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(-3.5px,-133.7px) scale(1.01)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:1"><img src="capturas/D12-concluido-repouso.png" alt=""></div><div class="ph" style="left:1450px;top:170px;width:400px;height:866px;opacity:1"><img src="capturas/P05-celular-concluido.png" alt=""></div></div><div class="schip">Protótipo · dados simulados</div><div class="cap">Concluído · 132,9 MB</div></div></div><span class="tc">00:49.5 · 5.5 s</span></div>
+  <div class="meta">
+    <h4><b>MF-24</b> Concluído</h4>
+    <p class="chips2"><span class="tp real">interface real</span><span class="cap-id">D12</span><span class="cap-id">P05</span><span class="cam">câmera 1.01× · 954, 667</span></p>
+    <p>Plano geral em repouso: os dois aparelhos concluídos. Respiro de 2 s antes do fecho.</p>
+    <p class="ease">Curva: enter · 1100 ms</p>
+    <p class="legenda">Legenda: “Concluído · 132,9 MB”</p>
+  </div></article></div></section><section id="S7"><header class="sh"><span class="dot" style="background:#022C17"></span><h3>S7 · Fecho <small>55–62 s</small></h3><p>O app recua, a logo e a assinatura voltam; aviso de protótipo e placeholder institucional.</p></header><div class="grid"><article class="mf" id="MF-25">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(192.0px,108.0px) scale(0.8)"><div class="win" style="left:48px;top:150px;width:1344px;height:756px;opacity:0.28"><img src="capturas/D12-concluido-repouso.png" alt=""></div><div class="ph" style="left:1450px;top:170px;width:400px;height:866px;opacity:0.28"><img src="capturas/P05-celular-concluido.png" alt=""></div></div></div></div><span class="tc">00:55.0 · 2.0 s</span></div>
+  <div class="meta">
+    <h4><b>MF-25</b> O app recua</h4>
+    <p class="chips2"><span class="tp marca">composição de marca</span><span class="cap-id">D12</span><span class="cap-id">P05</span><span class="cam">câmera 0.80× · 960, 540</span></p>
+    <p>Câmera recua para zoom 0,8 enquanto as camadas do app esmaecem para 0% e o fundo areia volta.</p>
+    <p class="ease">Curva: standard · 1000 ms</p>
+    
+  </div></article><article class="mf" id="MF-26">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(0.0px,0.0px) scale(1)"></div><div class="line solid" style="left:560px;top:757px;width:800px"></div><div class="node o " style="left:560px;top:760px"></div><div class="node g " style="left:1360px;top:760px"></div><img class="biglogo" src="../design/assets/eras%C3%B3-logo-horizontal.png" alt="" style="left:580px;top:330px;width:760px"></div></div><span class="tc">00:57.0 · 2.5 s</span></div>
+  <div class="meta">
+    <h4><b>MF-26</b> Logo e assinatura</h4>
+    <p class="chips2"><span class="tp marca">composição de marca</span><span class="cam">câmera 1.00× · 960, 540</span></p>
+    <p>A logo oficial reaparece (com a assinatura que já faz parte dela) e a trilha se desenha embaixo. A trilha fecha em verde (destino alcançado).</p>
+    <p class="ease">Curva: enter · 700 ms</p>
+    
+  </div></article><article class="mf" id="MF-27">
+  <div class="thumb"><div class="scale"><div class="stage"><div class="world" style="transform:translate(0.0px,0.0px) scale(1)"></div><div class="line solid" style="left:560px;top:757px;width:800px"></div><div class="node o " style="left:560px;top:760px"></div><div class="node g " style="left:1360px;top:760px"></div><img class="biglogo" src="../design/assets/eras%C3%B3-logo-horizontal.png" alt="" style="left:580px;top:330px;width:760px"><div class="foot"><span>Demonstração do protótipo · dados simulados</span></div></div></div><span class="tc">00:59.5 · 2.5 s</span></div>
+  <div class="meta">
+    <h4><b>MF-27</b> Aviso do protótipo</h4>
+    <p class="chips2"><span class="tp marca">composição de marca</span><span class="cam">câmera 1.00× · 960, 540</span></p>
+    <p>Surge, discreta, a linha “Demonstração do protótipo · dados simulados”. Fecho só com a logo do ERASÓ (sem créditos institucionais nem ODS). Fade final para areia.</p>
+    <p class="ease">Curva: enter · 450 ms + fade 500 ms</p>
+    
+  </div></article></div></section>
+
+<h2>Direção de movimento</h2>
+<div class="cols"><div class="box"><h3>Câmera</h3><ul><li>Palco 1920×1080 a 30 fps. “Mundo” fixo: janela do notebook (1344×756) à esquerda, celular (400×866) à direita. A câmera só faz pan + zoom (sem rotação nem perspectiva 3D).</li><li>Zoom entre 1,0× e 2,2× durante o app; 0,8× só no fecho. Os enquadramentos são calculados a partir da geometria medida em cada captura (capturas/geometria.json) — nenhum recorte feito “no olho”. O alvo fica ~70 px acima do centro para a legenda nunca cobrir o foco.</li><li>Cada movimento dura 0,8–1,1 s e termina em repouso de pelo menos 1,2 s antes do próximo.</li></ul></div><div class="box"><h3>Transições</h3><ul><li>Dentro do app não há corte: a câmera é contínua e é a própria interface real que muda de estado.</li><li>Dissolve de 300 ms apenas nas duas fronteiras marca ↔ app (S0→S1 e S6→S7).</li><li>Elemento compartilhado: a logo da abertura voa até o lugar exato da marca na barra lateral (MF-05), no mesmo gesto do estado “abrindo” da especificação de movimento.</li></ul></div><div class="box"><h3>Ritmo</h3><ul><li>62 s no total: uma ideia por cena de 5–8 s; o pico de movimento fica no envio e na aceitação (S4); respiros deliberados em MF-04 (0,8 s) e MF-24 (2 s).</li><li>Marcação do tempo de cada quadro na tabela e na linha do tempo (tempo de início + duração).</li></ul></div><div class="box"><h3>Microinterações</h3><ul><li>Da interface real (reproduzidas, não recriadas): pulso de descoberta, entrada dos cartões, overlay “Solte para adicionar”, itens da bandeja em cascata, hover do cartão, trilha origem→destino, barra de progresso, mudança do dock para “Tudo certo”, aviso (toast) e o estado da marca na lateral.</li><li>Adicionadas na composição (sempre discretas): cursor (seta grafite com contorno claro; arco curvo de 700–900 ms), anel de clique laranja e anel de toque branco com contorno grafite (para contrastar com o botão laranja Aceitar); 0→56 px, some em 450 ms, legendas.</li><li>Tokens de easing do próprio design system: enter (.16,1,.3,1), standard (.2,0,0,1), settle (.34,1.3,.64,1). Sem bounce exagerado, sem partículas, sem glow.</li></ul></div><div class="box"><h3>Legendas e marca</h3><ul><li>Legendas em português, pílula areia, Lexend 34 px, cor verde-floresta; 1 linha; entram em 280 ms (fade + 8 px) e saem em 200 ms; mínimo de 1,6 s na tela.</li><li>Chip permanente “Protótipo · dados simulados” nas cenas do app, para não sugerir que a transferência já funciona em rede.</li><li>Identidade: fundo areia, trilha laranja→verde, logo oficial em PNG (não há SVG oficial; ver riscos).</li></ul></div><div class="box"><h3>Áudio</h3><ul><li>Sem narração. Por padrão, vídeo mudo com legendas (assiste-se sem som). Trilha sonora é decisão sua (abaixo).</li></ul></div></div>
+
+<h2>Riscos e limites (ditos com franqueza)</h2>
+<table><tbody><tr><td>ffmpeg ausente</td><td>Não está instalado nesta máquina (winget está disponível). Depende da decisão acima.</td></tr><tr><td>Captura determinística</td><td>Teste feito: o relógio virtual do navegador avançou 184 quadros seguidos em passos de 33,3 ms e a interface real animou normalmente; a captura travou no quadro 184 (≈6 s de vídeo). Causa ainda não identificada. Se não resolver, gravo em tempo real e ajusto o tempo na composição.</td></tr><tr><td>Logo animada com PNG</td><td>Só existe a logo oficial em PNG. A revelação usa máscara sobre o PNG (sem vetor). O SVG oficial (pendência D11) permitiria animar o símbolo com mais precisão.</td></tr><tr><td>Dois aparelhos, duas instâncias</td><td>O protótipo não tem rede: notebook e celular são duas instâncias independentes. O sincronismo é roteirizado e declarado no aviso “Demonstração do protótipo · dados simulados”. Os percentuais das capturas (ex.: 42% × 67%) diferem; na produção rodam em sincronia.</td></tr><tr><td>Escopo</td><td>Ficam de fora, de propósito: rota remota, Caixa, histórico, link, pareamento e tema escuro. Não inventei telas nem funcionalidades; só o fluxo pedido.</td></tr><tr><td>App intocado</td><td>O app não é modificado. A cena é preparada pelo console (como o botão “Simular” do próprio app) e por cliques reais.</td></tr></tbody></table>
+
+<h2>Decisões que dependem de você</h2>
+<table><tbody><tr><td>Storyboard</td><td>Aprovar os 27 Motion Frames e os 62 s, ou indicar quais cortar/mudar (versão curta de ~45 s é possível removendo MF-10, MF-15 e MF-21).</td></tr><tr><td>Codificação</td><td>Autorizar a instalação do ffmpeg via winget (pacote Gyan.FFmpeg) para exportar MP4 H.264. Sem ele, só consigo WebM, com menos controle.</td></tr><tr><td>Áudio</td><td>Sem som (recomendado) ou você fornece uma trilha livre de direitos.</td></tr><tr><td>Legendas</td><td>Legendas em português queimadas no vídeo (recomendado) ou vídeo sem texto.</td></tr><tr><td>Dados de exemplo</td><td>Aprovar os nomes simulados (Ipê Sereno, Arara Atenta) e os três arquivos de exemplo (apresentacao-extensao.pdf, fotos-oficina.zip, cartaz-evento.png — escolhidos por mim para a demonstração).</td></tr><tr><td>Tema</td><td>Apenas tema claro (recomendado) ou também uma versão escura.</td></tr><tr><td>Fecho</td><td>Decidido: o fecho mostra só a logo do ERASÓ, sem créditos institucionais nem ODS (a linha de protótipo permanece).</td></tr></tbody></table>
+<div class="note"><b>Depois da aprovação:</b> gravar as camadas reais → compor câmera, legendas e marca → exportar MP4 → revisar a fidelidade quadro a quadro contra as capturas.</div>
+
+<h2>Capturas reais (matéria-prima)</h2>
+<div class="sheet"><figure class="d"><img src="capturas/D01-descoberta-buscando.png" loading="lazy" alt=""><figcaption>D01-descoberta-buscando</figcaption></figure><figure class="d"><img src="capturas/D02-descoberta-concluida.png" loading="lazy" alt=""><figcaption>D02-descoberta-concluida</figcaption></figure><figure class="d"><img src="capturas/D03-soltar-arquivos.png" loading="lazy" alt=""><figcaption>D03-soltar-arquivos</figcaption></figure><figure class="d"><img src="capturas/D04-selecao-3-itens.png" loading="lazy" alt=""><figcaption>D04-selecao-3-itens</figcaption></figure><figure class="d"><img src="capturas/D05-meus-aparelhos.png" loading="lazy" alt=""><figcaption>D05-meus-aparelhos</figcaption></figure><figure class="d"><img src="capturas/D06-hover-destino.png" loading="lazy" alt=""><figcaption>D06-hover-destino</figcaption></figure><figure class="d"><img src="capturas/D07-envio-aguardando.png" loading="lazy" alt=""><figcaption>D07-envio-aguardando</figcaption></figure><figure class="d"><img src="capturas/D08-envio-aceito.png" loading="lazy" alt=""><figcaption>D08-envio-aceito</figcaption></figure><figure class="d"><img src="capturas/D09-progresso-a.png" loading="lazy" alt=""><figcaption>D09-progresso-a</figcaption></figure><figure class="d"><img src="capturas/D10-progresso-b.png" loading="lazy" alt=""><figcaption>D10-progresso-b</figcaption></figure><figure class="d"><img src="capturas/D11-concluido.png" loading="lazy" alt=""><figcaption>D11-concluido</figcaption></figure><figure class="d"><img src="capturas/D12-concluido-repouso.png" loading="lazy" alt=""><figcaption>D12-concluido-repouso</figcaption></figure><figure class="p"><img src="capturas/P01-celular-inicio.png" loading="lazy" alt=""><figcaption>P01-celular-inicio</figcaption></figure><figure class="p"><img src="capturas/P02-celular-pedido.png" loading="lazy" alt=""><figcaption>P02-celular-pedido</figcaption></figure><figure class="p"><img src="capturas/P03-celular-recebendo-a.png" loading="lazy" alt=""><figcaption>P03-celular-recebendo-a</figcaption></figure><figure class="p"><img src="capturas/P04-celular-recebendo-b.png" loading="lazy" alt=""><figcaption>P04-celular-recebendo-b</figcaption></figure><figure class="p"><img src="capturas/P05-celular-concluido.png" loading="lazy" alt=""><figcaption>P05-celular-concluido</figcaption></figure></div>
+<footer>Gerado por <code>docs/video/tools/gerar-storyboard.mjs</code> a partir de <code>storyboard-dados.mjs</code> e <code>capturas/geometria.json</code>.</footer>
+</div></body></html>

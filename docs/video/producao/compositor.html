@@ -1,0 +1,220 @@
+﻿<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>ERASÓ · compositor do vídeo</title>
+<style>
+:root{--sand:#F7F2E8;--ink:#022C17;--fl:#004F29;--gr:#0C884A;--br:#F76100;--line:#d9d0bd}
+*{box-sizing:border-box}html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--sand)}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;background:radial-gradient(120% 90% at 50% 40%,#F9F5EC 0%,#F2EBDB 100%)}
+#world{position:absolute;left:0;top:0;transform-origin:0 0;opacity:0}
+.win{position:absolute;left:48px;top:150px;width:1344px;height:756px;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px rgba(2,44,23,.12),0 30px 80px rgba(2,44,23,.18)}
+.ph{position:absolute;left:1450px;top:170px;width:400px;height:866px;border-radius:34px;overflow:hidden;background:#fff;box-shadow:0 0 0 10px #111311,0 30px 80px rgba(2,44,23,.28);opacity:0}
+iframe{border:0;display:block;transform-origin:0 0;background:#fff}
+#fd{width:1280px;height:720px;transform:scale(1.05)}#fp{width:375px;height:812px;transform:scale(1.06667)}
+#cur{position:absolute;left:0;top:0;opacity:0;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28));transform-origin:3px 2px}
+#chips{position:absolute;left:0;top:0;display:none;gap:4px;transform-origin:0 0}#chips i{width:34px;height:42px;border-radius:5px;background:#fff;border:2px solid var(--fl);box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.ring{position:absolute;border:solid var(--br);border-radius:50%;background:rgba(247,97,0,.14);opacity:0}.ring.tap{border-color:#fff;background:rgba(255,255,255,.28);box-shadow:0 0 0 3px rgba(17,19,17,.55)}
+#brand{position:absolute;inset:0}
+.node{position:absolute;width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%;opacity:0}.node.o{background:var(--br)}.node.g{background:var(--gr)}
+.line{position:absolute;height:6px;border-radius:3px;background:var(--ink);opacity:0;transform-origin:0 0}
+.logo{position:absolute;display:block;left:510px;top:320px;width:900px;opacity:0}
+#fly{position:absolute;display:block;opacity:0;clip-path:polygon(6% 8%,94% 8%,94% 85%,6% 85%)}
+#foot{position:absolute;left:0;right:0;bottom:84px;display:flex;flex-direction:column;align-items:center;gap:6px;font:500 26px/1.3 "Instrument Sans",system-ui,sans-serif;color:#4d5b52;opacity:0}#foot .ph2{font:500 24px ui-monospace,Consolas,monospace;color:var(--br)}
+#cap{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);background:var(--sand);border:1px solid var(--line);color:var(--ink);font:600 34px/1.2 Lexend,"Instrument Sans",system-ui,sans-serif;padding:14px 30px;border-radius:99px;box-shadow:0 8px 28px rgba(2,44,23,.16);white-space:nowrap;opacity:0}
+#chip{position:absolute;left:36px;bottom:36px;font:600 20px "Instrument Sans",system-ui,sans-serif;color:#4d5b52;background:rgba(247,242,232,.9);border:1px solid var(--line);padding:6px 14px;border-radius:99px;opacity:0}
+#nudge{position:absolute;right:0;bottom:0;width:2px;height:2px;background:#F7F2E8}
+#stage>*:not(#world),#cur,#chips,.ring{pointer-events:none}
+#fade{position:absolute;inset:0;background:var(--sand);opacity:0;pointer-events:none}
+</style></head><body>
+<div id="stage">
+  <div id="world">
+    <div class="win" id="win"><iframe id="fd" title="notebook"></iframe></div>
+    <div class="ph" id="ph"><iframe id="fp" title="celular"></iframe></div>
+    <svg id="cur" width="30" height="30" viewBox="0 0 30 30"><path d="M3 2v21l5.6-5 3.6 8.4 4-1.7-3.6-8.2H21z" fill="#111311" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <div id="chips"><i></i><i></i><i></i></div>
+    <div class="ring" id="ring1"></div><div class="ring tap" id="ring2"></div>
+  </div>
+  <div id="brand">
+    <div class="line" id="bline"></div><div class="node o" id="bn1"></div><div class="node g" id="bn2"></div>
+    <img class="logo" id="logoA" src="../../design/assets/eras%C3%B3-logo-horizontal.png" alt="" style="clip-path:polygon(0 0,100% 0,100% 66%,34% 66%,34% 82%,100% 82%,100% 100%,0 100%)">
+    <img class="logo" id="logoB" src="../../design/assets/eras%C3%B3-logo-horizontal.png" alt="" style="clip-path:inset(66% 3% 17% 34%)">
+    <img id="fly" src="../../design/assets/eras%C3%B3-logo-horizontal.png" alt="">
+    <div id="foot"><span>Demonstração do protótipo · dados simulados</span></div>
+  </div>
+  <div id="chip">Protótipo · dados simulados</div>
+  <div id="cap"></div>
+  <div id="nudge"></div>
+  <div id="fade"></div>
+</div>
+<script type="module">
+import * as R from './roteiro-final.mjs';
+const $ = (s) => document.querySelector(s);
+const fd = $('#fd'), fp = $('#fp');
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+// cubic-bezier (x1,y1,x2,y2) por bisseção
+const bez = ([x1, y1, x2, y2]) => (x) => { if (x <= 0) return 0; if (x >= 1) return 1; let lo = 0, hi = 1, t = x; for (let i = 0; i < 24; i++) { t = (lo + hi) / 2; const cx = 3 * x1 * t * (1 - t) ** 2 + 3 * x2 * t * t * (1 - t) + t ** 3; if (cx < x) lo = t; else hi = t; } return 3 * y1 * t * (1 - t) ** 2 + 3 * y2 * t * t * (1 - t) + t ** 3; };
+const ramp = (t, a, b, ease = (x) => x) => ease(clamp((t - a) / (b - a)));
+const E_ENTER = bez(R.CAMERA[2][3]), E_STD = bez([0.2, 0, 0, 1]);
+const lerp = (a, b, k) => a + (b - a) * k;
+
+// ── Câmera ──
+function camAt(t) {
+  let cur = R.CAMERA[0][1];
+  for (let i = 1; i < R.CAMERA.length; i++) {
+    const [t0, to, d, ez] = R.CAMERA[i]; if (t < t0) break;
+    const k = d <= 0.011 ? 1 : bez(ez)(clamp((t - t0) / d));
+    const from = R.CAMERA[i - 1].__end || cur;
+    cur = { cx: lerp(from.cx, to.cx, k), cy: lerp(from.cy, to.cy, k), z: lerp(from.z, to.z, k) };
+    if (t >= t0 + d) R.CAMERA[i].__end = to; // estado final do segmento
+  }
+  return cur;
+}
+// "from" de cada segmento é o destino do anterior (calculado de forma determinística, sem depender da ordem de chamadas)
+for (let i = 1; i < R.CAMERA.length; i++) R.CAMERA[i - 1].__end = R.CAMERA[i - 1][1];
+function camAt2(t) {
+  let cam = R.CAMERA[0][1];
+  for (let i = 1; i < R.CAMERA.length; i++) {
+    const [t0, to, d, ez] = R.CAMERA[i]; if (t < t0) break;
+    const from = R.CAMERA[i - 1][1];
+    const k = d <= 0.011 ? 1 : bez(ez)(clamp((t - t0) / d));
+    cam = { cx: lerp(from.cx, to.cx, k), cy: lerp(from.cy, to.cy, k), z: lerp(from.z, to.z, k) };
+  }
+  return cam;
+}
+
+// ── Conversões ──
+const frameRect = (el) => el.getBoundingClientRect(); // já inclui as transformações do mundo
+const inner = (el, sel) => { const d = el.contentDocument; const e = d && d.querySelector(sel); if (!e) return null; const b = e.getBoundingClientRect(); const fr = frameRect(el); const k = fr.width / el.offsetWidth; return { x: fr.left + b.left * k, y: fr.top + b.top * k, w: b.width * k, h: b.height * k }; };
+const toWorld = (p, cam) => ({ x: (p.x - (960 - cam.cx * cam.z)) / cam.z, y: (p.y - (540 - cam.cy * cam.z)) / cam.z });
+const center = (r) => ({ x: r.x + r.w / 2, y: r.y + r.h / 2 });
+
+function alvoPagina(nome, cam) {
+  const map = { composer: [fd, '[data-composer]'], abaMeus: [fd, '[data-tab="mine"]'], arara: [fd, '.card[data-dev="arara"]'], aceitar: [fp, '[data-req-accept]'] };
+  const [el, sel] = map[nome]; const r = inner(el, sel); return r ? center(r) : null;
+}
+// posição do alvo em coordenadas do MUNDO sem depender da câmera atual
+function alvoMundo(nome) {
+  const m = { composer: [fd, '[data-composer]'], abaMeus: [fd, '[data-tab="mine"]'], arara: [fd, '.card[data-dev="arara"]'], aceitar: [fp, '[data-req-accept]'] }[nome];
+  const [el, sel] = m; const d = el.contentDocument; const e = d && d.querySelector(sel); if (!e) return null;
+  const b = e.getBoundingClientRect(); const o = el === fd ? R.DESK : R.PH;
+  return { x: o.x + (b.left + b.width / 2) * o.s, y: o.y + (b.top + b.height / 2) * o.s };
+}
+
+// ── Estado exposto ao gravador ──
+window.__ok = false;
+window.carregar = () => {
+  fd.src = '../../../app/index.html?sem-intro'; fp.src = '../../../app/index.html?sem-intro'; return 1;
+};
+window.preparar = () => {
+  const dw = fd.contentWindow, pw = fp.contentWindow;
+  dw.eval(`(()=>{setTheme('light');document.querySelector('.sim').style.display='none';
+    const a=DEVICES.find(d=>d.id==='arara');a.route='local';REQ_FILES.length=0;REQ_FILES.push(...${JSON.stringify(R.AMOSTRA)});return 1})()`);
+  pw.eval(`(()=>{setTheme('light');document.querySelector('.sim').style.display='none';
+    const a=DEVICES.find(d=>d.id==='arara');a.route='local';REQ_FILES.length=0;REQ_FILES.push(...${JSON.stringify(R.AMOSTRA)});
+    ME.name='Arara Atenta';ME.type='phone';ME.os='Android 14';S.auto='off';
+    const p=DEVICES.find(d=>d.id==='pequi');Object.assign(p,{name:'Ipê Sereno',type:'laptop',meta:'Windows 11 · Notebook',mine:true,verified:true,fav:false,route:'local',online:true});
+    renderThisDevice();renderGrid();return 1})()`);
+  return 1;
+};
+window.acao = (id) => {
+  const dw = fd.contentWindow, pw = fp.contentWindow;
+  if (id === 'arrastar') { const dt = new dw.DataTransfer(); dt.items.add(new dw.File(['x'], 'arquivo.pdf')); dw.document.dispatchEvent(new dw.DragEvent('dragenter', { dataTransfer: dt, bubbles: true })); }
+  if (id === 'soltar') { dw.document.querySelector('[data-drop]').hidden = true; dw.addItems(JSON.parse(JSON.stringify(R.AMOSTRA))); }
+  if (id === 'pedido-celular') {
+    // só na gravação: sem animações/transições dentro da folha de pedido — no navegador sem cabeça com relógio virtual o conteúdo dela não é pintado quando elas existem (a folha aparece de uma vez, em vez de deslizar)
+    const st = pw.document.createElement('style'); st.textContent = '.dialog,.dialog *{animation:none!important;transition:none!important}'; pw.document.head.appendChild(st);
+    pw.openRequest('files');
+  }
+  return 1;
+};
+window.estado = () => ({
+  desk: fd.contentWindow.eval(`(()=>{const t=S.transfers[0];return t?[t.status,+(t.done/t.total).toFixed(3)]:null})()`),
+  ph: fp.contentWindow.eval(`(()=>{const t=S.transfers[0];return t?[t.status,+(t.done/t.total).toFixed(3)]:null})()`),
+  mine: fd.contentWindow.eval(`document.querySelector('[data-tab="mine"]')?.getAttribute('aria-selected')||document.querySelector('[data-tab="mine"]')?.className`),
+});
+
+// ── Quadro ──
+let nudgeFlip = 0;
+window.nudge = () => { nudgeFlip ^= 1; document.querySelector('#nudge').style.background = nudgeFlip ? '#F7F2E8' : '#F5F0E6'; return 1; };
+window.render = (t) => {
+  const cam = camAt2(t);
+  const w = $('#world'); w.style.transform = `translate(${960 - cam.cx * cam.z}px,${540 - cam.cy * cam.z}px) scale(${cam.z})`;
+  // app: entra em 5.2–6.0 (sobe 28 px) e sai em 41.7–43.0
+  const appIn = ramp(t, 5.2, 6.0, E_STD), appOut = 1 - ramp(t, 41.7, 43.0, E_STD);
+  w.style.opacity = String(appIn * appOut);
+  $('#win').style.transform = `translateY(${(1 - appIn) * 28}px)`;
+  // celular: surge junto da câmera que recua (CV+1.0)
+  const phk = ramp(t, R.CV + 0.9, R.CV + 1.6, E_ENTER);
+  const ph = $('#ph'); ph.style.opacity = String(phk); ph.style.transform = `translateX(${(1 - phk) * 70}px)`;
+
+  // marca (S0)
+  const logoIn = ramp(t, 2.4, 3.4, E_ENTER);              // máscara percorre a logo
+  const tagIn = ramp(t, 4.0, 4.9, E_ENTER);               // assinatura da própria logo
+  const brandOut = 1 - ramp(t, 5.2, 5.9, E_STD);          // some quando a logo viaja para o app
+  const closeIn = ramp(t, 43.4, 44.2, E_ENTER);           // fecho
+  const logoVis = t < 20 ? logoIn * brandOut : closeIn;
+  const mk = (p) => `linear-gradient(90deg,#000 ${p * 106 - 6}%,transparent ${p * 106}%)`;
+  const A = $('#logoA'), B = $('#logoB');
+  A.style.opacity = String(t < 20 ? (logoIn > 0 ? 1 : 0) * brandOut : closeIn); A.style.webkitMaskImage = A.style.maskImage = mk(t < 20 ? logoIn : 1);
+  B.style.opacity = String(t < 20 ? (tagIn > 0 ? 1 : 0) * brandOut : closeIn); B.style.webkitMaskImage = B.style.maskImage = mk(t < 20 ? tagIn : 1);
+  const tr = 1 - ramp(t, 2.4, 3.0), drawn = ramp(t, 1.2, 2.2, E_ENTER), dot = ramp(t, 0, 0.9, bez([0.34, 1.3, 0.64, 1]));
+  const L = $('#bline'), n1 = $('#bn1'), n2 = $('#bn2');
+  let lineOp = 0, lineW = 520 * drawn, y = 540, x0 = 700, n2op = 0;
+  if (t < 20) { lineOp = (1 - ramp(t, 2.4, 3.0)) * (t > 1.2 ? 1 : 0); n2op = (1 - ramp(t, 2.4, 3.0)) * ramp(t, 2.0, 2.3); n1.style.opacity = String(dot * (1 - ramp(t, 2.4, 3.0))); }
+  else { y = 800; x0 = 560; lineW = 800 * ramp(t, 43.8, 44.6, E_ENTER); lineOp = closeIn > 0 ? 1 : 0; n2op = ramp(t, 44.4, 44.8); n1.style.opacity = String(closeIn); L.style.background = '#0C884A'; }
+  L.style.left = x0 + 'px'; L.style.top = (y - 3) + 'px'; L.style.width = lineW + 'px'; L.style.opacity = String(lineOp);
+  n1.style.left = x0 + 'px'; n1.style.top = y + 'px'; n2.style.left = (x0 + (t < 20 ? 520 : 800)) + 'px'; n2.style.top = y + 'px'; n2.style.opacity = String(n2op);
+  n1.style.transform = `scale(${t < 20 ? dot : 1})`;
+  $('#foot').style.opacity = String(ramp(t, 45.9, 46.6, E_ENTER));
+  $('#fade').style.opacity = String(ramp(t, 48.2, 48.7));
+
+  // logo que viaja (S0→S1): da posição da logo para a marca real da barra lateral
+  const fly = $('#fly'); const fk = ramp(t, 5.2, 6.0, E_STD);
+  if (t >= 5.2 && t <= 6.4 && fd.contentDocument) {
+    const target = inner(fd, '.sidebar .brand');
+    if (target) {
+      const h0 = 900 * (667 / 2000) * 0.74, w0 = 900 * 0.74 * 1.0, src = { x: 960 - (900 * 0.88) / 2, y: 470 - (900 * 0.88 * (667 / 2000)) / 2, w: 900 * 0.88 };
+      const tw = target.h * (2000 * 0.88) / (667 * 0.77); // largura que dá a altura da marca real
+      const dst = { x: target.x, y: target.y - target.h * 0.06, w: tw };
+      fly.style.left = lerp(src.x, dst.x, fk) + 'px'; fly.style.top = lerp(src.y, dst.y, fk) + 'px'; fly.style.width = lerp(src.w, dst.w, fk) + 'px';
+      fly.style.opacity = String(t < 5.9 ? 1 : 1 - ramp(t, 5.9, 6.3));
+    }
+  } else fly.style.opacity = '0';
+  if (t >= 5.2 && t < 5.9) { A.style.opacity = '0'; B.style.opacity = '0'; } // a cópia que voa substitui a logo parada
+
+  // cursor
+  const cur = $('#cur'), chips = $('#chips'); let cursorPage = null, cvis = 0;
+  const ks = R.CURSOR; let kA = null, kB = null;
+  for (let i = 0; i < ks.length; i++) { if (ks[i][0] <= t) kA = ks[i]; else { kB = ks[i]; break; } }
+  if (kA) {
+    const pos = (k) => { const a = alvoMundo(k[1]); return a ? { x: a.x + k[2][0], y: a.y + k[2][1] } : null; };
+    const pa = pos(kA); let p = pa, vis = kA[3];
+    if (kB && pa) { const pb = pos(kB); const u = ramp(t, kA[0], kB[0], E_ENTER); if (pb) { const arc = Math.sin(Math.PI * u) * 0.07; const dx = pb.x - pa.x, dy = pb.y - pa.y; p = { x: lerp(pa.x, pb.x, u) - dy * arc, y: lerp(pa.y, pb.y, u) + dx * arc }; } vis = lerp(kA[3], kB[3], ramp(t, kA[0], kB[0])); if (kA[3] === 0 && kB[3] === 1) vis = ramp(t, kB[0] - 0.25, kB[0]); }
+    if (p && vis > 0) {
+      const k = 1 / cam.z;
+      cur.style.left = p.x + 'px'; cur.style.top = p.y + 'px'; cur.style.transform = `scale(${(1.35 * k).toFixed(3)})`; cur.style.opacity = String(vis);
+      cursorPage = { x: 960 - cam.cx * cam.z + p.x * cam.z + 3 * 1.35, y: 540 - cam.cy * cam.z + p.y * cam.z + 2 * 1.35 }; cvis = vis;
+      const withFiles = t >= 12.0 && t < 13.9; chips.style.display = withFiles ? 'flex' : 'none'; chips.style.left = (p.x + 20 * k) + 'px'; chips.style.top = (p.y + 26 * k) + 'px'; chips.style.transform = `scale(${(k * 1.2).toFixed(3)})`;
+    } else { cur.style.opacity = '0'; chips.style.display = 'none'; }
+  }
+  // anéis
+  const rings = [$('#ring1'), $('#ring2')]; rings.forEach((r) => (r.style.opacity = '0'));
+  for (const [t0, nome] of R.ANEIS) {
+    const u = (t - t0) / 0.45; if (u < 0 || u > 1) continue;
+    const pnt = alvoMundo(nome); if (!pnt) continue;
+    const r = rings[nome === 'aceitar' ? 1 : 0], rad = (28 / cam.z) * (0.2 + 0.8 * E_STD(u));
+    r.style.left = (pnt.x - rad) + 'px'; r.style.top = (pnt.y - rad) + 'px'; r.style.width = r.style.height = (2 * rad) + 'px'; r.style.borderWidth = (3 / cam.z) + 'px'; r.style.opacity = String(1 - u);
+  }
+  // legenda e chip
+  let capText = '', capOp = 0;
+  for (const [a, b, txt] of R.LEGENDAS) { if (t >= a && t <= b) { capText = txt; capOp = Math.min(ramp(t, a, a + 0.28, E_ENTER), 1 - ramp(t, b - 0.2, b)); capText = txt; capY = (1 - ramp(t, a, a + 0.28, E_ENTER)) * 8; break; } }
+  const cap = $('#cap'); cap.textContent = capText; cap.style.opacity = String(capOp); cap.style.transform = `translateX(-50%) translateY(${typeof capY === 'number' && capOp > 0 ? capY : 0}px)`;
+  $('#chip').style.opacity = String(ramp(t, 6.0, 6.6) * (1 - ramp(t, 41.7, 42.6)));
+  // força um novo quadro mesmo com tudo parado
+  nudgeFlip ^= 1; $('#nudge').style.background = nudgeFlip ? '#F7F2E8' : '#F5F0E6';
+  const acc = alvoPagina('aceitar', cam);
+  return { cursorPage, acceptPage: acc, aba: alvoPagina('abaMeus', cam), arara: alvoPagina('arara', cam), cam };
+};
+let capY = 0;
+window.__ok = true;
+</script>
+</body></html>
+
