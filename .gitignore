@@ -1,0 +1,28 @@
+# Dependências e ambiente
+node_modules/
+.env
+.env.*
+!.env.example
+
+# Configuração local de ferramentas e editores
+.claude/
+.vscode/
+.idea/
+
+# Sistema operacional e temporários
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+tmp/
+
+# Material de trabalho que não faz parte do projeto publicado:
+# capturas de referência de terceiros (LocalSend), capturas intermediárias e vídeo-fonte duplicado
+docs/landing/referencia/
+docs/landing/comparacao/
+docs/landing/etapa1/
+docs/video/capturas/
+docs/video/*.mp4
+docs/video/versao-landing-antiga/
+_site/
+_site-teste/

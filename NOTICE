@@ -1,0 +1,19 @@
+ERASÓ
+Projeto acadêmico de extensão (Cruzeiro do Sul Virtual).
+
+Este produto inclui material derivado de terceiros:
+
+- Estrutura, medidas, pontos de quebra e animações da landing page (pasta landing/),
+  adaptados do site do LocalSend (https://github.com/localsend/website),
+  licenciado sob a Apache License 2.0. Detalhes e alterações feitas em
+  landing/THIRD_PARTY_NOTICES.md.
+
+O aplicativo LocalSend (https://github.com/localsend/localsend) foi usado apenas como
+referência funcional; nenhum código dele foi incorporado.
+
+As fontes Instrument Sans, Lexend e IBM Plex Mono são distribuídas pelo Google Fonts sob a
+SIL Open Font License 1.1 e não fazem parte deste repositório.
+
+O logotipo, o símbolo e o nome ERASÓ (arquivos em app/assets, docs/design/assets e
+landing/assets) não são licenciados por este arquivo: os direitos sobre a marca ainda
+estão por definir. A Apache License 2.0 não concede direito de uso de marcas (seção 6).
