@@ -1,0 +1,36 @@
+<!doctype html><meta charset="utf-8"><title>ERASÓ · página de teste da rede</title>
+<script src="/app/rede.js"></script>
+<script>
+// Página usada só pelos testes automatizados: expõe a camada de rede real, sem interface.
+window.registro = { aparelhos: [], pedidos: [], recebidos: [], textos: [], log: [], estado: '' };
+window.criar = (nome, opcoes = {}) => {
+  const id = ErasoRede.aleatorio(12);
+  window.rede = new ErasoRede.Rede({
+    perfil: { id, nome, tipo: 'laptop', so: 'Teste' }, visivel: opcoes.visivel !== false,
+    onStatus: (s) => { registro.estado = s; }, onAparelhos: (l) => { registro.aparelhos = l; },
+    log: (t, m) => registro.log.push(t + ': ' + m),
+    onPedido: (rec) => {
+      const reg = { rec, itens: rec.itens, par: rec.peer.nome, arquivos: [], progresso: [], status: [] };
+      registro.pedidos.push(reg);
+      rec.onstatus = (s, e) => reg.status.push(s + (e ? ':' + e : ''));
+      rec.onprogresso = (n, t) => reg.progresso.push(n);
+      rec.onarquivo = async (a) => { const buf = new Uint8Array(await a.blob.arrayBuffer()); reg.arquivos.push({ i: a.i, nome: a.nome, tamanho: a.tamanho, crc: ErasoRede.crc32(0, buf), verificado: a.verificado }); };
+      rec.ontexto = (t) => registro.textos.push({ nome: t.name, corpo: t.body, tipo: t.kind });
+      if (window.politica === 'aceitar') rec.aceitar(window.opcoesAceite || {}); else if (window.politica === 'recusar') rec.recusar();
+    },
+  });
+  window.politica = opcoes.politica || 'manual';
+  return id;
+};
+window.arquivoAleatorio = (nome, tam) => { const u = new Uint8Array(tam); for (let o = 0; o < tam; o += 65536) crypto.getRandomValues(u.subarray(o, Math.min(o + 65536, tam))); window.ultimoCrc = ErasoRede.crc32(0, u); return { file: new File([u], nome), crc: window.ultimoCrc, tam }; };
+window.envios = [];
+window.enviar = (para, specs, opcoes) => {
+  const itens = specs.map((s) => { if (s.corpo !== undefined) return { kind: s.tipo || 'text', name: s.corpo.slice(0, 20), size: new Blob([s.corpo]).size, body: s.corpo }; const a = arquivoAleatorio(s.nome, s.tam); return { kind: 'file', name: s.nome, size: s.tam, file: a.file, crc: a.crc }; });
+  const peer = rede.aparelhos.find((a) => a.id === para) || { id: para, nome: 'Aparelho' };
+  const envio = rede.enviar(peer, itens, opcoes || {});
+  const reg = { envio, itens, status: [], progresso: [] };
+  envio.onstatus = (s, e) => reg.status.push(s + (e ? ':' + e : ''));
+  envio.onprogresso = (n) => reg.progresso.push(n); envio.onpin = (r) => reg.status.push('pedePin:' + r);
+  envios.push(reg); return envios.length - 1;
+};
+</script>
