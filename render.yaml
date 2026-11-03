@@ -1,0 +1,19 @@
+# Blueprint do Render (https://render.com): cria o serviço web a partir deste repositório.
+# Só use depois de revisar docs/etapa4/HOSPEDAGEM.md.
+services:
+  - type: web
+    name: eraso
+    runtime: node
+    plan: free
+    buildCommand: "true"
+    startCommand: node server/servidor.mjs
+    healthCheckPath: /saude
+    envVars:
+      - key: ERASO_PUBLICO
+        value: "1"
+      - key: ERASO_TURN_URL
+        sync: false   # preencha no painel, se for usar TURN
+      - key: ERASO_TURN_USER
+        sync: false
+      - key: ERASO_TURN_CRED
+        sync: false
