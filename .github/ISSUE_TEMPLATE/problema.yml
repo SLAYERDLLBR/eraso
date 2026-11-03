@@ -1,0 +1,51 @@
+name: Relatar um problema
+description: Algo não funcionou como esperado no ERASÓ.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por ajudar. Antes de enviar, abra a tela **Diagnóstico** do aplicativo e use **Copiar relatório**.
+        **Não inclua dados pessoais** nem códigos de sala em capturas de tela.
+  - type: textarea
+    id: passos
+    attributes:
+      label: O que você fez, passo a passo
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: O que você esperava que acontecesse
+    validations:
+      required: true
+  - type: textarea
+    id: obtido
+    attributes:
+      label: O que aconteceu de fato
+      description: Inclua o texto de qualquer mensagem de erro.
+    validations:
+      required: true
+  - type: dropdown
+    id: modo
+    attributes:
+      label: Como o servidor estava rodando
+      options:
+        - Rede local (npm start)
+        - Servidor público (sala com código)
+        - Não sei
+    validations:
+      required: true
+  - type: input
+    id: ambiente
+    attributes:
+      label: Navegador e sistema dos dois aparelhos
+      placeholder: "Ex.: Chrome 130 no Android 14 e Edge no Windows 11"
+    validations:
+      required: true
+  - type: textarea
+    id: relatorio
+    attributes:
+      label: Relatório do Diagnóstico
+      description: Cole aqui o texto de "Copiar relatório".
+      render: text

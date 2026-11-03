@@ -1,0 +1,25 @@
+name: Sugerir uma melhoria
+description: Uma ideia para o ERASÓ.
+labels: ["melhoria"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Lembre-se: o ERASÓ só apresenta como real o que realmente acontece, e não usa contas nem armazenamento em servidor.
+        Ideias que dependam disso são bem-vindas para discussão, mas exigem decisão da equipe.
+  - type: textarea
+    id: problema
+    attributes:
+      label: Que problema isso resolve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposta
+    attributes:
+      label: Como você imagina a solução
+    validations:
+      required: true
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: Alternativas que você considerou

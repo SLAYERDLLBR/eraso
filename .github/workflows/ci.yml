@@ -1,0 +1,31 @@
+name: Verificações
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verificacoes:
+    name: Sintaxe, servidor e site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Sintaxe de todo o JavaScript
+        run: npm run verificar-sintaxe
+      - name: Testes do servidor (salas, autenticação, limites, cabeçalhos)
+        run: npm run test:servidor
+      - name: Páginas do site em dia com os modelos
+        run: |
+          npm run gerar-site
+          git diff --exit-code -- landing
+      - name: Links e acessibilidade básica do site
+        run: npm run verificar-site:offline
+      - name: Build do GitHub Pages sob subcaminho
+        run: npm run test:pages
