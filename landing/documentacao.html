@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentação e guia de utilização · ERASÓ</title>
+<meta name="description" content="Guia de utilização do ERASÓ (enviar, receber, salas, Caixa, configurações, diagnóstico, atalhos) e índice da documentação técnica.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ERASÓ">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Documentação e guia de utilização · ERASÓ">
+<meta property="og:description" content="Guia de utilização do ERASÓ (enviar, receber, salas, Caixa, configurações, diagnóstico, atalhos) e índice da documentação técnica.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script>
+  // Tema antes da pintura (preferência salva ou do sistema)
+  try {
+    const t = localStorage.getItem('eraso-landing-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Lexend:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Símbolo vetorial PROVISÓRIO, traçado a partir do PNG oficial (substituir pelo SVG oficial — dúvida D11) -->
+    <symbol id="eraso-symbol" viewBox="0 0 134 108">
+      <path d="M48 12 A72 72 0 0 1 132 56" fill="none" stroke="#F76100" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M3 68 A68 68 0 0 0 70 105" fill="none" stroke="var(--logo-green-orbit, #023E21)" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M34 30 H92 Q116 30 116 46 Q116 59 101 61" fill="none" stroke="#F76100" stroke-width="10.5" stroke-linecap="round"/>
+      <path d="M86 41 Q76 54 60 55 H34 Q19 55 19 64 Q19 73 34 73 H103" fill="none" stroke="var(--logo-green-path, #004F29)" stroke-width="10.5" stroke-linecap="round"/>
+      <circle cx="34" cy="30" r="12" fill="#F76100"/>
+      <circle cx="103" cy="73.5" r="12.5" fill="var(--logo-green-node, #0C884A)"/>
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.4-4.4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+    <symbol id="i-remote" viewBox="0 0 24 24"><circle cx="5" cy="17" r="2.3"/><circle cx="19" cy="17" r="2.3"/><path d="M6.4 15.2C8 8.5 16 8.5 17.6 15.2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.4 8.4-7 10-3.6-1.6-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M4 13h4l2 3h4l2-3h4"/><path d="M4 13 6.5 6h11L20 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4 14 20 11 13Z"/><path d="M11 13 20 4"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M2.5 6.5A2 2 0 0 1 4.5 4.5h4.6l2 2.2h8.4a2 2 0 0 1 2 2v9.3a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-cursor" viewBox="0 0 24 24"><path d="M3 3l17 7.2-7.3 2.5L10.2 20z"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16.2 9.6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="navbar" id="navbar">
+  <nav class="container" aria-label="Principal">
+    <a href="index.html" class="logo" aria-label="ERASÓ — início">
+      <svg class="symbol" viewBox="0 0 134 108" aria-hidden="true"><use href="#eraso-symbol"/></svg>
+      <img class="wordmark wordmark-light" src="assets/letreiro.png" alt="ERASÓ">
+      <img class="wordmark wordmark-dark" src="assets/letreiro-invertido.png" alt="ERASÓ">
+    </a>
+    <ul class="nav-links">
+      <li><a href="sobre.html">Sobre</a></li>
+      <li><a href="como-funciona.html">Como funciona</a></li>
+      <li><a href="documentacao.html" aria-current="page">Documentação</a></li>
+      <li><a href="contato.html">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Alternar entre tema claro e escuro">
+        <svg class="icon moon" aria-hidden="true"><use href="#i-moon"/></svg>
+        <svg class="icon sun" aria-hidden="true"><use href="#i-sun"/></svg>
+      </button>
+      <div class="lang-switcher" id="lang">
+        <button class="nav-action-btn" id="lang-btn" aria-label="Idioma: Português (Brasil)" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-dropdown">
+          <span class="lang-label-long">Português (Brasil)</span><span class="lang-label-short">Português</span>
+          <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
+        </button>
+        <div class="lang-dropdown" id="lang-dropdown" hidden>
+          <label class="lang-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Buscar idioma</span><input type="text" id="lang-search" placeholder="Buscar idioma…" autocomplete="off"></label>
+          <div class="lang-list" role="listbox" aria-label="Idioma">
+            <button class="lang-item" role="option" aria-selected="true" data-lang-name="Português (Brasil) Portuguese (Brazil)"><span><span class="lang-name">Português (Brasil)</span><span class="lang-en">Portuguese (Brazil)</span></span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button>
+          </div>
+          <p class="lang-empty" id="lang-empty" hidden>Nenhum idioma encontrado.</p>
+        </div>
+      </div>
+      <a href="../app/index.html" class="btn btn-primary btn-sm hide-mobile">Acessar o app</a>
+      <button class="mobile-toggle" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg class="icon open" aria-hidden="true"><use href="#i-menu"/></svg>
+        <svg class="icon close" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <ul class="mobile-nav-links">
+      <li><a href="sobre.html">Sobre</a></li>
+      <li><a href="como-funciona.html">Como funciona</a></li>
+      <li><a href="documentacao.html">Documentação</a></li>
+      <li><a href="contato.html">Contato</a></li>
+    </ul>
+    <a href="../app/index.html" class="btn btn-primary btn-block">Acessar o app</a>
+  </div>
+</header>
+
+<main id="conteudo">
+  <section class="page-header">
+    <div class="container text-center">
+      <nav class="breadcrumb" aria-label="Você está em">
+        <ol><li><a href="index.html">Início</a></li><li aria-current="page">Documentação e guia de utilização</li></ol>
+      </nav>
+      
+      <h1>Documentação e guia de utilização</h1>
+      <p class="subtitle">Como usar o ERASÓ, atalhos, acessibilidade e onde está a documentação técnica.</p>
+    </div>
+  </section>
+  <div class="page-body">
+    <article class="container legal-content">
+      <aside class="notice-box" aria-label="Sobre este guia">
+        <strong class="label">Sobre este guia</strong>
+        <p>O guia descreve o aplicativo como ele funciona hoje, em versão de protótipo funcional. O que ainda não existe está listado em <a href="como-funciona.html#o-que-existe">Como funciona</a>.</p>
+      </aside>
+      <nav class="toc" aria-labelledby="toc-title">
+        <h2 id="toc-title">Nesta página</h2>
+        <ol>
+          <li><a href="#guia">Guia de utilização</a></li>
+          <li><a href="#atalhos">Atalhos de teclado</a></li>
+          <li><a href="#acessibilidade">Acessibilidade</a></li>
+          <li><a href="#glossario">Glossário</a></li>
+          <li><a href="#documentos">Documentação técnica</a></li>
+          <li><a href="#limites">Limites atuais</a></li>
+        </ol>
+      </nav>
+<h2 id="guia">Guia de utilização</h2>
+<p>Abra o <a href="../app/index.html">aplicativo</a> no computador e no celular. Os dois precisam estar no mesmo Wi-Fi (quando o servidor roda na rede local) ou na mesma <a href="#salas">sala</a>. Para pular a introdução, use o endereço com <code>?sem-intro</code> no final.</p>
+
+<h3 id="comecar">Primeiro uso</h3>
+<ol>
+  <li>Na primeira abertura, uma introdução de quatro passos pergunta o <strong>nome do aparelho</strong>, se ele fica <strong>visível</strong> e quem pode te enviar coisas <strong>automaticamente</strong>. Você pode pular e rever depois em <em>Configurações › Sobre o projeto › Rever introdução</em>.</li>
+  <li>O nome de fábrica é o que o aparelho realmente é: modelo ou sistema, navegador e o fim do identificador (por exemplo, <code>Windows · Edge · B797</code>). Os navegadores não revelam o nome da máquina. Você pode trocar o nome a qualquer momento.</li>
+  <li>A navegação tem cinco destinos: <strong>Compartilhar</strong>, <strong>Caixa</strong>, <strong>Atividade</strong>, <strong>Dispositivos</strong> e <strong>Configurações</strong>, na barra lateral (computador) ou na barra inferior (celular).</li>
+</ol>
+
+<h3 id="salas">Salas</h3>
+<p>Quando o servidor é público, o aplicativo pede um <strong>código de sala</strong>: só aparelhos com o mesmo código se enxergam. Escolha <em>Criar sala nova</em> e abra o <strong>link de convite</strong> no outro aparelho, ou digite um código que você já tem. Em <em>Configurações › Sala</em> é possível copiar o convite e sair da sala. Em um servidor na rede local, a sala é opcional: sem código, todos os aparelhos da rede se veem. Trate o código como uma senha de grupo.</p>
+
+<h3 id="enviar">Enviar</h3>
+<ol class="flow">
+  <li><strong>Escolha o que enviar</strong>Use os blocos <em>Arquivo, Pasta, Mídia, Texto, Link</em> ou <em>Colar</em>; ou arraste para qualquer lugar da janela; ou cole com <kbd>Ctrl</kbd> + <kbd>V</kbd>. A bandeja mostra quantos itens e o tamanho total; <em>Editar</em> permite renomear e remover; <em>Limpar</em> esvazia.</li>
+  <li><strong>Escolha o modo</strong><em>Um destino</em> (tocar no aparelho envia) ou <em>Vários</em> (marque aparelhos e use “Enviar para N aparelhos”).</li>
+  <li><strong>Escolha o destino</strong>As abas <em>Por perto</em> e <em>Favoritos</em> listam os aparelhos. O campo de busca filtra por nome, ID, sistema ou tipo. <em>Buscar novamente</em> consulta o servidor.</li>
+  <li><strong>Aguarde a resposta</strong>O destino pode aceitar, recusar ou pedir PIN. Se o aparelho não responder ou sair, o aplicativo mostra o motivo.</li>
+  <li><strong>Acompanhe</strong>O painel de transferências mostra progresso, velocidade e tempo restante reais; dá para cancelar e, se falhar, “Tentar de novo” ou “Diagnosticar”.</li>
+</ol>
+
+<h3 id="receber">Receber</h3>
+<ul>
+  <li>O pedido mostra <strong>quem</strong> envia e <strong>o quê</strong> (nomes, textos e tamanhos).</li>
+  <li><strong>Aceitar</strong> (também com <kbd>Enter</kbd>) ou <strong>Recusar</strong>. <kbd>Esc</kbd> <em>não</em> recusa, para evitar recusa acidental.</li>
+  <li>Antes de aceitar, você pode <strong>pular</strong> itens e <strong>renomear</strong> arquivos.</li>
+  <li>Textos e links recebidos podem ser copiados, abertos ou salvos na Caixa.</li>
+  <li>Os arquivos recebidos são salvos pelo navegador, na pasta de downloads (não há seletor de pasta). Receber vários arquivos pode acionar o aviso “permitir vários downloads”.</li>
+  <li>Com <em>Exigir PIN</em> ligado, quem envia precisa digitar o PIN que você definiu; o seu aparelho confere.</li>
+</ul>
+
+<h3 id="caixa">Caixa</h3>
+<p>Escreva, cole um link ou solte um arquivo na área de captura e guarde com o botão ou <kbd>Ctrl</kbd> + <kbd>Enter</kbd>. Cada item permite <em>copiar</em>, <em>abrir</em> (links), <em>baixar</em> (arquivos), <em>fixar</em> no topo, <em>enviar para…</em> outro aparelho e <em>excluir</em> (com desfazer). A validade dos itens (1, 7 ou 30 dias) é uma opção de <em>Configurações</em>; itens fixados não expiram. A Caixa fica <strong>somente neste navegador</strong>: limpar os dados do site apaga a Caixa.</p>
+
+<h3 id="atividade">Atividade e Dispositivos</h3>
+<ul>
+  <li><strong>Atividade</strong> é o histórico deste aparelho, com busca, filtros e <em>Limpar histórico</em> (os arquivos continuam no disco). A conferência de integridade (CRC32) só é indicada nos recebimentos em que os dois lados a usaram.</li>
+  <li><strong>Dispositivos</strong> lista os aparelhos que estão na rede ou sala agora e os seus favoritos. O botão ⓘ abre os detalhes, como o identificador completo.</li>
+</ul>
+
+<h3 id="configuracoes">Configurações</h3>
+<p>Tudo é salvo no navegador e aplicado na hora. A busca no topo filtra as opções. Há quatro temas (<em>Sistema, Claro, Escuro e Alto contraste</em>), controle de animações, nome do aparelho, sala, receber automaticamente, PIN, conferência de integridade, histórico, esconder o painel ao terminar e validade da Caixa.</p>
+
+<h3 id="diagnostico">Diagnóstico de conexão</h3>
+<p>A tela <em>Diagnóstico</em> verifica o navegador, o servidor, a visibilidade, os aparelhos encontrados e a <strong>conexão direta</strong> com cada aparelho (com a latência medida). Quando algo falha, mostra o motivo e o que fazer. Redes com “isolamento de clientes”, comuns em Wi-Fi de instituições e de visitantes, impedem a conexão direta mesmo com o servidor funcionando. O botão <em>Copiar relatório</em> gera um texto para enviar à equipe.</p>
+
+<h2 id="atalhos">Atalhos de teclado</h2>
+<div class="table-wrap">
+  <table class="data-table">
+    <caption class="sr-only">Atalhos de teclado do aplicativo</caption>
+    <thead><tr><th scope="col">Atalho</th><th scope="col">O que faz</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>K</kbd></th><td>Abre a paleta de comandos (ações, aparelhos, ajustes). Também encontra aparelhos pelo ID.</td></tr>
+      <tr><th scope="row"><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>V</kbd></th><td>Cola texto ou arquivos na seleção.</td></tr>
+      <tr><th scope="row"><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>1</kbd> … <kbd>5</kbd></th><td>Vai para Compartilhar, Caixa, Atividade, Dispositivos ou Configurações.</td></tr>
+      <tr><th scope="row"><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Enter</kbd></th><td>Adiciona o texto à seleção ou guarda na Caixa.</td></tr>
+      <tr><th scope="row"><kbd>Enter</kbd></th><td>Aceita um pedido de recebimento.</td></tr>
+      <tr><th scope="row"><kbd>Esc</kbd></th><td>Fecha painel, diálogo ou paleta (não recusa pedidos).</td></tr>
+      <tr><th scope="row"><kbd>?</kbd></th><td>Mostra a lista de atalhos.</td></tr>
+      <tr><th scope="row">Botão direito no cartão</th><td>Abre os detalhes do aparelho.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 id="acessibilidade">Acessibilidade</h2>
+<p>O design system define como meta a conformidade com WCAG 2.2 nível AA: contraste calculado para cada par de cores, tema de alto contraste, uso pelo teclado, rótulos de texto além de cor, regiões anunciadas por leitores de tela e respeito à preferência por movimento reduzido. <strong>A meta ainda não foi auditada</strong> com leitores de tela nem por avaliação independente. Se encontrar uma barreira, avise pelo <a href="contato.html">contato</a>.</p>
+
+<h2 id="glossario">Glossário</h2>
+<dl class="facts">
+  <dt>Aparelho</dt><dd>Celular, tablet, computador ou navegador que tem o ERASÓ aberto.</dd>
+  <dt>Servidor</dt><dd>Programa que apresenta os aparelhos uns aos outros e repassa as mensagens iniciais da conexão. Não recebe arquivos nem textos.</dd>
+  <dt>Sala</dt><dd>Grupo de aparelhos que usam o mesmo código secreto e, por isso, se enxergam.</dd>
+  <dt>Conexão direta</dt><dd>Canal criptografado (WebRTC) aberto entre os dois navegadores, por onde seguem os arquivos e textos.</dd>
+  <dt>STUN e TURN</dt><dd>Serviços que ajudam a abrir a conexão direta entre redes diferentes (STUN) ou a retransmiti-la quando ela não abre (TURN).</dd>
+  <dt>PIN</dt><dd>Senha curta que quem envia precisa digitar para falar com o seu aparelho.</dd>
+  <dt>Recebimento automático</dt><dd>Aceitar pedidos sem perguntar, só de quem você escolher.</dd>
+  <dt>Caixa</dt><dd>Seu espaço para guardar textos, links e arquivos neste aparelho.</dd>
+  <dt>Atividade</dt><dd>Histórico do que foi enviado e recebido neste aparelho.</dd>
+</dl>
+
+<h2 id="documentos">Documentação técnica</h2>
+<p>Os documentos técnicos acompanham o código-fonte, na pasta <code>docs/</code> do repositório: design system, tokens, inventário de componentes, especificação de movimento, plano de adaptação, relatórios de testes e o guia de hospedagem. O endereço do repositório está em <a href="codigo-fonte.html">Código-fonte e GitHub</a>.</p>
+
+<h2 id="limites">Limites atuais</h2>
+<ul>
+  <li>O arquivo recebido fica na memória do navegador até terminar; o limite é de 2 GB por pedido.</li>
+  <li>Redes muito restritivas só conectam com um servidor de retransmissão (TURN), que ainda não foi definido.</li>
+  <li>O endereço sem HTTPS (servidor na rede local) impede o botão “Colar” de ler a área de transferência; <kbd>Ctrl</kbd> + <kbd>V</kbd> continua funcionando.</li>
+  <li>Uma aba por navegador: abrir o ERASÓ em outra aba do mesmo navegador desconecta a primeira.</li>
+  <li>Só há português do Brasil.</li>
+</ul>
+    </article>
+  </div>
+</main>
+
+<footer class="footer section">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo" aria-label="ERASÓ — voltar ao topo">
+          <svg class="symbol" viewBox="0 0 134 108" aria-hidden="true"><use href="#eraso-symbol"/></svg>
+          <img class="wordmark wordmark-light" src="assets/letreiro.png" alt="ERASÓ">
+          <img class="wordmark wordmark-dark" src="assets/letreiro-invertido.png" alt="ERASÓ">
+        </a>
+        <p>Compartilhamento de arquivos, textos e links entre aparelhos. Projeto de extensão universitária em fase de protótipo funcional.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Produto</h4>
+          <ul>
+            <li><a href="../app/index.html">Acessar o ERASÓ</a></li>
+            <li><a href="como-funciona.html">Como funciona</a></li>
+            <li><a href="index.html#features">Recursos</a></li>
+            <li><a href="index.html#faq">Perguntas frequentes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Projeto</h4>
+          <ul>
+            <li><a href="sobre.html">Sobre o ERASÓ</a></li>
+            <li><a href="projeto-academico.html">Projeto acadêmico</a></li>
+            <li><a href="ods.html">ODS e impacto</a></li>
+            <li><a href="contato.html">Contato</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal e segurança</h4>
+          <ul>
+            <li><a href="privacidade.html">Privacidade e LGPD</a></li>
+            <li><a href="termos.html">Termos de uso</a></li>
+            <li><a href="seguranca.html">Segurança</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Para desenvolvedores</h4>
+          <ul>
+            <li><a href="documentacao.html">Documentação e guia</a></li>
+            <li><a href="codigo-fonte.html">Código-fonte e GitHub</a></li>
+            <li><a href="codigo-fonte.html#documentos">Documentos técnicos</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">&copy; 2026 ERASÓ · Projeto de extensão universitária, Cruzeiro do Sul Virtual <span class="placeholder">[vínculo a confirmar]</span>.</div>
+      <div class="attribution">Estrutura inspirada no <a href="https://github.com/localsend/website" target="_blank" rel="noopener">site do LocalSend</a>, sob <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener" class="license-link">Apache License 2.0</a>.</div>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!--meta {"file":"codigo-fonte.html","nav":"codigo-fonte","title":"Código-fonte e GitHub","lead":"Onde está o código, como executar o projeto e sob quais licenças cada parte é distribuída.","desc":"Conteúdo do projeto ERASÓ, como executar localmente, como testar, licenças e créditos de terceiros.","notice":{"label":"Repositório","html":"<p>O código-fonte está publicado no GitHub, sob a Apache License 2.0. Esta página descreve o que ele contém e como executá-lo.</p>"}} -->
+<h2 id="repositorio">Repositório</h2>
+<dl class="facts">
+  <dt>Hospedagem</dt><dd>GitHub — <a href="https://github.com/SLAYERDLLBR/eraso" target="_blank" rel="noopener">github.com/SLAYERDLLBR/eraso</a></dd>
+  <dt>Visibilidade</dt><dd>Público</dd>
+  <dt>Licença do código do ERASÓ</dt><dd>Apache License 2.0 (arquivo <code>LICENSE</code> no repositório). O nome, o logotipo e o símbolo não estão incluídos na licença.</dd>
+  <dt>Contribuições</dt><dd>As regras estarão no arquivo <code>CONTRIBUTING.md</code> do repositório. Enquanto isso, envie sugestões pelo <a href="contato.html">Contato</a></dd>
+</dl>
+
+<h2 id="o-que-ha">O que há no projeto</h2>
+<pre><code>app/        Aplicativo web (HTML, CSS e JavaScript puros)
+server/     Servidor de presença e sinalização; também serve o site e o aplicativo
+landing/    Site e páginas institucionais
+tests/      Testes automatizados (servidor, rede, interface e ponta a ponta)
+docs/       Design system, relatórios de testes, guia de hospedagem e documentos de produção</code></pre>
+<p>O projeto <strong>não tem</strong> banco de dados, contas de usuário nem etapa de compilação, e <strong>não usa dependências</strong> externas: o navegador roda HTML, CSS e JavaScript puros, e o servidor usa apenas módulos nativos do Node.js.</p>
+
+<h2 id="executar">Como executar</h2>
+<p>É preciso o <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a> 18 ou superior. Na pasta raiz do projeto:</p>
+<pre><code>npm start</code></pre>
+<p>O terminal mostra os endereços da sua rede, como <code>http://192.168.0.12:8780/app/index.html</code>. Abra o mesmo endereço em cada aparelho, no mesmo Wi-Fi. O site fica em <code>/landing/index.html</code>.</p>
+<p>Para o modo público (internet, com salas e limites), use <code>npm run start:publico</code> atrás de HTTPS. As variáveis de ambiente e o passo a passo de hospedagem estão em <code>docs/etapa4/HOSPEDAGEM.md</code>. As fontes vêm do Google Fonts e precisam de internet.</p>
+
+<h2 id="testes">Como testar</h2>
+<pre><code>npm test</code></pre>
+<p>Executa quatro suítes: servidor (salas, autenticação, limites, cabeçalhos e pastas servidas), camada de rede, interface com dois navegadores reais e ponta a ponta no modo público. Exigem o Microsoft Edge (ou outro Chromium, definido na variável <code>EDGE</code>). Para conferir os links do site: <code>npm run verificar-site</code>.</p>
+<p>Para regenerar as páginas institucionais depois de editar o conteúdo em <code>landing/tools/paginas/</code>: <code>node landing/tools/gerar-paginas.mjs</code>.</p>
+
+<h2 id="documentos">Documentos técnicos</h2>
+<p>Ficam na pasta <code>docs/</code> do repositório:</p>
+<ul>
+  <li><strong>Design system</strong> (<code>docs/design/DESIGN_SYSTEM.md</code>): conceito, princípios, identidade, cores, tipografia e acessibilidade.</li>
+  <li><strong>Tokens de design</strong> (<code>DESIGN_TOKENS.md</code>) e <strong>especificação de movimento</strong> (<code>MOTION_SPEC.md</code>).</li>
+  <li><strong>Inventário de componentes</strong> (<code>COMPONENT_INVENTORY.md</code>) e <strong>plano de adaptação</strong> (<code>ADAPTATION_PLAN.md</code>, análise do LocalSend). Parte desses documentos foi escrita antes da implementação real e ainda descreve recursos que o projeto decidiu não construir (pareamento, rota remota).</li>
+  <li><strong>Relatórios</strong> de testes e de correções, e o <strong>guia de hospedagem</strong> (<code>docs/etapa3</code> e <code>docs/etapa4</code>).</li>
+</ul>
+
+<h2 id="licencas">Licenças e créditos</h2>
+<div class="table-wrap">
+  <table class="data-table">
+    <caption class="sr-only">Licenças dos componentes do projeto</caption>
+    <thead><tr><th scope="col">Componente</th><th scope="col">Origem</th><th scope="col">Licença</th><th scope="col">Observação</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Código do ERASÓ</th><td>Equipe do projeto</td><td>Apache License 2.0</td><td>Titular dos direitos autorais <span class="placeholder">[a definir]</span>. Textos do site: <span class="placeholder">[licença a definir]</span>.</td></tr>
+      <tr><th scope="row">Estrutura, medidas, pontos de quebra e animações da landing</th><td><a href="https://github.com/localsend/website" target="_blank" rel="noopener">localsend/website</a></td><td>Apache License 2.0</td><td>Adaptados para a identidade do ERASÓ. Atribuição no rodapé, no início de <code>landing/styles.css</code> e em <code>landing/THIRD_PARTY_NOTICES.md</code>.</td></tr>
+      <tr><th scope="row">Aplicativo LocalSend</th><td><a href="https://github.com/localsend/localsend" target="_blank" rel="noopener">localsend/localsend</a></td><td>Apache License 2.0</td><td>Apenas referência funcional; nenhum código incorporado.</td></tr>
+      <tr><th scope="row">Fontes Instrument Sans, Lexend e IBM Plex Mono</th><td>Google Fonts</td><td>SIL Open Font License 1.1</td><td>Carregadas do Google Fonts (veja <a href="privacidade.html#terceiros">Privacidade</a>).</td></tr>
+      <tr><th scope="row">Ícones</th><td>Equipe do projeto</td><td><span class="placeholder">[a definir]</span></td><td>Ícones de traço desenhados para o projeto.</td></tr>
+      <tr><th scope="row">Logotipo e símbolo ERASÓ</th><td>Equipe do projeto</td><td><span class="placeholder">[direitos a definir]</span></td><td>O símbolo vetorial atual é provisório, recriado a partir do PNG oficial; falta o SVG oficial.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 id="contribuir">Como contribuir</h2>
+<p>As regras de contribuição acompanham o repositório (<code>CONTRIBUTING.md</code>); contribuições são licenciadas sob a Apache License 2.0. Para relatar problemas ou sugerir melhorias, use o <a href="contato.html">Contato</a>; para falhas de segurança, veja <a href="seguranca.html#reportar">Segurança</a>.</p>
+
+<h2 id="creditos">Créditos</h2>
+<p>O ERASÓ agradece aos autores e colaboradores do <a href="https://github.com/localsend/localsend" target="_blank" rel="noopener">LocalSend</a>, cuja organização funcional serviu de referência, e aos criadores das fontes usadas. A equipe do ERASÓ será listada em <a href="projeto-academico.html#ficha">Projeto acadêmico</a> quando for informada.</p>

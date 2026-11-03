@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 134 108">
+  <!-- Símbolo vetorial PROVISÓRIO (traçado a partir do PNG oficial). Trocar pelo SVG oficial — dúvida D11. -->
+  <path d="M48 12 A72 72 0 0 1 132 56" fill="none" stroke="#F76100" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M3 68 A68 68 0 0 0 70 105" fill="none" stroke="#023E21" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M34 30 H92 Q116 30 116 46 Q116 59 101 61" fill="none" stroke="#F76100" stroke-width="10.5" stroke-linecap="round"/>
+  <path d="M86 41 Q76 54 60 55 H34 Q19 55 19 64 Q19 73 34 73 H103" fill="none" stroke="#004F29" stroke-width="10.5" stroke-linecap="round"/>
+  <circle cx="34" cy="30" r="12" fill="#F76100"/>
+  <circle cx="103" cy="73.5" r="12.5" fill="#0C884A"/>
+</svg>

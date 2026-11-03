@@ -1,0 +1,93 @@
+<!--meta {"file":"documentacao.html","nav":"documentacao","title":"Documentação e guia de utilização","lead":"Como usar o ERASÓ, atalhos, acessibilidade e onde está a documentação técnica.","desc":"Guia de utilização do ERASÓ (enviar, receber, salas, Caixa, configurações, diagnóstico, atalhos) e índice da documentação técnica.","notice":{"label":"Sobre este guia","html":"<p>O guia descreve o aplicativo como ele funciona hoje, em versão de protótipo funcional. O que ainda não existe está listado em <a href=\"como-funciona.html#o-que-existe\">Como funciona</a>.</p>"}} -->
+<h2 id="guia">Guia de utilização</h2>
+<p>Abra o <a href="../app/index.html">aplicativo</a> no computador e no celular. Os dois precisam estar no mesmo Wi-Fi (quando o servidor roda na rede local) ou na mesma <a href="#salas">sala</a>. Para pular a introdução, use o endereço com <code>?sem-intro</code> no final.</p>
+
+<h3 id="comecar">Primeiro uso</h3>
+<ol>
+  <li>Na primeira abertura, uma introdução de quatro passos pergunta o <strong>nome do aparelho</strong>, se ele fica <strong>visível</strong> e quem pode te enviar coisas <strong>automaticamente</strong>. Você pode pular e rever depois em <em>Configurações › Sobre o projeto › Rever introdução</em>.</li>
+  <li>O nome de fábrica é o que o aparelho realmente é: modelo ou sistema, navegador e o fim do identificador (por exemplo, <code>Windows · Edge · B797</code>). Os navegadores não revelam o nome da máquina. Você pode trocar o nome a qualquer momento.</li>
+  <li>A navegação tem cinco destinos: <strong>Compartilhar</strong>, <strong>Caixa</strong>, <strong>Atividade</strong>, <strong>Dispositivos</strong> e <strong>Configurações</strong>, na barra lateral (computador) ou na barra inferior (celular).</li>
+</ol>
+
+<h3 id="salas">Salas</h3>
+<p>Quando o servidor é público, o aplicativo pede um <strong>código de sala</strong>: só aparelhos com o mesmo código se enxergam. Escolha <em>Criar sala nova</em> e abra o <strong>link de convite</strong> no outro aparelho, ou digite um código que você já tem. Em <em>Configurações › Sala</em> é possível copiar o convite e sair da sala. Em um servidor na rede local, a sala é opcional: sem código, todos os aparelhos da rede se veem. Trate o código como uma senha de grupo.</p>
+
+<h3 id="enviar">Enviar</h3>
+<ol class="flow">
+  <li><strong>Escolha o que enviar</strong>Use os blocos <em>Arquivo, Pasta, Mídia, Texto, Link</em> ou <em>Colar</em>; ou arraste para qualquer lugar da janela; ou cole com <kbd>Ctrl</kbd> + <kbd>V</kbd>. A bandeja mostra quantos itens e o tamanho total; <em>Editar</em> permite renomear e remover; <em>Limpar</em> esvazia.</li>
+  <li><strong>Escolha o modo</strong><em>Um destino</em> (tocar no aparelho envia) ou <em>Vários</em> (marque aparelhos e use “Enviar para N aparelhos”).</li>
+  <li><strong>Escolha o destino</strong>As abas <em>Por perto</em> e <em>Favoritos</em> listam os aparelhos. O campo de busca filtra por nome, ID, sistema ou tipo. <em>Buscar novamente</em> consulta o servidor.</li>
+  <li><strong>Aguarde a resposta</strong>O destino pode aceitar, recusar ou pedir PIN. Se o aparelho não responder ou sair, o aplicativo mostra o motivo.</li>
+  <li><strong>Acompanhe</strong>O painel de transferências mostra progresso, velocidade e tempo restante reais; dá para cancelar e, se falhar, “Tentar de novo” ou “Diagnosticar”.</li>
+</ol>
+
+<h3 id="receber">Receber</h3>
+<ul>
+  <li>O pedido mostra <strong>quem</strong> envia e <strong>o quê</strong> (nomes, textos e tamanhos).</li>
+  <li><strong>Aceitar</strong> (também com <kbd>Enter</kbd>) ou <strong>Recusar</strong>. <kbd>Esc</kbd> <em>não</em> recusa, para evitar recusa acidental.</li>
+  <li>Antes de aceitar, você pode <strong>pular</strong> itens e <strong>renomear</strong> arquivos.</li>
+  <li>Textos e links recebidos podem ser copiados, abertos ou salvos na Caixa.</li>
+  <li>Os arquivos recebidos são salvos pelo navegador, na pasta de downloads (não há seletor de pasta). Receber vários arquivos pode acionar o aviso “permitir vários downloads”.</li>
+  <li>Com <em>Exigir PIN</em> ligado, quem envia precisa digitar o PIN que você definiu; o seu aparelho confere.</li>
+</ul>
+
+<h3 id="caixa">Caixa</h3>
+<p>Escreva, cole um link ou solte um arquivo na área de captura e guarde com o botão ou <kbd>Ctrl</kbd> + <kbd>Enter</kbd>. Cada item permite <em>copiar</em>, <em>abrir</em> (links), <em>baixar</em> (arquivos), <em>fixar</em> no topo, <em>enviar para…</em> outro aparelho e <em>excluir</em> (com desfazer). A validade dos itens (1, 7 ou 30 dias) é uma opção de <em>Configurações</em>; itens fixados não expiram. A Caixa fica <strong>somente neste navegador</strong>: limpar os dados do site apaga a Caixa.</p>
+
+<h3 id="atividade">Atividade e Dispositivos</h3>
+<ul>
+  <li><strong>Atividade</strong> é o histórico deste aparelho, com busca, filtros e <em>Limpar histórico</em> (os arquivos continuam no disco). A conferência de integridade (CRC32) só é indicada nos recebimentos em que os dois lados a usaram.</li>
+  <li><strong>Dispositivos</strong> lista os aparelhos que estão na rede ou sala agora e os seus favoritos. O botão ⓘ abre os detalhes, como o identificador completo.</li>
+</ul>
+
+<h3 id="configuracoes">Configurações</h3>
+<p>Tudo é salvo no navegador e aplicado na hora. A busca no topo filtra as opções. Há quatro temas (<em>Sistema, Claro, Escuro e Alto contraste</em>), controle de animações, nome do aparelho, sala, receber automaticamente, PIN, conferência de integridade, histórico, esconder o painel ao terminar e validade da Caixa.</p>
+
+<h3 id="diagnostico">Diagnóstico de conexão</h3>
+<p>A tela <em>Diagnóstico</em> verifica o navegador, o servidor, a visibilidade, os aparelhos encontrados e a <strong>conexão direta</strong> com cada aparelho (com a latência medida). Quando algo falha, mostra o motivo e o que fazer. Redes com “isolamento de clientes”, comuns em Wi-Fi de instituições e de visitantes, impedem a conexão direta mesmo com o servidor funcionando. O botão <em>Copiar relatório</em> gera um texto para enviar à equipe.</p>
+
+<h2 id="atalhos">Atalhos de teclado</h2>
+<div class="table-wrap">
+  <table class="data-table">
+    <caption class="sr-only">Atalhos de teclado do aplicativo</caption>
+    <thead><tr><th scope="col">Atalho</th><th scope="col">O que faz</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>K</kbd></th><td>Abre a paleta de comandos (ações, aparelhos, ajustes). Também encontra aparelhos pelo ID.</td></tr>
+      <tr><th scope="row"><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>V</kbd></th><td>Cola texto ou arquivos na seleção.</td></tr>
+      <tr><th scope="row"><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>1</kbd> … <kbd>5</kbd></th><td>Vai para Compartilhar, Caixa, Atividade, Dispositivos ou Configurações.</td></tr>
+      <tr><th scope="row"><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Enter</kbd></th><td>Adiciona o texto à seleção ou guarda na Caixa.</td></tr>
+      <tr><th scope="row"><kbd>Enter</kbd></th><td>Aceita um pedido de recebimento.</td></tr>
+      <tr><th scope="row"><kbd>Esc</kbd></th><td>Fecha painel, diálogo ou paleta (não recusa pedidos).</td></tr>
+      <tr><th scope="row"><kbd>?</kbd></th><td>Mostra a lista de atalhos.</td></tr>
+      <tr><th scope="row">Botão direito no cartão</th><td>Abre os detalhes do aparelho.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 id="acessibilidade">Acessibilidade</h2>
+<p>O design system define como meta a conformidade com WCAG 2.2 nível AA: contraste calculado para cada par de cores, tema de alto contraste, uso pelo teclado, rótulos de texto além de cor, regiões anunciadas por leitores de tela e respeito à preferência por movimento reduzido. <strong>A meta ainda não foi auditada</strong> com leitores de tela nem por avaliação independente. Se encontrar uma barreira, avise pelo <a href="contato.html">contato</a>.</p>
+
+<h2 id="glossario">Glossário</h2>
+<dl class="facts">
+  <dt>Aparelho</dt><dd>Celular, tablet, computador ou navegador que tem o ERASÓ aberto.</dd>
+  <dt>Servidor</dt><dd>Programa que apresenta os aparelhos uns aos outros e repassa as mensagens iniciais da conexão. Não recebe arquivos nem textos.</dd>
+  <dt>Sala</dt><dd>Grupo de aparelhos que usam o mesmo código secreto e, por isso, se enxergam.</dd>
+  <dt>Conexão direta</dt><dd>Canal criptografado (WebRTC) aberto entre os dois navegadores, por onde seguem os arquivos e textos.</dd>
+  <dt>STUN e TURN</dt><dd>Serviços que ajudam a abrir a conexão direta entre redes diferentes (STUN) ou a retransmiti-la quando ela não abre (TURN).</dd>
+  <dt>PIN</dt><dd>Senha curta que quem envia precisa digitar para falar com o seu aparelho.</dd>
+  <dt>Recebimento automático</dt><dd>Aceitar pedidos sem perguntar, só de quem você escolher.</dd>
+  <dt>Caixa</dt><dd>Seu espaço para guardar textos, links e arquivos neste aparelho.</dd>
+  <dt>Atividade</dt><dd>Histórico do que foi enviado e recebido neste aparelho.</dd>
+</dl>
+
+<h2 id="documentos">Documentação técnica</h2>
+<p>Os documentos técnicos acompanham o código-fonte, na pasta <code>docs/</code> do repositório: design system, tokens, inventário de componentes, especificação de movimento, plano de adaptação, relatórios de testes e o guia de hospedagem. O endereço do repositório está em <a href="codigo-fonte.html">Código-fonte e GitHub</a>.</p>
+
+<h2 id="limites">Limites atuais</h2>
+<ul>
+  <li>O arquivo recebido fica na memória do navegador até terminar; o limite é de 2 GB por pedido.</li>
+  <li>Redes muito restritivas só conectam com um servidor de retransmissão (TURN), que ainda não foi definido.</li>
+  <li>O endereço sem HTTPS (servidor na rede local) impede o botão “Colar” de ler a área de transferência; <kbd>Ctrl</kbd> + <kbd>V</kbd> continua funcionando.</li>
+  <li>Uma aba por navegador: abrir o ERASÓ em outra aba do mesmo navegador desconecta a primeira.</li>
+  <li>Só há português do Brasil.</li>
+</ul>

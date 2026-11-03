@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Política de privacidade e LGPD · ERASÓ</title>
+<meta name="description" content="Política de privacidade do ERASÓ: dados tratados pelo site, pelo aplicativo e pelo servidor, serviços de terceiros e direitos do titular (LGPD).">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ERASÓ">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Política de privacidade e LGPD · ERASÓ">
+<meta property="og:description" content="Política de privacidade do ERASÓ: dados tratados pelo site, pelo aplicativo e pelo servidor, serviços de terceiros e direitos do titular (LGPD).">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script>
+  // Tema antes da pintura (preferência salva ou do sistema)
+  try {
+    const t = localStorage.getItem('eraso-landing-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Lexend:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Símbolo vetorial PROVISÓRIO, traçado a partir do PNG oficial (substituir pelo SVG oficial — dúvida D11) -->
+    <symbol id="eraso-symbol" viewBox="0 0 134 108">
+      <path d="M48 12 A72 72 0 0 1 132 56" fill="none" stroke="#F76100" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M3 68 A68 68 0 0 0 70 105" fill="none" stroke="var(--logo-green-orbit, #023E21)" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M34 30 H92 Q116 30 116 46 Q116 59 101 61" fill="none" stroke="#F76100" stroke-width="10.5" stroke-linecap="round"/>
+      <path d="M86 41 Q76 54 60 55 H34 Q19 55 19 64 Q19 73 34 73 H103" fill="none" stroke="var(--logo-green-path, #004F29)" stroke-width="10.5" stroke-linecap="round"/>
+      <circle cx="34" cy="30" r="12" fill="#F76100"/>
+      <circle cx="103" cy="73.5" r="12.5" fill="var(--logo-green-node, #0C884A)"/>
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.4-4.4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+    <symbol id="i-remote" viewBox="0 0 24 24"><circle cx="5" cy="17" r="2.3"/><circle cx="19" cy="17" r="2.3"/><path d="M6.4 15.2C8 8.5 16 8.5 17.6 15.2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.4 8.4-7 10-3.6-1.6-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M4 13h4l2 3h4l2-3h4"/><path d="M4 13 6.5 6h11L20 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4 14 20 11 13Z"/><path d="M11 13 20 4"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M2.5 6.5A2 2 0 0 1 4.5 4.5h4.6l2 2.2h8.4a2 2 0 0 1 2 2v9.3a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-cursor" viewBox="0 0 24 24"><path d="M3 3l17 7.2-7.3 2.5L10.2 20z"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16.2 9.6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="navbar" id="navbar">
+  <nav class="container" aria-label="Principal">
+    <a href="index.html" class="logo" aria-label="ERASÓ — início">
+      <svg class="symbol" viewBox="0 0 134 108" aria-hidden="true"><use href="#eraso-symbol"/></svg>
+      <img class="wordmark wordmark-light" src="assets/letreiro.png" alt="ERASÓ">
+      <img class="wordmark wordmark-dark" src="assets/letreiro-invertido.png" alt="ERASÓ">
+    </a>
+    <ul class="nav-links">
+      <li><a href="sobre.html">Sobre</a></li>
+      <li><a href="como-funciona.html">Como funciona</a></li>
+      <li><a href="documentacao.html">Documentação</a></li>
+      <li><a href="contato.html">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Alternar entre tema claro e escuro">
+        <svg class="icon moon" aria-hidden="true"><use href="#i-moon"/></svg>
+        <svg class="icon sun" aria-hidden="true"><use href="#i-sun"/></svg>
+      </button>
+      <div class="lang-switcher" id="lang">
+        <button class="nav-action-btn" id="lang-btn" aria-label="Idioma: Português (Brasil)" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-dropdown">
+          <span class="lang-label-long">Português (Brasil)</span><span class="lang-label-short">Português</span>
+          <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
+        </button>
+        <div class="lang-dropdown" id="lang-dropdown" hidden>
+          <label class="lang-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Buscar idioma</span><input type="text" id="lang-search" placeholder="Buscar idioma…" autocomplete="off"></label>
+          <div class="lang-list" role="listbox" aria-label="Idioma">
+            <button class="lang-item" role="option" aria-selected="true" data-lang-name="Português (Brasil) Portuguese (Brazil)"><span><span class="lang-name">Português (Brasil)</span><span class="lang-en">Portuguese (Brazil)</span></span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button>
+          </div>
+          <p class="lang-empty" id="lang-empty" hidden>Nenhum idioma encontrado.</p>
+        </div>
+      </div>
+      <a href="../app/index.html" class="btn btn-primary btn-sm hide-mobile">Acessar o app</a>
+      <button class="mobile-toggle" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg class="icon open" aria-hidden="true"><use href="#i-menu"/></svg>
+        <svg class="icon close" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <ul class="mobile-nav-links">
+      <li><a href="sobre.html">Sobre</a></li>
+      <li><a href="como-funciona.html">Como funciona</a></li>
+      <li><a href="documentacao.html">Documentação</a></li>
+      <li><a href="contato.html">Contato</a></li>
+    </ul>
+    <a href="../app/index.html" class="btn btn-primary btn-block">Acessar o app</a>
+  </div>
+</header>
+
+<main id="conteudo">
+  <section class="page-header">
+    <div class="container text-center">
+      <nav class="breadcrumb" aria-label="Você está em">
+        <ol><li><a href="index.html">Início</a></li><li aria-current="page">Política de privacidade e LGPD</li></ol>
+      </nav>
+      <p><span class="badge">Rascunho · versão 0.2 · 02/11/2026</span></p>
+      <h1>Política de privacidade e LGPD</h1>
+      <p class="subtitle">Quais dados o ERASÓ trata, onde ficam, quem os recebe e quais são os seus direitos segundo a LGPD.</p>
+    </div>
+  </section>
+  <div class="page-body">
+    <article class="container legal-content">
+      <aside class="notice-box" aria-label="Rascunho para validação">
+        <strong class="label">Rascunho para validação</strong>
+        <p>Esta política foi redigida a partir da <strong>auditoria técnica</strong> do código (site, aplicativo e servidor). Ela ainda <strong>não passou por validação jurídica</strong> nem pela instituição. Os campos marcados como <span class="placeholder">[a definir]</span> dependem de decisões da equipe.</p>
+      </aside>
+      <nav class="toc" aria-labelledby="toc-title">
+        <h2 id="toc-title">Nesta página</h2>
+        <ol>
+          <li><a href="#escopo">A que esta política se aplica</a></li>
+          <li><a href="#resumo">Resumo</a></li>
+          <li><a href="#controlador">Quem é responsável</a></li>
+          <li><a href="#dados-hoje">Dados tratados</a></li>
+          <li><a href="#terceiros">Serviços de terceiros</a></li>
+          <li><a href="#cookies">Cookies e armazenamento local</a></li>
+          <li><a href="#salas">Salas e códigos</a></li>
+          <li><a href="#futuras">Funcionalidades que não existem</a></li>
+          <li><a href="#bases">Finalidades, bases legais e compartilhamento</a></li>
+          <li><a href="#direitos">Seus direitos como titular</a></li>
+          <li><a href="#alteracoes">Alterações nesta política</a></li>
+        </ol>
+      </nav>
+<h2 id="escopo">A que esta política se aplica</h2>
+<p>Ela cobre o <strong>site do ERASÓ</strong>, o <strong>aplicativo web</strong> (protótipo funcional) e o <strong>servidor</strong> que apresenta os aparelhos uns aos outros. Ela não cobre serviços de terceiros que o aplicativo usa (veja <a href="#terceiros">Serviços de terceiros</a>).</p>
+
+<h2 id="resumo">Resumo</h2>
+<ul>
+  <li>O ERASÓ <strong>não tem conta, cadastro, formulário, cookies nem ferramentas de análise</strong> (Google Analytics ou similares).</li>
+  <li><strong>Arquivos, textos e links</strong> que você envia vão <strong>direto de um aparelho ao outro</strong>, criptografados. O servidor <strong>não os recebe nem os guarda</strong>.</li>
+  <li>O servidor conhece, <strong>apenas em memória e enquanto o aparelho está conectado</strong>: o identificador aleatório do aparelho, o nome, o tipo, o sistema e navegador, o código da sala e o endereço IP (usado para limitar abusos). O código do servidor <strong>não grava registros</strong>.</li>
+  <li>Histórico, Caixa e preferências ficam <strong>no seu navegador</strong>; você pode apagá-los quando quiser.</li>
+  <li>Terceiros que recebem dados técnicos: o provedor de <strong>hospedagem</strong>, o serviço <strong>STUN/TURN</strong> e o <strong>Google Fonts</strong>.</li>
+</ul>
+
+<h2 id="controlador">Quem é responsável</h2>
+<dl class="facts">
+  <dt>Controlador</dt><dd><span class="placeholder">[a definir — instituição ou equipe do projeto]</span></dd>
+  <dt>Encarregado (DPO)</dt><dd><span class="placeholder">[a definir]</span></dd>
+  <dt>Canal para pedidos de titulares</dt><dd><span class="placeholder">[a definir]</span>. Enquanto isso, veja <a href="contato.html">Contato</a></dd>
+</dl>
+<p>A LGPD exige que o controlador indique um encarregado pelo tratamento de dados pessoais (art. 41). Essa indicação ainda não foi feita.</p>
+
+<h2 id="dados-hoje">Dados tratados</h2>
+<div class="table-wrap">
+  <table class="data-table">
+    <caption class="sr-only">Informações guardadas ou enviadas pelo site, pelo aplicativo e pelo servidor</caption>
+    <thead><tr><th scope="col">Informação</th><th scope="col">Onde fica</th><th scope="col">Para quê</th><th scope="col">Sai do seu aparelho?</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>eraso-landing-theme</code> (site)</th><td>Navegador (<code>localStorage</code>)</td><td>Lembrar o tema claro ou escuro</td><td>Não</td></tr>
+      <tr><th scope="row"><code>eraso-theme</code>, <code>eraso-motion</code>, <code>eraso-onboarded</code></th><td>Navegador (<code>localStorage</code>)</td><td>Tema, animações e não repetir a introdução</td><td>Não</td></tr>
+      <tr><th scope="row"><code>eraso-prefs</code>: identificador aleatório do aparelho, nome, visibilidade, <strong>PIN</strong>, favoritos, prazo da Caixa, sala e demais opções</th><td>Navegador (<code>localStorage</code>). O PIN fica salvo <strong>sem criptografia</strong>, neste navegador</td><td>Manter suas configurações</td><td>O identificador, o nome e a sala vão ao servidor e ao aparelho com que você troca arquivos; o restante, não</td></tr>
+      <tr><th scope="row"><code>eraso-atividade</code>: histórico de envios e recebimentos (nomes, tamanhos, aparelhos, horários e textos recebidos)</th><td>Navegador (<code>localStorage</code>)</td><td>Mostrar a Atividade</td><td>Não</td></tr>
+      <tr><th scope="row">Caixa: textos, links e <strong>arquivos</strong> guardados por você</th><td>Navegador (IndexedDB)</td><td>Guardar para depois</td><td>Não, a menos que você os envie a outro aparelho</td></tr>
+      <tr><th scope="row">Arquivos, textos e links enviados</th><td>Memória do navegador durante a transferência; depois, o arquivo é salvo pelo navegador na pasta de downloads</td><td>Entregar o conteúdo</td><td><strong>Sim, direto ao aparelho de destino</strong>, criptografado. Não passa pelo servidor</td></tr>
+      <tr><th scope="row">Identificador, nome, tipo, sistema e navegador do aparelho, código da sala, visibilidade e endereço IP</th><td>Memória do servidor, enquanto o aparelho está conectado</td><td>Mostrar o aparelho aos outros da mesma rede ou sala; limitar abusos</td><td><strong>Sim, ao servidor</strong>. Identificador, nome, tipo e sistema também são mostrados aos aparelhos da mesma sala</td></tr>
+      <tr><th scope="row">Mensagens de sinalização (oferta, resposta e candidatos de conexão, que contêm endereços IP de rede)</th><td>Repassadas pelo servidor, sem guardar</td><td>Abrir a conexão direta</td><td><strong>Sim</strong>. O aparelho de destino também recebe o seu endereço de rede, como em qualquer conexão direta</td></tr>
+      <tr><th scope="row">Endereço IP e dados técnicos do navegador</th><td>Servidores do Google Fonts</td><td>Entregar as fontes de texto</td><td><strong>Sim</strong>, ao Google (veja a próxima seção)</td></tr>
+      <tr><th scope="row">Registros de acesso do servidor</th><td>Provedor de hospedagem <span class="placeholder">[a definir]</span></td><td>Operação e segurança</td><td><strong>Sim</strong>, ao provedor, quando o site for publicado</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>Outros pontos verificados no código: o aplicativo lê a área de transferência <em>só</em> quando você aciona “Colar” e escreve nela <em>só</em> quando você aciona “Copiar” (o navegador pode pedir permissão); <strong>não usa câmera, microfone, localização nem notificações</strong>. O servidor envia ao navegador uma política de segurança de conteúdo que restringe de onde o site pode carregar recursos.</p>
+
+<h2 id="terceiros">Serviços de terceiros</h2>
+<ul>
+  <li><strong>Hospedagem.</strong> O provedor que hospedar o servidor <span class="placeholder">[a definir]</span> costuma registrar endereço IP e horário dos acessos, fora do controle do ERASÓ.</li>
+  <li><strong>STUN</strong> (por padrão, o serviço público da Cloudflare). Para descobrir o endereço público do seu aparelho, o navegador consulta esse serviço, que recebe o seu endereço IP. Só ocorre em servidor público.</li>
+  <li><strong>TURN</strong> (opcional, <span class="placeholder">[a definir]</span>). Se for usado, retransmite o tráfego quando a conexão direta falha. O operador vê endereços e volume de dados, não o conteúdo, que continua criptografado de ponta a ponta.</li>
+  <li><strong>Google Fonts.</strong> Ao abrir qualquer página, seu navegador solicita as fontes a <code>fonts.googleapis.com</code> e <code>fonts.gstatic.com</code>. O Google recebe, nessa solicitação, seu endereço IP e dados técnicos do navegador, conforme a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">política de privacidade do Google</a>. Empacotar as fontes no próprio site é uma decisão pendente.</li>
+  <li><strong>Links externos</strong> (ONU, GitHub, Apache e outros). Ao clicar, você sai do ERASÓ e passa a seguir as regras do outro site.</li>
+</ul>
+
+<h2 id="cookies">Cookies e armazenamento local</h2>
+<p>O ERASÓ <strong>não define cookies</strong>. Ele usa o armazenamento do navegador (<code>localStorage</code> e IndexedDB) para as informações listadas na tabela. Para apagá-las, use <em>Limpar histórico</em> e a exclusão de itens no aplicativo ou limpe os dados do site nas configurações do seu navegador.</p>
+
+<h2 id="salas">Salas e códigos</h2>
+<p>O código de sala funciona como senha de grupo: quem o conhecer entra na sala e vê o nome, o tipo e o sistema dos aparelhos presentes, e pode enviar pedidos a eles (cada recebimento continua dependendo da sua aprovação e do PIN, se você o ativou). Compartilhe o código apenas com quem deve entrar e crie um novo para cada grupo. Ao sair da sala ou fechar a página, o seu aparelho some da lista.</p>
+
+<h2 id="futuras">Funcionalidades que não existem</h2>
+<p>Pareamento permanente entre aparelhos, Caixa sincronizada entre aparelhos e envio por link para quem não tem o aplicativo <strong>não existem</strong>. Se forem construídas, elas poderão tratar mais dados pessoais (por exemplo, conteúdo guardado em servidor). Antes disso, esta política será atualizada, a base legal (LGPD, art. 7º) e o prazo de retenção serão definidos, e o aviso correspondente será exibido no próprio aplicativo <span class="placeholder">[compromisso a ser confirmado pela equipe]</span>.</p>
+
+<h2 id="bases">Finalidades, bases legais e compartilhamento</h2>
+<p>O servidor trata dados mínimos de conexão (identificador, nome, sala e endereço IP), em memória, para entregar o serviço que você pediu (mostrar e conectar aparelhos) e para proteger o serviço contra abuso. A base legal aplicável e o prazo de retenção dos registros do provedor de hospedagem <span class="placeholder">[a definir com orientação jurídica]</span>. Os dados não são vendidos nem usados para publicidade ou análise de comportamento.</p>
+
+<h2 id="direitos">Seus direitos como titular</h2>
+<p>Segundo o art. 18 da <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" target="_blank" rel="noopener">Lei nº 13.709/2018 (LGPD)</a>, você pode pedir, a respeito dos seus dados pessoais tratados pelo controlador:</p>
+<ul>
+  <li>confirmação de que existe tratamento;</li>
+  <li>acesso aos dados;</li>
+  <li>correção de dados incompletos, inexatos ou desatualizados;</li>
+  <li>anonimização, bloqueio ou eliminação de dados desnecessários, excessivos ou tratados em desconformidade;</li>
+  <li>portabilidade dos dados a outro fornecedor;</li>
+  <li>eliminação dos dados tratados com o seu consentimento;</li>
+  <li>informação sobre com quem os dados foram compartilhados;</li>
+  <li>informação sobre a possibilidade de não consentir e suas consequências;</li>
+  <li>revogação do consentimento.</li>
+</ul>
+<p>Como exercer: <span class="placeholder">[canal a definir]</span>. Como o servidor do ERASÓ não guarda dados além da conexão em curso, é mais provável que um pedido se refira ao provedor de hospedagem, ao serviço STUN/TURN ou ao Google (fontes); nesses casos, procure diretamente o serviço. Você também pode reclamar à <a href="https://www.gov.br/anpd/pt-br" target="_blank" rel="noopener">Autoridade Nacional de Proteção de Dados (ANPD)</a>.</p>
+
+<h2 id="alteracoes">Alterações nesta política</h2>
+<p>Esta política muda quando o produto mudar. A versão e a data ficam no topo da página; alterações relevantes serão destacadas no site e no aplicativo <span class="placeholder">[mecanismo a definir]</span>. Versão atual: <strong>0.2 (rascunho)</strong>, de 02/11/2026.</p>
+<p>Veja também: <a href="seguranca.html">Segurança</a> · <a href="termos.html">Termos de uso</a> · <a href="contato.html">Contato</a>.</p>
+    </article>
+  </div>
+</main>
+
+<footer class="footer section">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo" aria-label="ERASÓ — voltar ao topo">
+          <svg class="symbol" viewBox="0 0 134 108" aria-hidden="true"><use href="#eraso-symbol"/></svg>
+          <img class="wordmark wordmark-light" src="assets/letreiro.png" alt="ERASÓ">
+          <img class="wordmark wordmark-dark" src="assets/letreiro-invertido.png" alt="ERASÓ">
+        </a>
+        <p>Compartilhamento de arquivos, textos e links entre aparelhos. Projeto de extensão universitária em fase de protótipo funcional.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Produto</h4>
+          <ul>
+            <li><a href="../app/index.html">Acessar o ERASÓ</a></li>
+            <li><a href="como-funciona.html">Como funciona</a></li>
+            <li><a href="index.html#features">Recursos</a></li>
+            <li><a href="index.html#faq">Perguntas frequentes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Projeto</h4>
+          <ul>
+            <li><a href="sobre.html">Sobre o ERASÓ</a></li>
+            <li><a href="projeto-academico.html">Projeto acadêmico</a></li>
+            <li><a href="ods.html">ODS e impacto</a></li>
+            <li><a href="contato.html">Contato</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal e segurança</h4>
+          <ul>
+            <li><a href="privacidade.html">Privacidade e LGPD</a></li>
+            <li><a href="termos.html">Termos de uso</a></li>
+            <li><a href="seguranca.html">Segurança</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Para desenvolvedores</h4>
+          <ul>
+            <li><a href="documentacao.html">Documentação e guia</a></li>
+            <li><a href="codigo-fonte.html">Código-fonte e GitHub</a></li>
+            <li><a href="codigo-fonte.html#documentos">Documentos técnicos</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">&copy; 2026 ERASÓ · Projeto de extensão universitária, Cruzeiro do Sul Virtual <span class="placeholder">[vínculo a confirmar]</span>.</div>
+      <div class="attribution">Estrutura inspirada no <a href="https://github.com/localsend/website" target="_blank" rel="noopener">site do LocalSend</a>, sob <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener" class="license-link">Apache License 2.0</a>.</div>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!--meta {"file":"sobre.html","nav":"sobre","title":"Sobre o ERASÓ","lead":"Aplicação para compartilhar arquivos, textos e links entre aparelhos, em poucos passos e sem depender de aplicativos de mensagem.","desc":"O que é o ERASÓ, por que o projeto existe, em que estágio está e como se relaciona com o LocalSend.","badge":"Protótipo funcional"} -->
+<h2 id="o-que-e">O que é o ERASÓ</h2>
+<p class="lead">O ERASÓ é uma aplicação para compartilhar arquivos, imagens, textos e links entre os seus aparelhos e com pessoas próximas, em poucos passos.</p>
+<p>O projeto propõe uma alternativa ao uso de aplicativos de mensagem, como o WhatsApp Web, para transferências pessoais (o hábito de “mandar para mim mesmo”): abrir o ERASÓ, escolher o conteúdo e tocar no aparelho de destino.</p>
+<p>O ERASÓ roda no navegador, sem instalar nada. Os aparelhos se encontram na mesma rede ou em uma sala com código e trocam o conteúdo direto, de um navegador ao outro, de forma criptografada; o servidor só apresenta os aparelhos. Os detalhes estão em <a href="como-funciona.html">Como funciona</a>.</p>
+
+<h2 id="principios">Princípios de design</h2>
+<p>Estes princípios estão documentados no design system do projeto (na pasta <code>docs/design</code> do repositório) e orientam todas as telas do aplicativo:</p>
+<ul>
+  <li><strong>Dois toques para compartilhar:</strong> abrir, escolher o conteúdo e tocar no aparelho.</li>
+  <li><strong>O estado está sempre à vista:</strong> se este aparelho está visível, se há conexão com o servidor e o que está em andamento.</li>
+  <li><strong>Confiança explícita:</strong> quem envia e o que vem, informado em linguagem simples, antes de aceitar.</li>
+  <li><strong>Teclado e toque de primeira classe:</strong> tudo pode ser feito por teclado, paleta de comandos ou polegar.</li>
+  <li><strong>Inclusivo antes de sofisticado:</strong> rótulos sempre visíveis, contraste calculado e textos simples, para pessoas com diferentes níveis de familiaridade com tecnologia.</li>
+</ul>
+
+<h2 id="identidade">Identidade</h2>
+<p>O símbolo mostra dois pontos, de partida e de chegada, ligados por um caminho. Na interface, o <strong>laranja</strong> indica o que está em trânsito ou a próxima ação, e o <strong>verde</strong> indica o que chegou ou é confiável. A assinatura é <em>“De uma ponta à outra.”</em></p>
+
+<h2 id="estado">Estágio do projeto</h2>
+<p>O ERASÓ está em fase de <strong>protótipo funcional</strong>. A descoberta de aparelhos e a transferência de arquivos, textos e links entre aparelhos são <strong>reais</strong> e foram testadas com navegadores reais. Ainda faltam validação em mais aparelhos e navegadores, auditoria de segurança e de acessibilidade, e a definição de itens institucionais.</p>
+<div class="table-wrap">
+  <table class="data-table">
+    <caption class="sr-only">Situação de cada parte do projeto</caption>
+    <thead><tr><th scope="col">Parte do projeto</th><th scope="col">Situação</th><th scope="col">Observação</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Pesquisa de referências e design system</th><td><span class="chip chip-done">Concluída</span></td><td>Documentos na pasta <code>docs/design</code> do repositório (veja <a href="documentacao.html#documentos">Documentação</a>).</td></tr>
+      <tr><th scope="row">Aplicativo web: descoberta e transferência reais</th><td><span class="chip chip-done">Funciona</span></td><td>Testado de forma automática com navegadores reais; validação em celulares e outros navegadores em andamento.</td></tr>
+      <tr><th scope="row">Servidor de presença e sinalização, com salas</th><td><span class="chip chip-done">Funciona</span></td><td>Não recebe arquivos nem textos. A publicação na internet ainda não foi feita.</td></tr>
+      <tr><th scope="row">Landing page e páginas institucionais</th><td><span class="chip chip-proto">Em revisão</span></td><td>Textos jurídicos em rascunho, aguardando validação.</td></tr>
+      <tr><th scope="row">Conexão entre redes diferentes em qualquer rede</th><td><span class="chip chip-proto">Depende de TURN</span></td><td>Funciona na maioria das redes domésticas; redes restritas exigem um servidor de retransmissão ainda <span class="placeholder">[a definir]</span>.</td></tr>
+      <tr><th scope="row">Pareamento, Caixa sincronizada e envio por link</th><td><span class="chip chip-open">Não existe</span></td><td>Exigiriam contas ou armazenamento em servidor, que o projeto não tem.</td></tr>
+      <tr><th scope="row">Aplicação para computador</th><td><span class="chip chip-open">Não existe</span></td><td>O ERASÓ roda no navegador. <span class="placeholder">[prazo a definir]</span></td></tr>
+    </tbody>
+  </table>
+</div>
+<p>As consequências para <a href="seguranca.html">segurança</a> e <a href="privacidade.html">privacidade</a> estão explicadas nas respectivas páginas.</p>
+
+<h2 id="localsend">Relação com o LocalSend</h2>
+<p>O <a href="https://github.com/localsend/localsend" target="_blank" rel="noopener">LocalSend</a> é um aplicativo livre (Apache License 2.0) para enviar arquivos pela rede local. Ele é a principal referência <em>funcional</em> do ERASÓ: o fluxo “escolher → tocar no aparelho → aceitar”, a descoberta de aparelhos e o diagnóstico guiado inspiraram a organização do ERASÓ.</p>
+<p>O ERASÓ leva essa ideia para o navegador: sem instalar nada, com salas para aparelhos em redes diferentes, uma Caixa pessoal neste aparelho e um histórico de atividade. Nenhum código do LocalSend foi incorporado ao aplicativo. A estrutura visual desta landing page foi reproduzida do <a href="https://github.com/localsend/website" target="_blank" rel="noopener">site do LocalSend</a>, com crédito. Veja <a href="codigo-fonte.html#licencas">Código-fonte e licenças</a>.</p>
+<p>O ERASÓ é um projeto independente e não é afiliado ao LocalSend nem endossado por ele <span class="placeholder">[confirmar com a equipe]</span>.</p>
+
+<h2 id="quem">Quem desenvolve</h2>
+<p>O ERASÓ é um projeto acadêmico de extensão estudantil. Instituição, equipe e Objetivos de Desenvolvimento Sustentável estão em <a href="projeto-academico.html">Projeto acadêmico</a> e <a href="ods.html">ODS e impacto</a>.</p>
+
+<div class="cta-row">
+  <a class="btn btn-primary" href="../app/index.html">Acessar o ERASÓ</a>
+  <a class="btn btn-secondary" href="como-funciona.html">Ver como funciona</a>
+</div>

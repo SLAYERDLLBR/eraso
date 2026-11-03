@@ -1,0 +1,70 @@
+<!--meta {"file":"seguranca.html","nav":"seguranca","title":"Segurança","lead":"O que o ERASÓ faz para proteger o que você envia, o que ainda não faz e o que você pode fazer para se proteger.","desc":"Estado real da segurança do ERASÓ: criptografia da conexão direta, aprovação de pedidos, PIN, salas, proteções do servidor e limitações conhecidas.","notice":{"label":"Transparência","html":"<p>As medidas marcadas como <strong>implementadas</strong> estão no código e são cobertas por testes automáticos. O projeto <strong>não passou por auditoria de segurança independente</strong>. A tabela separa o que existe do que ainda não existe, sem prometer o que o código não faz.</p>"}} -->
+<h2 id="principios">Princípios</h2>
+<ul>
+  <li><strong>Você decide:</strong> cada recebimento passa por aprovação, a não ser que você escolha o contrário.</li>
+  <li><strong>Conteúdo fora do servidor:</strong> arquivos e textos vão direto entre os aparelhos; o servidor não os recebe.</li>
+  <li><strong>Mínimo de dados:</strong> sem contas e sem análise de uso (veja <a href="privacidade.html">Privacidade</a>).</li>
+  <li><strong>Transparência:</strong> distinguir o que existe do que ainda é projeto.</li>
+</ul>
+
+<h2 id="estado">O que existe hoje</h2>
+<div class="table-wrap">
+  <table class="data-table">
+    <caption class="sr-only">Medidas de segurança e sua situação</caption>
+    <thead><tr><th scope="col">Medida</th><th scope="col">Situação</th><th scope="col">Detalhe</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Criptografia da conexão direta</th><td><span class="chip chip-done">Implementada</span></td><td>O canal entre os navegadores é WebRTC com DTLS. Isso vale também quando o tráfego passa por um servidor de retransmissão (TURN).</td></tr>
+      <tr><th scope="row">Conteúdo não passa pelo servidor</th><td><span class="chip chip-done">Implementada</span></td><td>O servidor só repassa a sinalização; não recebe, não guarda e não registra arquivos nem textos.</td></tr>
+      <tr><th scope="row">Aprovação de cada pedido de recebimento</th><td><span class="chip chip-done">Implementada</span></td><td>Aceitar, recusar, pular e renomear. Aparelhos ocultos recusam pedidos.</td></tr>
+      <tr><th scope="row">PIN do destinatário</th><td><span class="chip chip-done">Implementada</span></td><td>O destino confere o PIN; três erros bloqueiam novas tentativas por 1 minuto. O PIN fica salvo sem criptografia no navegador do destino.</td></tr>
+      <tr><th scope="row">Salas com código secreto</th><td><span class="chip chip-done">Implementada</span></td><td>No servidor público, só aparelhos com o mesmo código se veem e trocam sinalização. Códigos gerados pelo aplicativo têm 10 caracteres aleatórios.</td></tr>
+      <tr><th scope="row">Autenticação de cada aparelho no servidor</th><td><span class="chip chip-done">Implementada</span></td><td>Cada conexão recebe um token aleatório; sem ele, não é possível sinalizar em nome de outro aparelho nem alterar o nome ou a visibilidade dele.</td></tr>
+      <tr><th scope="row">Limites contra abuso no servidor</th><td><span class="chip chip-done">Implementada</span></td><td>Limite de requisições por minuto e de conexões por IP, de aparelhos por sala e de tamanho das mensagens.</td></tr>
+      <tr><th scope="row">Proteções do navegador</th><td><span class="chip chip-done">Implementada</span></td><td>Política de segurança de conteúdo, <code>nosniff</code>, restrição de quem pode embutir o site e HTTPS obrigatório (HSTS) no servidor público. O servidor publica apenas o site e o aplicativo.</td></tr>
+      <tr><th scope="row">Conteúdo hostil vindo de outro aparelho</th><td><span class="chip chip-done">Testado</span></td><td>Nomes, textos e arquivos com HTML ou JavaScript são exibidos como texto, sem executar nada (teste automático).</td></tr>
+      <tr><th scope="row">Conferência de integridade (CRC32)</th><td><span class="chip chip-proto">Parcial</span></td><td>Detecta arquivo incompleto ou corrompido. Não é uma proteção contra adulteração intencional.</td></tr>
+      <tr><th scope="row">Verificação de identidade do outro aparelho</th><td><span class="chip chip-open">Não implementada</span></td><td>O servidor é confiável para a sinalização: um servidor malicioso poderia, em tese, intermediar a conexão. A comparação das impressões digitais da conexão nos dois aparelhos é viável, mas não foi feita.</td></tr>
+      <tr><th scope="row">Contas e identidade permanente de aparelhos</th><td><span class="chip chip-open">Não existe</span></td><td>Não há contas. A identidade do aparelho é um número aleatório guardado no navegador.</td></tr>
+      <tr><th scope="row">Auditoria de segurança independente</th><td><span class="chip chip-open">Não realizada</span></td><td>Os testes automáticos cobrem o servidor, a rede e a interface, mas não substituem uma auditoria.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 id="navegador">O que acontece no seu navegador</h2>
+<ul>
+  <li>Preferências, histórico e Caixa ficam no armazenamento do navegador, neste aparelho (veja <a href="privacidade.html#dados-hoje">Privacidade</a>).</li>
+  <li>Arquivos recebidos ficam na memória até a transferência terminar e são salvos pelo navegador; o limite é de 2 GB por pedido.</li>
+  <li>A área de transferência só é lida ou escrita quando você aciona “Colar” ou “Copiar”.</li>
+  <li>Câmera, microfone, localização e notificações <strong>não são usados</strong>.</li>
+  <li>Nenhum script de terceiros é carregado; a única requisição externa do site e do aplicativo é a de fontes do Google Fonts. Em servidor público, o navegador também consulta um servidor STUN.</li>
+</ul>
+
+<h2 id="boas-praticas">Boas práticas de uso</h2>
+<ul>
+  <li>Aceite apenas o que você reconhece. Desconfie de pedidos de aparelhos que você não conhece.</li>
+  <li>Use o <strong>código de sala gerado pelo aplicativo</strong> (10 caracteres aleatórios), não uma palavra fácil de adivinhar, e crie um novo para cada grupo.</li>
+  <li>Em redes públicas ou compartilhadas (laboratório, biblioteca, Wi-Fi da escola), use PIN e mantenha o recebimento automático em “sempre perguntar”.</li>
+  <li>Não compartilhe o PIN nem o código da sala fora de quem deve usá-los.</li>
+  <li>Se alguém na sala enviar pedidos indesejados, recuse, saia da sala e crie uma nova.</li>
+  <li>Mantenha o navegador atualizado.</li>
+</ul>
+
+<h2 id="abertas">Limitações conhecidas</h2>
+<div class="table-wrap">
+  <table class="data-table">
+    <caption class="sr-only">Limitações conhecidas</caption>
+    <thead><tr><th scope="col">Limitação</th><th scope="col">Efeito</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Servidor confiável para sinalização</th><td>Quem controla o servidor pode ver quem está online e tentar intermediar uma conexão nova. Não consegue ler conexões que ele não intermediou.</td></tr>
+      <tr><th scope="row">Quem tem o código da sala entra nela</th><td>Vê nomes e tipos dos aparelhos e pode enviar pedidos. Cada recebimento ainda exige a sua aprovação e o PIN, se ativado.</td></tr>
+      <tr><th scope="row">Endereços de rede visíveis para o outro aparelho</th><td>Como em qualquer conexão direta, o aparelho de destino recebe os endereços de rede usados na conexão.</td></tr>
+      <tr><th scope="row">Sem bloqueio de remetentes</th><td>Não há lista de bloqueio; a saída é recusar e trocar de sala.</td></tr>
+      <tr><th scope="row">Retomada de transferências interrompidas</th><td>Não existe: uma transferência que cai precisa ser refeita.</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>Os testes de segurança do servidor e o relatório da etapa de validação acompanham o código-fonte (veja <a href="codigo-fonte.html">Código-fonte e GitHub</a>).</p>
+
+<h2 id="reportar">Como relatar uma falha de segurança</h2>
+<p>Canal para relatos: <span class="placeholder">[a definir]</span>. Enquanto isso, use <a href="contato.html">Contato</a> e <strong>não publique</strong> detalhes da falha antes de a equipe responder.</p>
+<p>Ajuda muito informar: o que você fez, o que esperava, o que aconteceu, navegador e sistema, e capturas de tela sem dados pessoais. Prazo de resposta e política de divulgação: <span class="placeholder">[a definir]</span>.</p>

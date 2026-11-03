@@ -1,0 +1,67 @@
+<!--meta {"file":"como-funciona.html","nav":"como-funciona","title":"Como funciona","lead":"O envio acontece em três passos, direto de um navegador ao outro. O servidor só apresenta os aparelhos; o conteúdo não passa por ele.","desc":"Como o ERASÓ funciona: três passos, descoberta por rede ou por sala, aprovação de cada pedido, PIN opcional e transferência direta e criptografada entre os navegadores.","notice":{"label":"Estado atual","html":"<p>O ERASÓ é um <strong>protótipo funcional</strong>: a descoberta de aparelhos e a transferência são reais e foram testadas com navegadores reais. Ele ainda não passou por uma validação ampla. A <a href=\"#o-que-existe\">última seção</a> separa o que existe do que ainda não existe.</p>"}} -->
+<h2 id="tres-passos">O envio em três passos</h2>
+<ol class="flow">
+  <li><strong>Abra o ERASÓ</strong>No navegador do computador e do celular, no mesmo Wi-Fi ou na mesma sala. O aparelho recebe um nome e um identificador; você pode trocar o nome e ficar oculto quando quiser.</li>
+  <li><strong>Escolha o que enviar</strong>Arquivos, pastas, fotos, textos ou links. Arraste, cole com <kbd>Ctrl</kbd> + <kbd>V</kbd> ou toque em um dos blocos.</li>
+  <li><strong>Toque no aparelho</strong>O outro aparelho recebe um pedido. Quando ele aceita, a transferência começa e o progresso, a velocidade e o tempo restante aparecem no painel de transferências.</li>
+</ol>
+
+<!--parcial:fluxo-->
+
+<h2 id="encontro">Como os aparelhos se encontram</h2>
+<p>Navegadores não conseguem procurar outros aparelhos sozinhos. Por isso, cada navegador com o ERASÓ aberto avisa um <strong>servidor</strong> que está ali, e o servidor informa aos outros quem está disponível. Ele também repassa as mensagens iniciais que os dois navegadores trocam para abrir a conexão direta.</p>
+<div class="table-wrap">
+  <table class="data-table">
+    <caption class="sr-only">Formas de encontrar aparelhos</caption>
+    <thead><tr><th scope="col">Forma</th><th scope="col">Quando usar</th><th scope="col">Como funciona</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Mesma rede</th><td>Servidor rodando na rede local (modo local).</td><td>Todos os aparelhos que abrem o mesmo endereço, na mesma rede, aparecem em “Por perto”.</td></tr>
+      <tr><th scope="row">Sala com código</th><td>Aparelhos em redes diferentes, com o servidor público do projeto.</td><td>Você cria um código e abre o link de convite no outro aparelho. Só quem usa o mesmo código se vê.</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>Aparelhos que não estão visíveis ou que fecharam a página somem da lista. Os favoritos continuam listados, marcados como offline.</p>
+
+<h2 id="direto">O conteúdo vai direto entre os aparelhos</h2>
+<!--parcial:arquitetura-->
+<ul>
+  <li>Arquivos e textos seguem por um canal <strong>WebRTC</strong> entre os dois navegadores, <strong>criptografado</strong> (DTLS). O servidor <strong>não recebe nem guarda</strong> o conteúdo.</li>
+  <li>O envio tem controle de fluxo e, se você mantiver a opção ligada, cada arquivo é conferido por <strong>CRC32</strong> no destino. Arquivo incompleto ou com defeito é recusado, com mensagem clara.</li>
+  <li>Em redes diferentes, os aparelhos usam um servidor <strong>STUN</strong> para descobrir o endereço público. Quando nenhuma conexão direta é possível (algumas redes restritas), só um servidor de retransmissão (<strong>TURN</strong>) resolve; o tráfego retransmitido continua criptografado de ponta a ponta.</li>
+</ul>
+
+<h2 id="pedidos">Você aprova cada recebimento</h2>
+<ul>
+  <li>O pedido mostra <strong>quem</strong> está enviando e <strong>o quê</strong> (arquivos, textos, tamanhos).</li>
+  <li>Você pode <strong>aceitar</strong> ou <strong>recusar</strong>. Antes de aceitar, pode pular itens e renomear arquivos.</li>
+  <li>O <strong>recebimento automático</strong> é opcional: sempre perguntar (padrão), receber direto de favoritos ou receber de qualquer aparelho (esta última opção exibe um aviso de risco).</li>
+  <li>Você pode exigir um <strong>PIN</strong> de quem envia. O destino confere o PIN; três erros bloqueiam novas tentativas por 1 minuto.</li>
+  <li>Aparelhos ocultos recusam pedidos. Qualquer lado pode <strong>cancelar</strong> a transferência a qualquer momento, e nada é entregue.</li>
+</ul>
+
+<h2 id="modos">Dois modos de envio</h2>
+<ul>
+  <li><strong>Um destino:</strong> tocar no aparelho já envia; a seleção é limpa quando o destino aceita.</li>
+  <li><strong>Vários:</strong> você marca vários aparelhos e envia para todos de uma vez.</li>
+</ul>
+
+<h2 id="caixa">Atividade e Caixa, neste aparelho</h2>
+<p>A <strong>Atividade</strong> registra, neste navegador, o que foi enviado e recebido, com busca, filtros e opção de tentar de novo o que falhou. A <strong>Caixa</strong> guarda textos, links e arquivos neste aparelho, com prazo de 1, 7 ou 30 dias que você escolhe. Os dois ficam apenas no seu navegador: não são enviados a nenhum servidor nem aparecem em outros aparelhos.</p>
+
+<h2 id="o-que-existe">O que existe e o que não existe</h2>
+<div class="table-wrap">
+  <table class="data-table">
+    <caption class="sr-only">Situação dos recursos</caption>
+    <thead><tr><th scope="col">Recurso</th><th scope="col">Situação</th><th scope="col">Observação</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Descoberta na mesma rede ou sala</th><td><span class="chip chip-done">Funciona</span></td><td>Testada com navegadores reais.</td></tr>
+      <tr><th scope="row">Envio de arquivos, pastas, textos e links</th><td><span class="chip chip-done">Funciona</span></td><td>Limite de 2 GB por pedido; o arquivo recebido fica na memória do navegador até terminar.</td></tr>
+      <tr><th scope="row">Aprovação, PIN, cancelamento e histórico</th><td><span class="chip chip-done">Funciona</span></td><td>Histórico e Caixa ficam só neste aparelho.</td></tr>
+      <tr><th scope="row">Conexão entre redes diferentes</th><td><span class="chip chip-proto">Depende da rede</span></td><td>Usa STUN; redes restritas exigem um servidor TURN, que ainda <span class="placeholder">[a definir]</span>.</td></tr>
+      <tr><th scope="row">Validação em celulares e navegadores variados</th><td><span class="chip chip-proto">Em andamento</span></td><td>Testes automáticos em Chromium; demais navegadores dependem de teste manual.</td></tr>
+      <tr><th scope="row">Pareamento permanente, “Meus aparelhos” e verificação por símbolos</th><td><span class="chip chip-open">Não existe</span></td><td>Exigiria contas ou chaves por aparelho.</td></tr>
+      <tr><th scope="row">Caixa sincronizada entre aparelhos e envio por link para quem não tem o app</th><td><span class="chip chip-open">Não existe</span></td><td>Exigiria armazenamento em servidor.</td></tr>
+      <tr><th scope="row">Aplicativo de computador (pasta de destino, bandeja)</th><td><span class="chip chip-open">Não existe</span></td><td>O ERASÓ roda no navegador.</td></tr>
+    </tbody>
+  </table>
+</div>

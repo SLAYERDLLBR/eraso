@@ -1,0 +1,81 @@
+<!--meta {"file":"privacidade.html","nav":"privacidade","title":"Política de privacidade e LGPD","lead":"Quais dados o ERASÓ trata, onde ficam, quem os recebe e quais são os seus direitos segundo a LGPD.","desc":"Política de privacidade do ERASÓ: dados tratados pelo site, pelo aplicativo e pelo servidor, serviços de terceiros e direitos do titular (LGPD).","badge":"Rascunho · versão 0.2 · 02/11/2026","notice":{"label":"Rascunho para validação","html":"<p>Esta política foi redigida a partir da <strong>auditoria técnica</strong> do código (site, aplicativo e servidor). Ela ainda <strong>não passou por validação jurídica</strong> nem pela instituição. Os campos marcados como <span class=\"placeholder\">[a definir]</span> dependem de decisões da equipe.</p>"}} -->
+<h2 id="escopo">A que esta política se aplica</h2>
+<p>Ela cobre o <strong>site do ERASÓ</strong>, o <strong>aplicativo web</strong> (protótipo funcional) e o <strong>servidor</strong> que apresenta os aparelhos uns aos outros. Ela não cobre serviços de terceiros que o aplicativo usa (veja <a href="#terceiros">Serviços de terceiros</a>).</p>
+
+<h2 id="resumo">Resumo</h2>
+<ul>
+  <li>O ERASÓ <strong>não tem conta, cadastro, formulário, cookies nem ferramentas de análise</strong> (Google Analytics ou similares).</li>
+  <li><strong>Arquivos, textos e links</strong> que você envia vão <strong>direto de um aparelho ao outro</strong>, criptografados. O servidor <strong>não os recebe nem os guarda</strong>.</li>
+  <li>O servidor conhece, <strong>apenas em memória e enquanto o aparelho está conectado</strong>: o identificador aleatório do aparelho, o nome, o tipo, o sistema e navegador, o código da sala e o endereço IP (usado para limitar abusos). O código do servidor <strong>não grava registros</strong>.</li>
+  <li>Histórico, Caixa e preferências ficam <strong>no seu navegador</strong>; você pode apagá-los quando quiser.</li>
+  <li>Terceiros que recebem dados técnicos: o provedor de <strong>hospedagem</strong>, o serviço <strong>STUN/TURN</strong> e o <strong>Google Fonts</strong>.</li>
+</ul>
+
+<h2 id="controlador">Quem é responsável</h2>
+<dl class="facts">
+  <dt>Controlador</dt><dd><span class="placeholder">[a definir — instituição ou equipe do projeto]</span></dd>
+  <dt>Encarregado (DPO)</dt><dd><span class="placeholder">[a definir]</span></dd>
+  <dt>Canal para pedidos de titulares</dt><dd><span class="placeholder">[a definir]</span>. Enquanto isso, veja <a href="contato.html">Contato</a></dd>
+</dl>
+<p>A LGPD exige que o controlador indique um encarregado pelo tratamento de dados pessoais (art. 41). Essa indicação ainda não foi feita.</p>
+
+<h2 id="dados-hoje">Dados tratados</h2>
+<div class="table-wrap">
+  <table class="data-table">
+    <caption class="sr-only">Informações guardadas ou enviadas pelo site, pelo aplicativo e pelo servidor</caption>
+    <thead><tr><th scope="col">Informação</th><th scope="col">Onde fica</th><th scope="col">Para quê</th><th scope="col">Sai do seu aparelho?</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>eraso-landing-theme</code> (site)</th><td>Navegador (<code>localStorage</code>)</td><td>Lembrar o tema claro ou escuro</td><td>Não</td></tr>
+      <tr><th scope="row"><code>eraso-theme</code>, <code>eraso-motion</code>, <code>eraso-onboarded</code></th><td>Navegador (<code>localStorage</code>)</td><td>Tema, animações e não repetir a introdução</td><td>Não</td></tr>
+      <tr><th scope="row"><code>eraso-prefs</code>: identificador aleatório do aparelho, nome, visibilidade, <strong>PIN</strong>, favoritos, prazo da Caixa, sala e demais opções</th><td>Navegador (<code>localStorage</code>). O PIN fica salvo <strong>sem criptografia</strong>, neste navegador</td><td>Manter suas configurações</td><td>O identificador, o nome e a sala vão ao servidor e ao aparelho com que você troca arquivos; o restante, não</td></tr>
+      <tr><th scope="row"><code>eraso-atividade</code>: histórico de envios e recebimentos (nomes, tamanhos, aparelhos, horários e textos recebidos)</th><td>Navegador (<code>localStorage</code>)</td><td>Mostrar a Atividade</td><td>Não</td></tr>
+      <tr><th scope="row">Caixa: textos, links e <strong>arquivos</strong> guardados por você</th><td>Navegador (IndexedDB)</td><td>Guardar para depois</td><td>Não, a menos que você os envie a outro aparelho</td></tr>
+      <tr><th scope="row">Arquivos, textos e links enviados</th><td>Memória do navegador durante a transferência; depois, o arquivo é salvo pelo navegador na pasta de downloads</td><td>Entregar o conteúdo</td><td><strong>Sim, direto ao aparelho de destino</strong>, criptografado. Não passa pelo servidor</td></tr>
+      <tr><th scope="row">Identificador, nome, tipo, sistema e navegador do aparelho, código da sala, visibilidade e endereço IP</th><td>Memória do servidor, enquanto o aparelho está conectado</td><td>Mostrar o aparelho aos outros da mesma rede ou sala; limitar abusos</td><td><strong>Sim, ao servidor</strong>. Identificador, nome, tipo e sistema também são mostrados aos aparelhos da mesma sala</td></tr>
+      <tr><th scope="row">Mensagens de sinalização (oferta, resposta e candidatos de conexão, que contêm endereços IP de rede)</th><td>Repassadas pelo servidor, sem guardar</td><td>Abrir a conexão direta</td><td><strong>Sim</strong>. O aparelho de destino também recebe o seu endereço de rede, como em qualquer conexão direta</td></tr>
+      <tr><th scope="row">Endereço IP e dados técnicos do navegador</th><td>Servidores do Google Fonts</td><td>Entregar as fontes de texto</td><td><strong>Sim</strong>, ao Google (veja a próxima seção)</td></tr>
+      <tr><th scope="row">Registros de acesso do servidor</th><td>Provedor de hospedagem <span class="placeholder">[a definir]</span></td><td>Operação e segurança</td><td><strong>Sim</strong>, ao provedor, quando o site for publicado</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>Outros pontos verificados no código: o aplicativo lê a área de transferência <em>só</em> quando você aciona “Colar” e escreve nela <em>só</em> quando você aciona “Copiar” (o navegador pode pedir permissão); <strong>não usa câmera, microfone, localização nem notificações</strong>. O servidor envia ao navegador uma política de segurança de conteúdo que restringe de onde o site pode carregar recursos.</p>
+
+<h2 id="terceiros">Serviços de terceiros</h2>
+<ul>
+  <li><strong>Hospedagem.</strong> O provedor que hospedar o servidor <span class="placeholder">[a definir]</span> costuma registrar endereço IP e horário dos acessos, fora do controle do ERASÓ.</li>
+  <li><strong>STUN</strong> (por padrão, o serviço público da Cloudflare). Para descobrir o endereço público do seu aparelho, o navegador consulta esse serviço, que recebe o seu endereço IP. Só ocorre em servidor público.</li>
+  <li><strong>TURN</strong> (opcional, <span class="placeholder">[a definir]</span>). Se for usado, retransmite o tráfego quando a conexão direta falha. O operador vê endereços e volume de dados, não o conteúdo, que continua criptografado de ponta a ponta.</li>
+  <li><strong>Google Fonts.</strong> Ao abrir qualquer página, seu navegador solicita as fontes a <code>fonts.googleapis.com</code> e <code>fonts.gstatic.com</code>. O Google recebe, nessa solicitação, seu endereço IP e dados técnicos do navegador, conforme a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">política de privacidade do Google</a>. Empacotar as fontes no próprio site é uma decisão pendente.</li>
+  <li><strong>Links externos</strong> (ONU, GitHub, Apache e outros). Ao clicar, você sai do ERASÓ e passa a seguir as regras do outro site.</li>
+</ul>
+
+<h2 id="cookies">Cookies e armazenamento local</h2>
+<p>O ERASÓ <strong>não define cookies</strong>. Ele usa o armazenamento do navegador (<code>localStorage</code> e IndexedDB) para as informações listadas na tabela. Para apagá-las, use <em>Limpar histórico</em> e a exclusão de itens no aplicativo ou limpe os dados do site nas configurações do seu navegador.</p>
+
+<h2 id="salas">Salas e códigos</h2>
+<p>O código de sala funciona como senha de grupo: quem o conhecer entra na sala e vê o nome, o tipo e o sistema dos aparelhos presentes, e pode enviar pedidos a eles (cada recebimento continua dependendo da sua aprovação e do PIN, se você o ativou). Compartilhe o código apenas com quem deve entrar e crie um novo para cada grupo. Ao sair da sala ou fechar a página, o seu aparelho some da lista.</p>
+
+<h2 id="futuras">Funcionalidades que não existem</h2>
+<p>Pareamento permanente entre aparelhos, Caixa sincronizada entre aparelhos e envio por link para quem não tem o aplicativo <strong>não existem</strong>. Se forem construídas, elas poderão tratar mais dados pessoais (por exemplo, conteúdo guardado em servidor). Antes disso, esta política será atualizada, a base legal (LGPD, art. 7º) e o prazo de retenção serão definidos, e o aviso correspondente será exibido no próprio aplicativo <span class="placeholder">[compromisso a ser confirmado pela equipe]</span>.</p>
+
+<h2 id="bases">Finalidades, bases legais e compartilhamento</h2>
+<p>O servidor trata dados mínimos de conexão (identificador, nome, sala e endereço IP), em memória, para entregar o serviço que você pediu (mostrar e conectar aparelhos) e para proteger o serviço contra abuso. A base legal aplicável e o prazo de retenção dos registros do provedor de hospedagem <span class="placeholder">[a definir com orientação jurídica]</span>. Os dados não são vendidos nem usados para publicidade ou análise de comportamento.</p>
+
+<h2 id="direitos">Seus direitos como titular</h2>
+<p>Segundo o art. 18 da <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" target="_blank" rel="noopener">Lei nº 13.709/2018 (LGPD)</a>, você pode pedir, a respeito dos seus dados pessoais tratados pelo controlador:</p>
+<ul>
+  <li>confirmação de que existe tratamento;</li>
+  <li>acesso aos dados;</li>
+  <li>correção de dados incompletos, inexatos ou desatualizados;</li>
+  <li>anonimização, bloqueio ou eliminação de dados desnecessários, excessivos ou tratados em desconformidade;</li>
+  <li>portabilidade dos dados a outro fornecedor;</li>
+  <li>eliminação dos dados tratados com o seu consentimento;</li>
+  <li>informação sobre com quem os dados foram compartilhados;</li>
+  <li>informação sobre a possibilidade de não consentir e suas consequências;</li>
+  <li>revogação do consentimento.</li>
+</ul>
+<p>Como exercer: <span class="placeholder">[canal a definir]</span>. Como o servidor do ERASÓ não guarda dados além da conexão em curso, é mais provável que um pedido se refira ao provedor de hospedagem, ao serviço STUN/TURN ou ao Google (fontes); nesses casos, procure diretamente o serviço. Você também pode reclamar à <a href="https://www.gov.br/anpd/pt-br" target="_blank" rel="noopener">Autoridade Nacional de Proteção de Dados (ANPD)</a>.</p>
+
+<h2 id="alteracoes">Alterações nesta política</h2>
+<p>Esta política muda quando o produto mudar. A versão e a data ficam no topo da página; alterações relevantes serão destacadas no site e no aplicativo <span class="placeholder">[mecanismo a definir]</span>. Versão atual: <strong>0.2 (rascunho)</strong>, de 02/11/2026.</p>
+<p>Veja também: <a href="seguranca.html">Segurança</a> · <a href="termos.html">Termos de uso</a> · <a href="contato.html">Contato</a>.</p>

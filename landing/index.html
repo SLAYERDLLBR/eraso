@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ERASÓ: compartilhe arquivos entre seus aparelhos</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ERASÓ">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="ERASÓ: compartilhe arquivos entre seus aparelhos">
+<meta property="og:description" content="Envie arquivos, textos e links entre celular e computador, direto de um navegador ao outro. Protótipo funcional de um projeto de extensão universitária.">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="Envie arquivos, textos e links entre celular e computador, direto de um navegador ao outro, na mesma rede ou em uma sala com código. Protótipo funcional de um projeto de extensão universitária.">
+<script>
+  // Tema antes da pintura (mesmo comportamento da referência: preferência salva ou do sistema)
+  try {
+    const t = localStorage.getItem('eraso-landing-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Lexend:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Símbolo vetorial PROVISÓRIO, traçado a partir do PNG oficial (substituir pelo SVG oficial — dúvida D11) -->
+    <symbol id="eraso-symbol" viewBox="0 0 134 108">
+      <path d="M48 12 A72 72 0 0 1 132 56" fill="none" stroke="#F76100" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M3 68 A68 68 0 0 0 70 105" fill="none" stroke="var(--logo-green-orbit, #023E21)" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M34 30 H92 Q116 30 116 46 Q116 59 101 61" fill="none" stroke="#F76100" stroke-width="10.5" stroke-linecap="round"/>
+      <path d="M86 41 Q76 54 60 55 H34 Q19 55 19 64 Q19 73 34 73 H103" fill="none" stroke="var(--logo-green-path, #004F29)" stroke-width="10.5" stroke-linecap="round"/>
+      <circle cx="34" cy="30" r="12" fill="#F76100"/>
+      <circle cx="103" cy="73.5" r="12.5" fill="var(--logo-green-node, #0C884A)"/>
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.4-4.4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+    <symbol id="i-remote" viewBox="0 0 24 24"><circle cx="5" cy="17" r="2.3"/><circle cx="19" cy="17" r="2.3"/><path d="M6.4 15.2C8 8.5 16 8.5 17.6 15.2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.4 8.4-7 10-3.6-1.6-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M4 13h4l2 3h4l2-3h4"/><path d="M4 13 6.5 6h11L20 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4 14 20 11 13Z"/><path d="M11 13 20 4"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M2.5 6.5A2 2 0 0 1 4.5 4.5h4.6l2 2.2h8.4a2 2 0 0 1 2 2v9.3a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-cursor" viewBox="0 0 24 24"><path d="M3 3l17 7.2-7.3 2.5L10.2 20z"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16.2 9.6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="navbar" id="navbar">
+  <nav class="container" aria-label="Principal">
+    <a href="#topo" class="logo" aria-label="ERASÓ — início">
+      <svg class="symbol" viewBox="0 0 134 108" aria-hidden="true"><use href="#eraso-symbol"/></svg>
+      <img class="wordmark wordmark-light" src="assets/letreiro.png" alt="ERASÓ">
+      <img class="wordmark wordmark-dark" src="assets/letreiro-invertido.png" alt="ERASÓ">
+    </a>
+    <ul class="nav-links">
+      <li><a href="sobre.html">Sobre</a></li>
+      <li><a href="como-funciona.html">Como funciona</a></li>
+      <li><a href="documentacao.html">Documentação</a></li>
+      <li><a href="contato.html">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Alternar entre tema claro e escuro">
+        <svg class="icon moon" aria-hidden="true"><use href="#i-moon"/></svg>
+        <svg class="icon sun" aria-hidden="true"><use href="#i-sun"/></svg>
+      </button>
+      <div class="lang-switcher" id="lang">
+        <button class="nav-action-btn" id="lang-btn" aria-label="Idioma: Português (Brasil)" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-dropdown">
+          <span class="lang-label-long">Português (Brasil)</span><span class="lang-label-short">Português</span>
+          <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
+        </button>
+        <div class="lang-dropdown" id="lang-dropdown" hidden>
+          <label class="lang-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Buscar idioma</span><input type="text" id="lang-search" placeholder="Buscar idioma…" autocomplete="off"></label>
+          <div class="lang-list" role="listbox" aria-label="Idioma">
+            <button class="lang-item" role="option" aria-selected="true" data-lang-name="Português (Brasil) Portuguese (Brazil)"><span><span class="lang-name">Português (Brasil)</span><span class="lang-en">Portuguese (Brazil)</span></span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button>
+          </div>
+          <p class="lang-empty" id="lang-empty" hidden>Nenhum idioma encontrado.</p>
+        </div>
+      </div>
+      <a href="../app/index.html" class="btn btn-primary btn-sm hide-mobile">Acessar o app</a>
+      <button class="mobile-toggle" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg class="icon open" aria-hidden="true"><use href="#i-menu"/></svg>
+        <svg class="icon close" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <ul class="mobile-nav-links">
+      <li><a href="sobre.html">Sobre</a></li>
+      <li><a href="como-funciona.html">Como funciona</a></li>
+      <li><a href="documentacao.html">Documentação</a></li>
+      <li><a href="contato.html">Contato</a></li>
+    </ul>
+    <a href="../app/index.html" class="btn btn-primary btn-block">Acessar o app</a>
+  </div>
+</header>
+
+<main id="conteudo">
+  <!-- HERO -->
+  <section class="hero section" id="topo">
+    <div class="container text-center">
+      <p><a class="badge" href="sobre.html#estado">Protótipo funcional · Projeto de extensão universitária</a></p>
+      <h1>Compartilhe arquivos entre seus aparelhos.<br><span class="accent">De uma ponta à outra.</span></h1>
+      <p class="subtitle">Envie arquivos, textos e links entre celular e computador, direto de um navegador ao outro, na mesma rede ou em uma sala com código.</p>
+      <div class="hero-ctas">
+        <a href="../app/index.html" class="btn btn-primary btn-lg">Acessar o ERASÓ</a>
+        <a href="#how-it-works" class="btn btn-secondary btn-lg">Ver como funciona</a>
+      </div>
+      <div class="hero-visual">
+        <div class="desktop-mockup">
+          <img class="shot-light" src="assets/app/app-desktop-claro.png" width="2880" height="1800" alt="Aplicativo do ERASÓ no computador: tela Compartilhar com três arquivos selecionados e um aparelho encontrado por perto">
+          <img class="shot-dark" src="assets/app/app-desktop-escuro.png" width="2880" height="1800" alt="Aplicativo do ERASÓ no computador, tema escuro: transferência de um arquivo em andamento, com progresso e velocidade">
+        </div>
+        <div class="mobile-mockup">
+          <img class="shot-light" src="assets/app/app-celular-claro.png" width="750" height="1624" alt="ERASÓ no celular: pedido de recebimento de 3 arquivos, com os botões Recusar e Aceitar">
+          <img class="shot-dark" src="assets/app/app-celular-escuro.png" width="750" height="1624" alt="ERASÓ no celular, tema escuro: pedido de recebimento de 3 arquivos">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NÚMEROS (fatos do produto, sem estatísticas inventadas) -->
+  <section class="stats section" aria-label="Dados do produto">
+    <div class="container">
+      <div class="card card-grid">
+        <div class="stat-item"><span class="stat-value">2</span><span class="stat-label">formas de encontrar aparelhos: mesma rede ou sala com código</span></div>
+        <div class="stat-item"><span class="stat-value">0</span><span class="stat-label">arquivos guardados no servidor: o envio é direto entre os aparelhos</span></div>
+        <div class="stat-item"><span class="stat-value">4</span><span class="stat-label">temas: sistema, claro, escuro e alto contraste</span></div>
+        <div class="stat-item"><span class="stat-value">0</span><span class="stat-label">instalações: funciona no navegador</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECURSOS -->
+  <section class="features section" id="features" aria-labelledby="t-features">
+    <div class="container">
+      <div class="section-header text-center">
+        <h2 class="section-title" id="t-features">Recursos da plataforma</h2>
+        <p class="section-subtitle">Envio direto entre aparelhos, com aprovação de cada recebimento e uma Caixa pessoal neste aparelho.</p>
+      </div>
+      <div class="grid grid-4 features-grid">
+        <div class="card feature-card">
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-remote"/></svg></div>
+          <h3>Rede local e salas</h3>
+          <p>Na mesma rede, os aparelhos se encontram sozinhos. Em redes diferentes, use uma sala com código e um link de convite.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg></div>
+          <h3>Aprovação de cada recebimento</h3>
+          <p>Cada pedido pode ser aceito, recusado ou parcialmente recebido. É possível exigir PIN, e a conexão entre os aparelhos é criptografada.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-inbox"/></svg></div>
+          <h3>Caixa pessoal</h3>
+          <p>Guarde textos, links e arquivos neste aparelho, com prazo de 1, 7 ou 30 dias. Não é sincronizada entre aparelhos.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg></div>
+          <h3>Acessibilidade</h3>
+          <p>Temas claro, escuro e de alto contraste, uso completo pelo teclado e textos em linguagem simples.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section class="how-it-works section" id="how-it-works" aria-labelledby="t-how">
+    <div class="container">
+      <div class="section-header text-center">
+        <h2 class="section-title" id="t-how">Como funciona</h2>
+        <p class="section-subtitle">O envio tem três passos: abrir o ERASÓ, escolher o conteúdo e tocar no aparelho de destino.</p>
+      </div>
+      <div class="steps-grid" id="steps">
+        <div class="step-card">
+          <div class="step-visual card" aria-hidden="true">
+            <div class="install-animation">
+              <div class="install-app"><svg class="symbol" viewBox="0 0 134 108"><use href="#eraso-symbol"/></svg></div>
+              <div class="install-success"><svg class="icon"><use href="#i-check-circle"/></svg></div>
+              <div class="install-folder"><svg class="icon"><use href="#i-folder"/></svg></div>
+              <div class="install-cursor"><svg class="icon"><use href="#i-cursor"/></svg></div>
+            </div>
+          </div>
+          <h3>Abra o ERASÓ</h3>
+          <p>No navegador do computador e do celular. O aparelho aparece para os outros da mesma rede ou sala.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-visual card" aria-hidden="true">
+            <div class="file-stack"><div class="file-item"></div><div class="file-item"></div><div class="file-item"></div></div>
+          </div>
+          <h3>Escolha o que enviar</h3>
+          <p>Arquivos, pastas, fotos, textos ou links. Arraste, cole ou toque para adicionar.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-visual card" aria-hidden="true">
+            <div class="transfer-animation">
+              <div class="device-mini origin"><div class="transfer-file-source"></div></div>
+              <div class="transfer-indicator"></div>
+              <div class="device-mini"><div class="transfer-file-target"></div></div>
+            </div>
+          </div>
+          <h3>Toque no aparelho</h3>
+          <p>O aparelho de destino aceita o pedido e a transferência começa, direto entre os dois aparelhos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARQUITETURA E TECNOLOGIAS -->
+  <section class="section" id="arquitetura" aria-labelledby="t-arq">
+    <div class="container">
+      <div class="section-header text-center">
+        <h2 class="section-title" id="t-arq">Do aparelho A ao aparelho B</h2>
+        <p class="section-subtitle">Os aparelhos se encontram por um servidor leve. Arquivos e textos seguem direto, de navegador a navegador, e o servidor não os recebe.</p>
+      </div>
+      <!--parcial:arquitetura-->
+<figure class="diagram" id="figura-arquitetura">
+  <div class="dd">
+    <svg viewBox="0 0 760 370" role="img" aria-labelledby="arq-t arq-d" focusable="false">
+      <title id="arq-t">Arquitetura do ERASÓ</title>
+      <desc id="arq-d">Dois aparelhos, cada um com um navegador, ligados por uma conexão direta e criptografada. Acima, o servidor do ERASÓ conversa com os dois apenas para apresentá-los e repassar a sinalização. Abaixo da conexão direta, um serviço STUN ou TURN opcional.</desc>
+      <defs>
+        <linearGradient id="arq-g" gradientUnits="userSpaceOnUse" x1="270" y1="0" x2="490" y2="0"><stop offset="0" style="stop-color:var(--button-bg)"/><stop offset="1" style="stop-color:var(--accent-primary)"/></linearGradient>
+      </defs>
+      <line class="d-dash" x1="150" y1="236" x2="318" y2="96"/>
+      <line class="d-dash" x1="610" y1="236" x2="442" y2="96"/>
+      <rect class="d-box" x="270" y="20" width="220" height="76" rx="14"/>
+      <text class="d-t" x="380" y="53" text-anchor="middle">Servidor ERASÓ</text>
+      <text class="d-s" x="380" y="75" text-anchor="middle">presença e sinalização</text>
+      <text class="d-s" x="168" y="150" text-anchor="end">avisa que está aqui</text>
+      <text class="d-s" x="592" y="150">recebe a lista de aparelhos</text>
+      <rect class="d-box" x="30" y="236" width="240" height="96" rx="14"/>
+      <circle cx="58" cy="262" r="7" style="fill:var(--button-bg)"/>
+      <text class="d-t" x="76" y="268">Aparelho A</text>
+      <text class="d-s" x="58" y="296">navegador, sem instalação</text>
+      <text class="d-s" x="58" y="316">histórico e Caixa locais</text>
+      <rect class="d-box" x="490" y="236" width="240" height="96" rx="14"/>
+      <circle cx="518" cy="262" r="7" style="fill:var(--accent-primary)"/>
+      <text class="d-t" x="536" y="268">Aparelho B</text>
+      <text class="d-s" x="518" y="296">navegador, sem instalação</text>
+      <text class="d-s" x="518" y="316">histórico e Caixa locais</text>
+      <line x1="270" y1="284" x2="490" y2="284" stroke="url(#arq-g)" stroke-width="5" stroke-linecap="round"/>
+      <text class="d-t" x="380" y="258" text-anchor="middle">Conexão direta</text>
+      <text class="d-s" x="380" y="306" text-anchor="middle">arquivos e textos, criptografados</text>
+      <line class="d-dot" x1="380" y1="316" x2="380" y2="336"/>
+      <rect class="d-box d-opt" x="300" y="336" width="160" height="28" rx="14"/>
+      <text class="d-s" x="380" y="355" text-anchor="middle">STUN / TURN (opcional)</text>
+    </svg>
+  </div>
+  <div class="dm">
+    <svg viewBox="0 0 340 540" role="img" aria-labelledby="arqm-t arqm-d" focusable="false">
+      <title id="arqm-t">Arquitetura do ERASÓ</title>
+      <desc id="arqm-d">Dois aparelhos ligados por uma conexão direta e criptografada. À direita, o servidor do ERASÓ conversa com os dois apenas para apresentá-los e repassar a sinalização. Abaixo do servidor, um serviço STUN ou TURN opcional.</desc>
+      <defs>
+        <linearGradient id="arqm-g" gradientUnits="userSpaceOnUse" x1="0" y1="108" x2="0" y2="432"><stop offset="0" style="stop-color:var(--button-bg)"/><stop offset="1" style="stop-color:var(--accent-primary)"/></linearGradient>
+      </defs>
+      <line class="d-dash" x1="170" y1="62" x2="226" y2="190"/>
+      <line class="d-dash" x1="170" y1="478" x2="226" y2="290"/>
+      <rect class="d-box" x="14" y="20" width="156" height="88" rx="14"/>
+      <circle cx="36" cy="44" r="6" style="fill:var(--button-bg)"/>
+      <text class="d-t" x="50" y="49">Aparelho A</text>
+      <text class="d-s" x="30" y="74">navegador</text>
+      <text class="d-s" x="30" y="94">histórico local</text>
+      <rect class="d-box" x="14" y="432" width="156" height="88" rx="14"/>
+      <circle cx="36" cy="456" r="6" style="fill:var(--accent-primary)"/>
+      <text class="d-t" x="50" y="461">Aparelho B</text>
+      <text class="d-s" x="30" y="486">navegador</text>
+      <text class="d-s" x="30" y="506">histórico local</text>
+      <line x1="92" y1="108" x2="92" y2="432" stroke="url(#arqm-g)" stroke-width="5" stroke-linecap="round"/>
+      <text class="d-t" x="108" y="248">Conexão direta</text>
+      <text class="d-s" x="108" y="268">arquivos e textos,</text>
+      <text class="d-s" x="108" y="286">criptografados</text>
+      <rect class="d-box" x="226" y="190" width="100" height="100" rx="14"/>
+      <text class="d-t" x="276" y="226" text-anchor="middle">Servidor</text>
+      <text class="d-s" x="276" y="248" text-anchor="middle">presença e</text>
+      <text class="d-s" x="276" y="266" text-anchor="middle">sinalização</text>
+      <line class="d-dot" x1="276" y1="290" x2="276" y2="330"/>
+      <rect class="d-box d-opt" x="226" y="330" width="100" height="46" rx="14"/>
+      <text class="d-s" x="276" y="350" text-anchor="middle">STUN / TURN</text>
+      <text class="d-s" x="276" y="367" text-anchor="middle">opcional</text>
+    </svg>
+  </div>
+  <figcaption class="diagram-caption">Diagrama conceitual. O servidor só apresenta os aparelhos e repassa a sinalização; o conteúdo segue direto entre os navegadores.</figcaption>
+</figure>
+<!--/parcial-->
+      <div class="table-wrap">
+        <table class="data-table">
+          <caption class="sr-only">Tecnologias utilizadas</caption>
+          <thead><tr><th scope="col">Camada</th><th scope="col">Tecnologia</th><th scope="col">Função</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Interface</th><td>HTML, CSS e JavaScript puros</td><td>Aplicativo e site, sem framework e sem etapa de compilação.</td></tr>
+            <tr><th scope="row">Servidor</th><td>Node.js 18+, sem dependências</td><td>Presença dos aparelhos por eventos SSE e repasse da sinalização.</td></tr>
+            <tr><th scope="row">Conexão entre aparelhos</th><td>WebRTC (canal de dados, DTLS)</td><td>Transferência direta e criptografada de arquivos, textos e links.</td></tr>
+            <tr><th scope="row">Entre redes diferentes</th><td>STUN e, se necessário, TURN</td><td>Descoberta do endereço público e retransmissão. O TURN ainda <span class="placeholder">[a definir]</span>.</td></tr>
+            <tr><th scope="row">Dados no aparelho</th><td>localStorage e IndexedDB</td><td>Preferências, histórico e Caixa, apenas no navegador.</td></tr>
+            <tr><th scope="row">Qualidade</th><td>Testes automatizados com navegadores reais</td><td>Servidor, rede, interface e ponta a ponta.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓDIGO ABERTO -->
+  <section class="section" id="codigo-aberto" aria-labelledby="t-codigo">
+    <div class="container text-center">
+      <div class="section-header">
+        <h2 class="section-title" id="t-codigo">Código aberto no GitHub</h2>
+        <p class="section-subtitle">O código, os testes e a documentação técnica estão no repositório, sob a Apache License 2.0.</p>
+      </div>
+      <div class="hero-ctas">
+        <a href="https://github.com/SLAYERDLLBR/eraso" class="btn btn-primary btn-lg" target="_blank" rel="noopener">Ver o repositório</a>
+        <a href="codigo-fonte.html" class="btn btn-secondary btn-lg">Como executar e contribuir</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMONSTRAÇÃO + PERGUNTAS -->
+  <section class="video-faq section" id="faq" aria-labelledby="t-faq">
+    <div class="container">
+      <div class="faq-container">
+        <h2 class="section-title text-center" id="t-faq">Perguntas frequentes</h2>
+        <div class="faq-list">
+          <div class="card faq-item"><h3 class="faq-question">Preciso instalar alguma coisa?</h3><p>Não. O ERASÓ funciona no navegador. Não há versão para computador.</p></div>
+          <div class="card faq-item"><h3 class="faq-question">Funciona sem internet?</h3><p>Depende de onde o servidor está. Com o servidor rodando na sua própria rede, nada sai dela. Com o servidor público, os aparelhos precisam de internet para se encontrar; mesmo assim, o conteúdo vai direto entre eles.</p></div>
+          <div class="card faq-item"><h3 class="faq-question">É seguro?</h3><p>O conteúdo vai direto entre os aparelhos, criptografado, sem passar pelo servidor, e cada pedido precisa ser aprovado. É possível exigir PIN. O projeto ainda não passou por auditoria independente; a página <a href="seguranca.html">Segurança</a> informa o que existe e o que não existe.</p></div>
+          <div class="card faq-item"><h3 class="faq-question">Onde os arquivos são salvos?</h3><p>Na pasta de downloads do navegador. O navegador define a pasta; o ERASÓ não tem seletor de pasta.</p></div>
+          <div class="card faq-item"><h3 class="faq-question">O que é a Caixa?</h3><p>Um espaço neste aparelho para guardar textos, links e arquivos, com prazo de 1, 7 ou 30 dias. Ela não é sincronizada entre aparelhos.</p></div>
+          <div class="card faq-item"><h3 class="faq-question">Quem desenvolve o ERASÓ?</h3><p>É um projeto de extensão universitária ligado à Cruzeiro do Sul Virtual. Os detalhes estão em <a href="projeto-academico.html">Projeto acadêmico</a>.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section class="contact section" id="contact" aria-labelledby="t-contact">
+    <div class="container text-center">
+      <div class="section-header">
+        <h2 class="section-title" id="t-contact">Entre em contato</h2>
+        <p class="section-subtitle">Acesse o aplicativo ou consulte os canais de atendimento do projeto.</p>
+      </div>
+      <div class="grid grid-2">
+        <a href="../app/index.html" class="card contact-card">
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-send"/></svg></div>
+          <h3>Acessar o ERASÓ</h3>
+          <p>Abra o aplicativo no computador e no celular para enviar um arquivo de um para o outro.</p>
+          <span class="read-more">Acessar o aplicativo →</span>
+        </a>
+        <a href="contato.html" class="card contact-card">
+          <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></div>
+          <h3>Atendimento</h3>
+          <p>Atendimento para dúvidas, solicitações de privacidade e assuntos relacionados à plataforma.</p>
+          <span class="read-more">Ver canais de contato →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer section">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#topo" class="logo" aria-label="ERASÓ — voltar ao topo">
+          <svg class="symbol" viewBox="0 0 134 108" aria-hidden="true"><use href="#eraso-symbol"/></svg>
+          <img class="wordmark wordmark-light" src="assets/letreiro.png" alt="ERASÓ">
+          <img class="wordmark wordmark-dark" src="assets/letreiro-invertido.png" alt="ERASÓ">
+        </a>
+        <p>Compartilhamento de arquivos, textos e links entre aparelhos. Projeto de extensão universitária em fase de protótipo funcional.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Produto</h4>
+          <ul>
+            <li><a href="../app/index.html">Acessar o ERASÓ</a></li>
+            <li><a href="como-funciona.html">Como funciona</a></li>
+            <li><a href="index.html#features">Recursos</a></li>
+            <li><a href="index.html#faq">Perguntas frequentes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Projeto</h4>
+          <ul>
+            <li><a href="sobre.html">Sobre o ERASÓ</a></li>
+            <li><a href="projeto-academico.html">Projeto acadêmico</a></li>
+            <li><a href="ods.html">ODS e impacto</a></li>
+            <li><a href="contato.html">Contato</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal e segurança</h4>
+          <ul>
+            <li><a href="privacidade.html">Privacidade e LGPD</a></li>
+            <li><a href="termos.html">Termos de uso</a></li>
+            <li><a href="seguranca.html">Segurança</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Para desenvolvedores</h4>
+          <ul>
+            <li><a href="documentacao.html">Documentação e guia</a></li>
+            <li><a href="codigo-fonte.html">Código-fonte e GitHub</a></li>
+            <li><a href="codigo-fonte.html#documentos">Documentos técnicos</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">&copy; 2026 ERASÓ · Projeto de extensão universitária, Cruzeiro do Sul Virtual <span class="placeholder">[vínculo a confirmar]</span>.</div>
+      <div class="attribution">Estrutura inspirada no <a href="https://github.com/localsend/website" target="_blank" rel="noopener">site do LocalSend</a>, sob <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener" class="license-link">Apache License 2.0</a>.</div>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

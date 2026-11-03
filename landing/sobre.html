@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sobre o ERASÓ · ERASÓ</title>
+<meta name="description" content="O que é o ERASÓ, por que o projeto existe, em que estágio está e como se relaciona com o LocalSend.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ERASÓ">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Sobre o ERASÓ · ERASÓ">
+<meta property="og:description" content="O que é o ERASÓ, por que o projeto existe, em que estágio está e como se relaciona com o LocalSend.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script>
+  // Tema antes da pintura (preferência salva ou do sistema)
+  try {
+    const t = localStorage.getItem('eraso-landing-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Lexend:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Símbolo vetorial PROVISÓRIO, traçado a partir do PNG oficial (substituir pelo SVG oficial — dúvida D11) -->
+    <symbol id="eraso-symbol" viewBox="0 0 134 108">
+      <path d="M48 12 A72 72 0 0 1 132 56" fill="none" stroke="#F76100" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M3 68 A68 68 0 0 0 70 105" fill="none" stroke="var(--logo-green-orbit, #023E21)" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M34 30 H92 Q116 30 116 46 Q116 59 101 61" fill="none" stroke="#F76100" stroke-width="10.5" stroke-linecap="round"/>
+      <path d="M86 41 Q76 54 60 55 H34 Q19 55 19 64 Q19 73 34 73 H103" fill="none" stroke="var(--logo-green-path, #004F29)" stroke-width="10.5" stroke-linecap="round"/>
+      <circle cx="34" cy="30" r="12" fill="#F76100"/>
+      <circle cx="103" cy="73.5" r="12.5" fill="var(--logo-green-node, #0C884A)"/>
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.4-4.4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+    <symbol id="i-remote" viewBox="0 0 24 24"><circle cx="5" cy="17" r="2.3"/><circle cx="19" cy="17" r="2.3"/><path d="M6.4 15.2C8 8.5 16 8.5 17.6 15.2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.4 8.4-7 10-3.6-1.6-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M4 13h4l2 3h4l2-3h4"/><path d="M4 13 6.5 6h11L20 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4 14 20 11 13Z"/><path d="M11 13 20 4"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M2.5 6.5A2 2 0 0 1 4.5 4.5h4.6l2 2.2h8.4a2 2 0 0 1 2 2v9.3a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-cursor" viewBox="0 0 24 24"><path d="M3 3l17 7.2-7.3 2.5L10.2 20z"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16.2 9.6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="navbar" id="navbar">
+  <nav class="container" aria-label="Principal">
+    <a href="index.html" class="logo" aria-label="ERASÓ — início">
+      <svg class="symbol" viewBox="0 0 134 108" aria-hidden="true"><use href="#eraso-symbol"/></svg>
+      <img class="wordmark wordmark-light" src="assets/letreiro.png" alt="ERASÓ">
+      <img class="wordmark wordmark-dark" src="assets/letreiro-invertido.png" alt="ERASÓ">
+    </a>
+    <ul class="nav-links">
+      <li><a href="sobre.html" aria-current="page">Sobre</a></li>
+      <li><a href="como-funciona.html">Como funciona</a></li>
+      <li><a href="documentacao.html">Documentação</a></li>
+      <li><a href="contato.html">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Alternar entre tema claro e escuro">
+        <svg class="icon moon" aria-hidden="true"><use href="#i-moon"/></svg>
+        <svg class="icon sun" aria-hidden="true"><use href="#i-sun"/></svg>
+      </button>
+      <div class="lang-switcher" id="lang">
+        <button class="nav-action-btn" id="lang-btn" aria-label="Idioma: Português (Brasil)" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-dropdown">
+          <span class="lang-label-long">Português (Brasil)</span><span class="lang-label-short">Português</span>
+          <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
+        </button>
+        <div class="lang-dropdown" id="lang-dropdown" hidden>
+          <label class="lang-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Buscar idioma</span><input type="text" id="lang-search" placeholder="Buscar idioma…" autocomplete="off"></label>
+          <div class="lang-list" role="listbox" aria-label="Idioma">
+            <button class="lang-item" role="option" aria-selected="true" data-lang-name="Português (Brasil) Portuguese (Brazil)"><span><span class="lang-name">Português (Brasil)</span><span class="lang-en">Portuguese (Brazil)</span></span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button>
+          </div>
+          <p class="lang-empty" id="lang-empty" hidden>Nenhum idioma encontrado.</p>
+        </div>
+      </div>
+      <a href="../app/index.html" class="btn btn-primary btn-sm hide-mobile">Acessar o app</a>
+      <button class="mobile-toggle" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg class="icon open" aria-hidden="true"><use href="#i-menu"/></svg>
+        <svg class="icon close" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <ul class="mobile-nav-links">
+      <li><a href="sobre.html">Sobre</a></li>
+      <li><a href="como-funciona.html">Como funciona</a></li>
+      <li><a href="documentacao.html">Documentação</a></li>
+      <li><a href="contato.html">Contato</a></li>
+    </ul>
+    <a href="../app/index.html" class="btn btn-primary btn-block">Acessar o app</a>
+  </div>
+</header>
+
+<main id="conteudo">
+  <section class="page-header">
+    <div class="container text-center">
+      <nav class="breadcrumb" aria-label="Você está em">
+        <ol><li><a href="index.html">Início</a></li><li aria-current="page">Sobre o ERASÓ</li></ol>
+      </nav>
+      <p><span class="badge">Protótipo funcional</span></p>
+      <h1>Sobre o ERASÓ</h1>
+      <p class="subtitle">Aplicação para compartilhar arquivos, textos e links entre aparelhos, em poucos passos e sem depender de aplicativos de mensagem.</p>
+    </div>
+  </section>
+  <div class="page-body">
+    <article class="container legal-content">
+      <nav class="toc" aria-labelledby="toc-title">
+        <h2 id="toc-title">Nesta página</h2>
+        <ol>
+          <li><a href="#o-que-e">O que é o ERASÓ</a></li>
+          <li><a href="#principios">Princípios de design</a></li>
+          <li><a href="#identidade">Identidade</a></li>
+          <li><a href="#estado">Estágio do projeto</a></li>
+          <li><a href="#localsend">Relação com o LocalSend</a></li>
+          <li><a href="#quem">Quem desenvolve</a></li>
+        </ol>
+      </nav>
+<h2 id="o-que-e">O que é o ERASÓ</h2>
+<p class="lead">O ERASÓ é uma aplicação para compartilhar arquivos, imagens, textos e links entre os seus aparelhos e com pessoas próximas, em poucos passos.</p>
+<p>O projeto propõe uma alternativa ao uso de aplicativos de mensagem, como o WhatsApp Web, para transferências pessoais (o hábito de “mandar para mim mesmo”): abrir o ERASÓ, escolher o conteúdo e tocar no aparelho de destino.</p>
+<p>O ERASÓ roda no navegador, sem instalar nada. Os aparelhos se encontram na mesma rede ou em uma sala com código e trocam o conteúdo direto, de um navegador ao outro, de forma criptografada; o servidor só apresenta os aparelhos. Os detalhes estão em <a href="como-funciona.html">Como funciona</a>.</p>
+
+<h2 id="principios">Princípios de design</h2>
+<p>Estes princípios estão documentados no design system do projeto (na pasta <code>docs/design</code> do repositório) e orientam todas as telas do aplicativo:</p>
+<ul>
+  <li><strong>Dois toques para compartilhar:</strong> abrir, escolher o conteúdo e tocar no aparelho.</li>
+  <li><strong>O estado está sempre à vista:</strong> se este aparelho está visível, se há conexão com o servidor e o que está em andamento.</li>
+  <li><strong>Confiança explícita:</strong> quem envia e o que vem, informado em linguagem simples, antes de aceitar.</li>
+  <li><strong>Teclado e toque de primeira classe:</strong> tudo pode ser feito por teclado, paleta de comandos ou polegar.</li>
+  <li><strong>Inclusivo antes de sofisticado:</strong> rótulos sempre visíveis, contraste calculado e textos simples, para pessoas com diferentes níveis de familiaridade com tecnologia.</li>
+</ul>
+
+<h2 id="identidade">Identidade</h2>
+<p>O símbolo mostra dois pontos, de partida e de chegada, ligados por um caminho. Na interface, o <strong>laranja</strong> indica o que está em trânsito ou a próxima ação, e o <strong>verde</strong> indica o que chegou ou é confiável. A assinatura é <em>“De uma ponta à outra.”</em></p>
+
+<h2 id="estado">Estágio do projeto</h2>
+<p>O ERASÓ está em fase de <strong>protótipo funcional</strong>. A descoberta de aparelhos e a transferência de arquivos, textos e links entre aparelhos são <strong>reais</strong> e foram testadas com navegadores reais. Ainda faltam validação em mais aparelhos e navegadores, auditoria de segurança e de acessibilidade, e a definição de itens institucionais.</p>
+<div class="table-wrap">
+  <table class="data-table">
+    <caption class="sr-only">Situação de cada parte do projeto</caption>
+    <thead><tr><th scope="col">Parte do projeto</th><th scope="col">Situação</th><th scope="col">Observação</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Pesquisa de referências e design system</th><td><span class="chip chip-done">Concluída</span></td><td>Documentos na pasta <code>docs/design</code> do repositório (veja <a href="documentacao.html#documentos">Documentação</a>).</td></tr>
+      <tr><th scope="row">Aplicativo web: descoberta e transferência reais</th><td><span class="chip chip-done">Funciona</span></td><td>Testado de forma automática com navegadores reais; validação em celulares e outros navegadores em andamento.</td></tr>
+      <tr><th scope="row">Servidor de presença e sinalização, com salas</th><td><span class="chip chip-done">Funciona</span></td><td>Não recebe arquivos nem textos. A publicação na internet ainda não foi feita.</td></tr>
+      <tr><th scope="row">Landing page e páginas institucionais</th><td><span class="chip chip-proto">Em revisão</span></td><td>Textos jurídicos em rascunho, aguardando validação.</td></tr>
+      <tr><th scope="row">Conexão entre redes diferentes em qualquer rede</th><td><span class="chip chip-proto">Depende de TURN</span></td><td>Funciona na maioria das redes domésticas; redes restritas exigem um servidor de retransmissão ainda <span class="placeholder">[a definir]</span>.</td></tr>
+      <tr><th scope="row">Pareamento, Caixa sincronizada e envio por link</th><td><span class="chip chip-open">Não existe</span></td><td>Exigiriam contas ou armazenamento em servidor, que o projeto não tem.</td></tr>
+      <tr><th scope="row">Aplicação para computador</th><td><span class="chip chip-open">Não existe</span></td><td>O ERASÓ roda no navegador. <span class="placeholder">[prazo a definir]</span></td></tr>
+    </tbody>
+  </table>
+</div>
+<p>As consequências para <a href="seguranca.html">segurança</a> e <a href="privacidade.html">privacidade</a> estão explicadas nas respectivas páginas.</p>
+
+<h2 id="localsend">Relação com o LocalSend</h2>
+<p>O <a href="https://github.com/localsend/localsend" target="_blank" rel="noopener">LocalSend</a> é um aplicativo livre (Apache License 2.0) para enviar arquivos pela rede local. Ele é a principal referência <em>funcional</em> do ERASÓ: o fluxo “escolher → tocar no aparelho → aceitar”, a descoberta de aparelhos e o diagnóstico guiado inspiraram a organização do ERASÓ.</p>
+<p>O ERASÓ leva essa ideia para o navegador: sem instalar nada, com salas para aparelhos em redes diferentes, uma Caixa pessoal neste aparelho e um histórico de atividade. Nenhum código do LocalSend foi incorporado ao aplicativo. A estrutura visual desta landing page foi reproduzida do <a href="https://github.com/localsend/website" target="_blank" rel="noopener">site do LocalSend</a>, com crédito. Veja <a href="codigo-fonte.html#licencas">Código-fonte e licenças</a>.</p>
+<p>O ERASÓ é um projeto independente e não é afiliado ao LocalSend nem endossado por ele <span class="placeholder">[confirmar com a equipe]</span>.</p>
+
+<h2 id="quem">Quem desenvolve</h2>
+<p>O ERASÓ é um projeto acadêmico de extensão estudantil. Instituição, equipe e Objetivos de Desenvolvimento Sustentável estão em <a href="projeto-academico.html">Projeto acadêmico</a> e <a href="ods.html">ODS e impacto</a>.</p>
+
+<div class="cta-row">
+  <a class="btn btn-primary" href="../app/index.html">Acessar o ERASÓ</a>
+  <a class="btn btn-secondary" href="como-funciona.html">Ver como funciona</a>
+</div>
+    </article>
+  </div>
+</main>
+
+<footer class="footer section">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo" aria-label="ERASÓ — voltar ao topo">
+          <svg class="symbol" viewBox="0 0 134 108" aria-hidden="true"><use href="#eraso-symbol"/></svg>
+          <img class="wordmark wordmark-light" src="assets/letreiro.png" alt="ERASÓ">
+          <img class="wordmark wordmark-dark" src="assets/letreiro-invertido.png" alt="ERASÓ">
+        </a>
+        <p>Compartilhamento de arquivos, textos e links entre aparelhos. Projeto de extensão universitária em fase de protótipo funcional.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Produto</h4>
+          <ul>
+            <li><a href="../app/index.html">Acessar o ERASÓ</a></li>
+            <li><a href="como-funciona.html">Como funciona</a></li>
+            <li><a href="index.html#features">Recursos</a></li>
+            <li><a href="index.html#faq">Perguntas frequentes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Projeto</h4>
+          <ul>
+            <li><a href="sobre.html">Sobre o ERASÓ</a></li>
+            <li><a href="projeto-academico.html">Projeto acadêmico</a></li>
+            <li><a href="ods.html">ODS e impacto</a></li>
+            <li><a href="contato.html">Contato</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal e segurança</h4>
+          <ul>
+            <li><a href="privacidade.html">Privacidade e LGPD</a></li>
+            <li><a href="termos.html">Termos de uso</a></li>
+            <li><a href="seguranca.html">Segurança</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Para desenvolvedores</h4>
+          <ul>
+            <li><a href="documentacao.html">Documentação e guia</a></li>
+            <li><a href="codigo-fonte.html">Código-fonte e GitHub</a></li>
+            <li><a href="codigo-fonte.html#documentos">Documentos técnicos</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">&copy; 2026 ERASÓ · Projeto de extensão universitária, Cruzeiro do Sul Virtual <span class="placeholder">[vínculo a confirmar]</span>.</div>
+      <div class="attribution">Estrutura inspirada no <a href="https://github.com/localsend/website" target="_blank" rel="noopener">site do LocalSend</a>, sob <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener" class="license-link">Apache License 2.0</a>.</div>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

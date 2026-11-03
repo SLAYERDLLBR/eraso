@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Segurança · ERASÓ</title>
+<meta name="description" content="Estado real da segurança do ERASÓ: criptografia da conexão direta, aprovação de pedidos, PIN, salas, proteções do servidor e limitações conhecidas.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ERASÓ">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Segurança · ERASÓ">
+<meta property="og:description" content="Estado real da segurança do ERASÓ: criptografia da conexão direta, aprovação de pedidos, PIN, salas, proteções do servidor e limitações conhecidas.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script>
+  // Tema antes da pintura (preferência salva ou do sistema)
+  try {
+    const t = localStorage.getItem('eraso-landing-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Lexend:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Símbolo vetorial PROVISÓRIO, traçado a partir do PNG oficial (substituir pelo SVG oficial — dúvida D11) -->
+    <symbol id="eraso-symbol" viewBox="0 0 134 108">
+      <path d="M48 12 A72 72 0 0 1 132 56" fill="none" stroke="#F76100" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M3 68 A68 68 0 0 0 70 105" fill="none" stroke="var(--logo-green-orbit, #023E21)" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M34 30 H92 Q116 30 116 46 Q116 59 101 61" fill="none" stroke="#F76100" stroke-width="10.5" stroke-linecap="round"/>
+      <path d="M86 41 Q76 54 60 55 H34 Q19 55 19 64 Q19 73 34 73 H103" fill="none" stroke="var(--logo-green-path, #004F29)" stroke-width="10.5" stroke-linecap="round"/>
+      <circle cx="34" cy="30" r="12" fill="#F76100"/>
+      <circle cx="103" cy="73.5" r="12.5" fill="var(--logo-green-node, #0C884A)"/>
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.4-4.4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+    <symbol id="i-remote" viewBox="0 0 24 24"><circle cx="5" cy="17" r="2.3"/><circle cx="19" cy="17" r="2.3"/><path d="M6.4 15.2C8 8.5 16 8.5 17.6 15.2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.4 8.4-7 10-3.6-1.6-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M4 13h4l2 3h4l2-3h4"/><path d="M4 13 6.5 6h11L20 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4 14 20 11 13Z"/><path d="M11 13 20 4"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M2.5 6.5A2 2 0 0 1 4.5 4.5h4.6l2 2.2h8.4a2 2 0 0 1 2 2v9.3a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-cursor" viewBox="0 0 24 24"><path d="M3 3l17 7.2-7.3 2.5L10.2 20z"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16.2 9.6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="navbar" id="navbar">
+  <nav class="container" aria-label="Principal">
+    <a href="index.html" class="logo" aria-label="ERASÓ — início">
+      <svg class="symbol" viewBox="0 0 134 108" aria-hidden="true"><use href="#eraso-symbol"/></svg>
+      <img class="wordmark wordmark-light" src="assets/letreiro.png" alt="ERASÓ">
+      <img class="wordmark wordmark-dark" src="assets/letreiro-invertido.png" alt="ERASÓ">
+    </a>
+    <ul class="nav-links">
+      <li><a href="sobre.html">Sobre</a></li>
+      <li><a href="como-funciona.html">Como funciona</a></li>
+      <li><a href="documentacao.html">Documentação</a></li>
+      <li><a href="contato.html">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Alternar entre tema claro e escuro">
+        <svg class="icon moon" aria-hidden="true"><use href="#i-moon"/></svg>
+        <svg class="icon sun" aria-hidden="true"><use href="#i-sun"/></svg>
+      </button>
+      <div class="lang-switcher" id="lang">
+        <button class="nav-action-btn" id="lang-btn" aria-label="Idioma: Português (Brasil)" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-dropdown">
+          <span class="lang-label-long">Português (Brasil)</span><span class="lang-label-short">Português</span>
+          <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
+        </button>
+        <div class="lang-dropdown" id="lang-dropdown" hidden>
+          <label class="lang-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Buscar idioma</span><input type="text" id="lang-search" placeholder="Buscar idioma…" autocomplete="off"></label>
+          <div class="lang-list" role="listbox" aria-label="Idioma">
+            <button class="lang-item" role="option" aria-selected="true" data-lang-name="Português (Brasil) Portuguese (Brazil)"><span><span class="lang-name">Português (Brasil)</span><span class="lang-en">Portuguese (Brazil)</span></span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></button>
+          </div>
+          <p class="lang-empty" id="lang-empty" hidden>Nenhum idioma encontrado.</p>
+        </div>
+      </div>
+      <a href="../app/index.html" class="btn btn-primary btn-sm hide-mobile">Acessar o app</a>
+      <button class="mobile-toggle" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg class="icon open" aria-hidden="true"><use href="#i-menu"/></svg>
+        <svg class="icon close" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <ul class="mobile-nav-links">
+      <li><a href="sobre.html">Sobre</a></li>
+      <li><a href="como-funciona.html">Como funciona</a></li>
+      <li><a href="documentacao.html">Documentação</a></li>
+      <li><a href="contato.html">Contato</a></li>
+    </ul>
+    <a href="../app/index.html" class="btn btn-primary btn-block">Acessar o app</a>
+  </div>
+</header>
+
+<main id="conteudo">
+  <section class="page-header">
+    <div class="container text-center">
+      <nav class="breadcrumb" aria-label="Você está em">
+        <ol><li><a href="index.html">Início</a></li><li aria-current="page">Segurança</li></ol>
+      </nav>
+      
+      <h1>Segurança</h1>
+      <p class="subtitle">O que o ERASÓ faz para proteger o que você envia, o que ainda não faz e o que você pode fazer para se proteger.</p>
+    </div>
+  </section>
+  <div class="page-body">
+    <article class="container legal-content">
+      <aside class="notice-box" aria-label="Transparência">
+        <strong class="label">Transparência</strong>
+        <p>As medidas marcadas como <strong>implementadas</strong> estão no código e são cobertas por testes automáticos. O projeto <strong>não passou por auditoria de segurança independente</strong>. A tabela separa o que existe do que ainda não existe, sem prometer o que o código não faz.</p>
+      </aside>
+      <nav class="toc" aria-labelledby="toc-title">
+        <h2 id="toc-title">Nesta página</h2>
+        <ol>
+          <li><a href="#principios">Princípios</a></li>
+          <li><a href="#estado">O que existe hoje</a></li>
+          <li><a href="#navegador">O que acontece no seu navegador</a></li>
+          <li><a href="#boas-praticas">Boas práticas de uso</a></li>
+          <li><a href="#abertas">Limitações conhecidas</a></li>
+          <li><a href="#reportar">Como relatar uma falha de segurança</a></li>
+        </ol>
+      </nav>
+<h2 id="principios">Princípios</h2>
+<ul>
+  <li><strong>Você decide:</strong> cada recebimento passa por aprovação, a não ser que você escolha o contrário.</li>
+  <li><strong>Conteúdo fora do servidor:</strong> arquivos e textos vão direto entre os aparelhos; o servidor não os recebe.</li>
+  <li><strong>Mínimo de dados:</strong> sem contas e sem análise de uso (veja <a href="privacidade.html">Privacidade</a>).</li>
+  <li><strong>Transparência:</strong> distinguir o que existe do que ainda é projeto.</li>
+</ul>
+
+<h2 id="estado">O que existe hoje</h2>
+<div class="table-wrap">
+  <table class="data-table">
+    <caption class="sr-only">Medidas de segurança e sua situação</caption>
+    <thead><tr><th scope="col">Medida</th><th scope="col">Situação</th><th scope="col">Detalhe</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Criptografia da conexão direta</th><td><span class="chip chip-done">Implementada</span></td><td>O canal entre os navegadores é WebRTC com DTLS. Isso vale também quando o tráfego passa por um servidor de retransmissão (TURN).</td></tr>
+      <tr><th scope="row">Conteúdo não passa pelo servidor</th><td><span class="chip chip-done">Implementada</span></td><td>O servidor só repassa a sinalização; não recebe, não guarda e não registra arquivos nem textos.</td></tr>
+      <tr><th scope="row">Aprovação de cada pedido de recebimento</th><td><span class="chip chip-done">Implementada</span></td><td>Aceitar, recusar, pular e renomear. Aparelhos ocultos recusam pedidos.</td></tr>
+      <tr><th scope="row">PIN do destinatário</th><td><span class="chip chip-done">Implementada</span></td><td>O destino confere o PIN; três erros bloqueiam novas tentativas por 1 minuto. O PIN fica salvo sem criptografia no navegador do destino.</td></tr>
+      <tr><th scope="row">Salas com código secreto</th><td><span class="chip chip-done">Implementada</span></td><td>No servidor público, só aparelhos com o mesmo código se veem e trocam sinalização. Códigos gerados pelo aplicativo têm 10 caracteres aleatórios.</td></tr>
+      <tr><th scope="row">Autenticação de cada aparelho no servidor</th><td><span class="chip chip-done">Implementada</span></td><td>Cada conexão recebe um token aleatório; sem ele, não é possível sinalizar em nome de outro aparelho nem alterar o nome ou a visibilidade dele.</td></tr>
+      <tr><th scope="row">Limites contra abuso no servidor</th><td><span class="chip chip-done">Implementada</span></td><td>Limite de requisições por minuto e de conexões por IP, de aparelhos por sala e de tamanho das mensagens.</td></tr>
+      <tr><th scope="row">Proteções do navegador</th><td><span class="chip chip-done">Implementada</span></td><td>Política de segurança de conteúdo, <code>nosniff</code>, restrição de quem pode embutir o site e HTTPS obrigatório (HSTS) no servidor público. O servidor publica apenas o site e o aplicativo.</td></tr>
+      <tr><th scope="row">Conteúdo hostil vindo de outro aparelho</th><td><span class="chip chip-done">Testado</span></td><td>Nomes, textos e arquivos com HTML ou JavaScript são exibidos como texto, sem executar nada (teste automático).</td></tr>
+      <tr><th scope="row">Conferência de integridade (CRC32)</th><td><span class="chip chip-proto">Parcial</span></td><td>Detecta arquivo incompleto ou corrompido. Não é uma proteção contra adulteração intencional.</td></tr>
+      <tr><th scope="row">Verificação de identidade do outro aparelho</th><td><span class="chip chip-open">Não implementada</span></td><td>O servidor é confiável para a sinalização: um servidor malicioso poderia, em tese, intermediar a conexão. A comparação das impressões digitais da conexão nos dois aparelhos é viável, mas não foi feita.</td></tr>
+      <tr><th scope="row">Contas e identidade permanente de aparelhos</th><td><span class="chip chip-open">Não existe</span></td><td>Não há contas. A identidade do aparelho é um número aleatório guardado no navegador.</td></tr>
+      <tr><th scope="row">Auditoria de segurança independente</th><td><span class="chip chip-open">Não realizada</span></td><td>Os testes automáticos cobrem o servidor, a rede e a interface, mas não substituem uma auditoria.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 id="navegador">O que acontece no seu navegador</h2>
+<ul>
+  <li>Preferências, histórico e Caixa ficam no armazenamento do navegador, neste aparelho (veja <a href="privacidade.html#dados-hoje">Privacidade</a>).</li>
+  <li>Arquivos recebidos ficam na memória até a transferência terminar e são salvos pelo navegador; o limite é de 2 GB por pedido.</li>
+  <li>A área de transferência só é lida ou escrita quando você aciona “Colar” ou “Copiar”.</li>
+  <li>Câmera, microfone, localização e notificações <strong>não são usados</strong>.</li>
+  <li>Nenhum script de terceiros é carregado; a única requisição externa do site e do aplicativo é a de fontes do Google Fonts. Em servidor público, o navegador também consulta um servidor STUN.</li>
+</ul>
+
+<h2 id="boas-praticas">Boas práticas de uso</h2>
+<ul>
+  <li>Aceite apenas o que você reconhece. Desconfie de pedidos de aparelhos que você não conhece.</li>
+  <li>Use o <strong>código de sala gerado pelo aplicativo</strong> (10 caracteres aleatórios), não uma palavra fácil de adivinhar, e crie um novo para cada grupo.</li>
+  <li>Em redes públicas ou compartilhadas (laboratório, biblioteca, Wi-Fi da escola), use PIN e mantenha o recebimento automático em “sempre perguntar”.</li>
+  <li>Não compartilhe o PIN nem o código da sala fora de quem deve usá-los.</li>
+  <li>Se alguém na sala enviar pedidos indesejados, recuse, saia da sala e crie uma nova.</li>
+  <li>Mantenha o navegador atualizado.</li>
+</ul>
+
+<h2 id="abertas">Limitações conhecidas</h2>
+<div class="table-wrap">
+  <table class="data-table">
+    <caption class="sr-only">Limitações conhecidas</caption>
+    <thead><tr><th scope="col">Limitação</th><th scope="col">Efeito</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Servidor confiável para sinalização</th><td>Quem controla o servidor pode ver quem está online e tentar intermediar uma conexão nova. Não consegue ler conexões que ele não intermediou.</td></tr>
+      <tr><th scope="row">Quem tem o código da sala entra nela</th><td>Vê nomes e tipos dos aparelhos e pode enviar pedidos. Cada recebimento ainda exige a sua aprovação e o PIN, se ativado.</td></tr>
+      <tr><th scope="row">Endereços de rede visíveis para o outro aparelho</th><td>Como em qualquer conexão direta, o aparelho de destino recebe os endereços de rede usados na conexão.</td></tr>
+      <tr><th scope="row">Sem bloqueio de remetentes</th><td>Não há lista de bloqueio; a saída é recusar e trocar de sala.</td></tr>
+      <tr><th scope="row">Retomada de transferências interrompidas</th><td>Não existe: uma transferência que cai precisa ser refeita.</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>Os testes de segurança do servidor e o relatório da etapa de validação acompanham o código-fonte (veja <a href="codigo-fonte.html">Código-fonte e GitHub</a>).</p>
+
+<h2 id="reportar">Como relatar uma falha de segurança</h2>
+<p>Canal para relatos: <span class="placeholder">[a definir]</span>. Enquanto isso, use <a href="contato.html">Contato</a> e <strong>não publique</strong> detalhes da falha antes de a equipe responder.</p>
+<p>Ajuda muito informar: o que você fez, o que esperava, o que aconteceu, navegador e sistema, e capturas de tela sem dados pessoais. Prazo de resposta e política de divulgação: <span class="placeholder">[a definir]</span>.</p>
+    </article>
+  </div>
+</main>
+
+<footer class="footer section">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo" aria-label="ERASÓ — voltar ao topo">
+          <svg class="symbol" viewBox="0 0 134 108" aria-hidden="true"><use href="#eraso-symbol"/></svg>
+          <img class="wordmark wordmark-light" src="assets/letreiro.png" alt="ERASÓ">
+          <img class="wordmark wordmark-dark" src="assets/letreiro-invertido.png" alt="ERASÓ">
+        </a>
+        <p>Compartilhamento de arquivos, textos e links entre aparelhos. Projeto de extensão universitária em fase de protótipo funcional.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Produto</h4>
+          <ul>
+            <li><a href="../app/index.html">Acessar o ERASÓ</a></li>
+            <li><a href="como-funciona.html">Como funciona</a></li>
+            <li><a href="index.html#features">Recursos</a></li>
+            <li><a href="index.html#faq">Perguntas frequentes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Projeto</h4>
+          <ul>
+            <li><a href="sobre.html">Sobre o ERASÓ</a></li>
+            <li><a href="projeto-academico.html">Projeto acadêmico</a></li>
+            <li><a href="ods.html">ODS e impacto</a></li>
+            <li><a href="contato.html">Contato</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal e segurança</h4>
+          <ul>
+            <li><a href="privacidade.html">Privacidade e LGPD</a></li>
+            <li><a href="termos.html">Termos de uso</a></li>
+            <li><a href="seguranca.html">Segurança</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Para desenvolvedores</h4>
+          <ul>
+            <li><a href="documentacao.html">Documentação e guia</a></li>
+            <li><a href="codigo-fonte.html">Código-fonte e GitHub</a></li>
+            <li><a href="codigo-fonte.html#documentos">Documentos técnicos</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">&copy; 2026 ERASÓ · Projeto de extensão universitária, Cruzeiro do Sul Virtual <span class="placeholder">[vínculo a confirmar]</span>.</div>
+      <div class="attribution">Estrutura inspirada no <a href="https://github.com/localsend/website" target="_blank" rel="noopener">site do LocalSend</a>, sob <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener" class="license-link">Apache License 2.0</a>.</div>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

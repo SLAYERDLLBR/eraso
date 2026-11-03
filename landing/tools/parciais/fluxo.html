@@ -1,0 +1,68 @@
+<figure class="diagram" id="figura-fluxo">
+  <div class="dd">
+    <svg viewBox="0 0 880 170" role="img" aria-labelledby="fl-t fl-d" focusable="false">
+      <title id="fl-t">Fluxo de um envio</title>
+      <desc id="fl-d">Cinco etapas em sequência: escolher o conteúdo, enviar o pedido, aprovação no aparelho de destino, transferência direta e conferência com salvamento. A primeira etapa é laranja, a última é verde.</desc>
+      <defs>
+        <linearGradient id="fl-g" gradientUnits="userSpaceOnUse" x1="70" y1="0" x2="810" y2="0"><stop offset="0" style="stop-color:var(--button-bg)"/><stop offset="1" style="stop-color:var(--accent-primary)"/></linearGradient>
+      </defs>
+      <line x1="70" y1="40" x2="810" y2="40" stroke="url(#fl-g)" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 10"/>
+      <circle cx="70" cy="40" r="14" style="fill:var(--button-bg)"/>
+      <circle class="d-node" cx="245" cy="40" r="14"/>
+      <circle class="d-node" cx="440" cy="40" r="14"/>
+      <circle class="d-node" cx="635" cy="40" r="14"/>
+      <circle cx="810" cy="40" r="14" style="fill:var(--accent-primary)"/>
+      <text class="d-n" x="70" y="45" text-anchor="middle">1</text>
+      <text class="d-n d-n2" x="245" y="45" text-anchor="middle">2</text>
+      <text class="d-n d-n2" x="440" y="45" text-anchor="middle">3</text>
+      <text class="d-n d-n2" x="635" y="45" text-anchor="middle">4</text>
+      <text class="d-n" x="810" y="45" text-anchor="middle">5</text>
+      <text class="d-t" x="70" y="92" text-anchor="middle">Escolher</text>
+      <text class="d-s" x="70" y="114" text-anchor="middle">arquivos, textos</text>
+      <text class="d-s" x="70" y="132" text-anchor="middle">ou links</text>
+      <text class="d-t" x="245" y="92" text-anchor="middle">Pedido</text>
+      <text class="d-s" x="245" y="114" text-anchor="middle">o destino vê quem</text>
+      <text class="d-s" x="245" y="132" text-anchor="middle">envia e o quê</text>
+      <text class="d-t" x="440" y="92" text-anchor="middle">Aprovação</text>
+      <text class="d-s" x="440" y="114" text-anchor="middle">aceitar, recusar</text>
+      <text class="d-s" x="440" y="132" text-anchor="middle">ou pedir PIN</text>
+      <text class="d-t" x="635" y="92" text-anchor="middle">Transferência</text>
+      <text class="d-s" x="635" y="114" text-anchor="middle">direta, com progresso</text>
+      <text class="d-s" x="635" y="132" text-anchor="middle">e cancelamento</text>
+      <text class="d-t" x="810" y="92" text-anchor="middle">Conferência</text>
+      <text class="d-s" x="810" y="114" text-anchor="middle">CRC32 e salvamento</text>
+      <text class="d-s" x="810" y="132" text-anchor="middle">no destino</text>
+    </svg>
+  </div>
+  <div class="dm">
+    <svg viewBox="0 0 340 470" role="img" aria-labelledby="flm-t flm-d" focusable="false">
+      <title id="flm-t">Fluxo de um envio</title>
+      <desc id="flm-d">Cinco etapas em sequência, de cima para baixo: escolher o conteúdo, enviar o pedido, aprovação no aparelho de destino, transferência direta e conferência com salvamento.</desc>
+      <defs>
+        <linearGradient id="flm-g" gradientUnits="userSpaceOnUse" x1="0" y1="34" x2="0" y2="426"><stop offset="0" style="stop-color:var(--button-bg)"/><stop offset="1" style="stop-color:var(--accent-primary)"/></linearGradient>
+      </defs>
+      <line x1="30" y1="34" x2="30" y2="426" stroke="url(#flm-g)" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 10"/>
+      <circle cx="30" cy="34" r="14" style="fill:var(--button-bg)"/>
+      <circle class="d-node" cx="30" cy="122" r="14"/>
+      <circle class="d-node" cx="30" cy="230" r="14"/>
+      <circle class="d-node" cx="30" cy="338" r="14"/>
+      <circle cx="30" cy="426" r="14" style="fill:var(--accent-primary)"/>
+      <text class="d-n" x="30" y="39" text-anchor="middle">1</text>
+      <text class="d-n d-n2" x="30" y="127" text-anchor="middle">2</text>
+      <text class="d-n d-n2" x="30" y="235" text-anchor="middle">3</text>
+      <text class="d-n d-n2" x="30" y="343" text-anchor="middle">4</text>
+      <text class="d-n" x="30" y="431" text-anchor="middle">5</text>
+      <text class="d-t" x="62" y="30">Escolher</text>
+      <text class="d-s" x="62" y="50">arquivos, textos ou links</text>
+      <text class="d-t" x="62" y="118">Pedido</text>
+      <text class="d-s" x="62" y="138">o destino vê quem envia e o quê</text>
+      <text class="d-t" x="62" y="226">Aprovação</text>
+      <text class="d-s" x="62" y="246">aceitar, recusar ou pedir PIN</text>
+      <text class="d-t" x="62" y="334">Transferência</text>
+      <text class="d-s" x="62" y="354">direta, com progresso e cancelamento</text>
+      <text class="d-t" x="62" y="422">Conferência</text>
+      <text class="d-s" x="62" y="442">CRC32 e salvamento no destino</text>
+    </svg>
+  </div>
+  <figcaption class="diagram-caption">Fluxo de um envio, do ponto de partida (laranja) ao de chegada (verde).</figcaption>
+</figure>
