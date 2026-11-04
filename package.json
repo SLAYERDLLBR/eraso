@@ -1,6 +1,6 @@
 {
   "name": "eraso",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "private": true,
   "description": "ERASÓ: envio de arquivos, textos e links entre os seus aparelhos, direto de um navegador ao outro.",
   "type": "module",

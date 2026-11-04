@@ -7,7 +7,7 @@
 ![Sem npm install](https://img.shields.io/badge/npm%20install-n%C3%A3o%20precisa-brightgreen)
 ![Estado: protótipo funcional](https://img.shields.io/badge/estado-prot%C3%B3tipo%20funcional-orange)
 
-O ERASÓ envia arquivos, imagens, textos e links entre os seus aparelhos (computador, celular, tablet) **direto de um navegador ao outro**, sem instalar nada e sem passar o conteúdo por nenhum servidor. **Abra o aplicativo nos dois aparelhos: no mesmo Wi-Fi eles se encontram sozinhos. https://slayerdllbr.github.io/eraso/app/index.html** É a alternativa para quem hoje manda arquivo para si mesmo pelo WhatsApp Web.
+O ERASÓ envia arquivos, imagens, textos e links entre os seus aparelhos (computador, celular, tablet) **direto de um navegador ao outro**, sem instalar nada e sem passar o conteúdo por nenhum servidor. **Abra o aplicativo nos dois aparelhos: no mesmo Wi-Fi eles se encontram sozinhos. https://eraso.pages.dev/app/** É a alternativa para quem hoje manda arquivo para si mesmo pelo WhatsApp Web.
 
 É um **projeto acadêmico de extensão** ligado à Cruzeiro do Sul Virtual. O [LocalSend](https://github.com/localsend/localsend) é a referência funcional; o ERASÓ leva a mesma ideia para a web.
 
@@ -66,7 +66,7 @@ HTML, CSS e JavaScript puros no navegador (sem framework e **sem `npm install`**
 
 ### Direto no navegador, sem instalar nada
 
-Abra **<https://slayerdllbr.github.io/eraso/app/index.html>** nos dois aparelhos (computador e celular, por exemplo). **No mesmo Wi-Fi eles aparecem um para o outro sozinhos**: toque no aparelho para enviar. Em redes diferentes, toque em **Criar sala** e abra o link de convite no outro aparelho (ou digite o código de 6 letras).
+Abra **<https://eraso.pages.dev/app/>** nos dois aparelhos (computador e celular, por exemplo). **No mesmo Wi-Fi eles aparecem um para o outro sozinhos**: toque no aparelho para enviar. Em redes diferentes, toque em **Criar sala** e abra o link de convite no outro aparelho (ou digite o código de 6 letras).
 
 Se o serviço de apresentação estiver fora do ar ou a rede o bloquear, use o pareamento por QR Code:
 
@@ -156,8 +156,9 @@ Documentos do projeto: guia de uso, política de privacidade (rascunho) e págin
 ## Links oficiais
 
 - Repositório: <https://github.com/SLAYERDLLBR/eraso>
-- Site institucional: <https://slayerdllbr.github.io/eraso/> (GitHub Pages) e <https://eraso.pages.dev/> (Cloudflare Pages)
-- Aplicativo: <https://slayerdllbr.github.io/eraso/app/index.html> e <https://eraso.pages.dev/app/>
+- Site institucional (oficial, Cloudflare Pages): <https://eraso.pages.dev/>
+- Aplicativo (oficial): <https://eraso.pages.dev/app/>
+- Espelho no GitHub Pages: <https://slayerdllbr.github.io/eraso/> (mesmo conteúdo; aponta o endereço oficial como `canonical`)
 - Serviço de apresentação (Cloudflare): `https://eraso-sinal.eraso.workers.dev/saude`. Código em [cloudflare/](cloudflare/README.md).
 - Servidor próprio opcional: [docs/etapa4/HOSPEDAGEM.md](docs/etapa4/HOSPEDAGEM.md).
 

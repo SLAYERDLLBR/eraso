@@ -8,7 +8,7 @@ compatibility_date = "2025-01-01"
 # Sites que podem usar este serviço (lista separada por vírgulas): o GitHub Pages e a Cloudflare Pages.
 ALLOWED_ORIGINS = "https://slayerdllbr.github.io,https://eraso.pages.dev"
 # Endereço do aplicativo, mostrado na página inicial do serviço (quem abre o endereço no navegador).
-APP_URL = "https://slayerdllbr.github.io/eraso/app/index.html"
+APP_URL = "https://eraso.pages.dev/app/"
 # STUN usado pelos navegadores para descobrir o próprio endereço (padrão: stun.cloudflare.com).
 # Para TURN (opcional), defina os segredos TURN_URL, TURN_USER e TURN_CRED com `npx wrangler secret put`.
 

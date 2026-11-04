@@ -5,6 +5,8 @@
 // Variáveis de ambiente (todas opcionais):
 //   SITE_URL      endereço público do site, sem barra final (ex.: https://usuario.github.io/eraso). Com ele, as páginas
 //                 ganham <link rel="canonical">, og:url e og:image, e o build gera sitemap.xml e robots.txt.
+//   CANONICAL_URL endereço OFICIAL do site, quando este build é um espelho (ex.: o do GitHub Pages, com o oficial na Cloudflare). As páginas passam a
+//                 apontar o oficial em canonical, og:url e og:image, e o espelho não publica sitemap.xml (evita conteúdo duplicado nos buscadores).
 //   HOSPEDAGEM=cloudflare (ou a opção --cloudflare)  Para a Cloudflare Pages. Neste modo, o build também escreve o arquivo _headers (a Cloudflare Pages aplica
 //                 cabeçalhos HTTP; o GitHub Pages não): política de conteúdo, nosniff, HSTS etc., como no servidor próprio. O site em si é o mesmo.
 //   ERASO_SERVIDOR_URL  endereço do serviço de presença e sinalização na nuvem (Cloudflare, veja cloudflare/README.md). Sem ele, vale
@@ -29,6 +31,10 @@ const SAIDA = join(RAIZ, process.argv.slice(2).find((a) => !a.startsWith('--')) 
 const SITE_URL = (process.env.SITE_URL || '').replace(/\/+$/, '');
 const APP_URL = (process.env.ERASO_APP_URL || '').trim();
 const BASE = SITE_URL ? new URL(SITE_URL).pathname.replace(/\/+$/, '') : '';
+const CANONICO = (process.env.CANONICAL_URL || '').trim().replace(/\/+$/, '');
+if (CANONICO && !/^https:\/\/[a-z0-9.-]+(:\d+)?(\/[A-Za-z0-9._~\/-]*)?$/i.test(CANONICO)) throw new Error('CANONICAL_URL precisa ser um endereço https:// sem parâmetros');
+const ORIGEM_OFICIAL = CANONICO || SITE_URL;
+const ESPELHO = !!CANONICO && CANONICO !== SITE_URL;
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
 if (APP_URL && !/^https:\/\//.test(APP_URL)) throw new Error('ERASO_APP_URL precisa começar com https://');
@@ -67,9 +73,9 @@ function reescreverLinksDoApp(html) {
 }
 
 function acrescentarMetadados(html, arquivo) {
-  if (!SITE_URL) return html;
-  const url = `${SITE_URL}/${arquivo === 'index.html' ? '' : arquivo}`;
-  const imagem = `${SITE_URL}/assets/app/app-desktop-claro.png`;
+  if (!ORIGEM_OFICIAL) return html;
+  const url = `${ORIGEM_OFICIAL}/${arquivo === 'index.html' ? '' : arquivo}`;
+  const imagem = `${ORIGEM_OFICIAL}/assets/app/app-desktop-claro.png`;
   const tags = `<link rel="canonical" href="${esc(url)}">\n<meta property="og:url" content="${esc(url)}">\n<meta property="og:image" content="${esc(imagem)}">\n<meta property="og:image:alt" content="Aplicativo do ERASÓ no computador: tela Compartilhar">\n<meta name="twitter:card" content="summary_large_image">\n`;
   return html.replace('<meta name="twitter:card" content="summary">\n', '').replace('</head>', `${tags}</head>`);
 }
@@ -92,7 +98,7 @@ const naoEncontrada = `<main id="conteudo"><section class="section"><div class="
 const quatroZeroQuatro = abs(topo).replace(/<title>[^<]*<\/title>/, '<title>Página não encontrada · ERASÓ</title>').replace(/<link rel="canonical"[^>]*>\n?/, '').replace(/<meta property="og:url"[^>]*>\n?/, '') + naoEncontrada + abs(rodape);
 writeFileSync(join(SAIDA, '404.html'), quatroZeroQuatro.replace('</head>', '<meta name="robots" content="noindex">\n</head>'), 'utf8');
 
-if (SITE_URL) {
+if (SITE_URL && !ESPELHO) {
   const urls = [...paginas.map((f) => `${SITE_URL}/${f === 'index.html' ? '' : f}`), `${SITE_URL}/app/index.html`];
   writeFileSync(join(SAIDA, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${esc(u)}</loc></url>`).join('\n')}\n</urlset>\n`);
   writeFileSync(join(SAIDA, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
@@ -117,4 +123,4 @@ const restantes = paginas.filter((f) => /(?:href|src)="\.\.\//.test(readFileSync
 if (restantes.length) throw new Error(`Links para fora do site em: ${restantes.join(', ')}`);
 if (!existsSync(join(SAIDA, 'index.html'))) throw new Error('index.html não foi gerado');
 
-console.log(`Site montado em ${SAIDA}: ${paginas.length} páginas + 404.html, ${linksReescritos} links do aplicativo reescritos (${APP_URL ? 'para ' + APP_URL : 'para app/index.html'}), app/ incluído${CLOUDFLARE ? ', _headers da Cloudflare' : ''}, ${SERVIDOR ? 'serviço na nuvem: ' + SERVIDOR : 'sem serviço na nuvem (só pareamento por código)'}${SITE_URL ? `, base ${BASE || '/'}` : ''}.`);
+console.log(`Site montado em ${SAIDA}: ${paginas.length} páginas + 404.html, ${linksReescritos} links do aplicativo reescritos (${APP_URL ? 'para ' + APP_URL : 'para app/index.html'}), app/ incluído${CLOUDFLARE ? ', _headers da Cloudflare' : ''}${ESPELHO ? `, espelho (oficial: ${CANONICO})` : ''}, ${SERVIDOR ? 'serviço na nuvem: ' + SERVIDOR : 'sem serviço na nuvem (só pareamento por código)'}${SITE_URL ? `, base ${BASE || '/'}` : ''}.`);

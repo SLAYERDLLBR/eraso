@@ -31,7 +31,7 @@ Atenção: na primeira publicação, a Cloudflare registra o seu subdomínio `wo
 1. Coloque o endereço mostrado em `app/config.js`, no campo `servidor`, e faça o commit. O site é republicado sozinho. (Neste projeto o endereço é `https://eraso-sinal.eraso.workers.dev`.)
 2. Confira `https://SEU-ENDERECO/saude`: deve responder `{"ok":true,"servico":"eraso-sinal"}`.
 
-Se o seu site não for `https://slayerdllbr.github.io`, ajuste `ALLOWED_ORIGINS` em `wrangler.toml` antes de publicar.
+Se os seus sites não forem `https://slayerdllbr.github.io` e `https://eraso.pages.dev`, ajuste `ALLOWED_ORIGINS` e `APP_URL` em `wrangler.toml` antes de publicar.
 
 ### TURN (opcional)
 

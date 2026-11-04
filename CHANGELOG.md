@@ -2,6 +2,12 @@
 
 Segue o formato do [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o versionamento semântico, adaptado à fase de protótipo (versões 0.x podem mudar sem aviso).
 
+## [0.5.3] — 2026-11-04
+
+### Alterado
+- O endereço **oficial** do ERASÓ passa a ser https://eraso.pages.dev/ (Cloudflare Pages). O GitHub Pages vira **espelho**: as páginas apontam o endereço oficial em `canonical`, `og:url` e `og:image` (`CANONICAL_URL` no build) e o espelho não publica `sitemap.xml`.
+- A página inicial do serviço da Cloudflare leva ao aplicativo oficial.
+
 ## [0.5.2] — 2026-11-04
 
 ### Adicionado

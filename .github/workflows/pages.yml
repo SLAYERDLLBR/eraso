@@ -44,6 +44,8 @@ jobs:
       - name: Montar o site estático
         env:
           SITE_URL: ${{ steps.pages.outputs.base_url }}
+          # O endereço oficial é o da Cloudflare Pages; esta publicação é o espelho.
+          CANONICAL_URL: https://eraso.pages.dev
           # Endereço público do aplicativo (servidor do ERASÓ), quando existir:
           # Settings > Secrets and variables > Actions > Variables > ERASO_APP_URL
           ERASO_APP_URL: ${{ vars.ERASO_APP_URL }}

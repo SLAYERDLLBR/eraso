@@ -1,6 +1,6 @@
 # Migração para a Cloudflare (site, aplicativo e serviço)
 
-> **Estado em 4 de novembro de 2026:** os passos 3.1 a 3.3 já foram feitos. O site e o aplicativo estão publicados **nos dois lugares** (GitHub Pages e Cloudflare Pages, https://eraso.pages.dev/), e o serviço aceita os dois endereços. Faltam, se você quiser: domínio próprio (3.4), escolher qual endereço é o oficial e atualizar os textos (3.5) e desligar o GitHub Pages (3.6). Nada disso é obrigatório.
+> **Estado em 4 de novembro de 2026:** os passos 3.1 a 3.3 já foram feitos e a Cloudflare Pages (https://eraso.pages.dev/) foi definida como o endereço **oficial**. O GitHub Pages continua publicado como **espelho** (as páginas apontam o endereço oficial em `canonical`), e o serviço aceita os dois. Faltam, se você quiser: domínio próprio (3.4) e desligar o espelho (3.6).
 
 ## 1. Onde cada parte está hoje
 

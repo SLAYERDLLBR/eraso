@@ -108,6 +108,12 @@ try {
     for (const rota of ['/', '/index.html', '/como-funciona.html', '/como-funciona']) { const b = bloco(rota); verdade(b && b.includes(hash) && /connect-src 'self';/.test(b) && /frame-ancestors 'self'/.test(b), `política do site em ${rota}`); }
     verdade(regras.size >= 24, 'deveria haver regras por página');
   });
+  await teste('espelho (GitHub Pages): canonical, og:url e og:image apontam para o endereço oficial e não há sitemap duplicado', async () => {
+    montar({ SITE_URL: `https://exemplo.github.io${BASE}`, CANONICAL_URL: 'https://oficial.exemplo.test' });
+    const idx = readFileSync(join(PASTA, 'index.html'), 'utf8'); verdade(idx.includes('<link rel="canonical" href="https://oficial.exemplo.test/">') && idx.includes('og:url" content="https://oficial.exemplo.test/"') && idx.includes('og:image" content="https://oficial.exemplo.test/assets/app/app-desktop-claro.png"'), 'metadados do espelho');
+    verdade(!existsSync(join(PASTA, 'sitemap.xml')), 'o espelho não publica sitemap'); verdade(!/exemplo\.github\.io/.test(idx), 'o endereço do espelho não deve aparecer nas páginas');
+    const r = spawnSync(process.execPath, [join(RAIZ, 'scripts', 'build-pages.mjs'), SAIDA], { env: { ...process.env, CANONICAL_URL: 'http://inseguro.test' }, encoding: 'utf8' }); verdade(r.status !== 0, 'deveria recusar CANONICAL_URL sem HTTPS');
+  });
 } finally { rmSync(PASTA, { recursive: true, force: true }); }
 
 console.log(`\n${ok} testes passaram, ${falhas.length} falharam.`);
