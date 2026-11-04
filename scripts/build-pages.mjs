@@ -5,6 +5,8 @@
 // Variáveis de ambiente (todas opcionais):
 //   SITE_URL      endereço público do site, sem barra final (ex.: https://usuario.github.io/eraso). Com ele, as páginas
 //                 ganham <link rel="canonical">, og:url e og:image, e o build gera sitemap.xml e robots.txt.
+//   ERASO_SERVIDOR_URL  endereço do serviço de presença e sinalização na nuvem (Cloudflare, veja cloudflare/README.md). Sem ele, vale
+//                 o que estiver em app/config.js. Com ele, o aplicativo encontra aparelhos sozinho (mesmo Wi-Fi ou sala).
 //   ERASO_APP_URL endereço público de um servidor do ERASÓ (opcional). Os botões "Acessar o ERASÓ" passam a apontar para ele.
 //                 Sem ele, apontam para o aplicativo publicado junto com o site (app/), que funciona sem servidor: os aparelhos
 //                 se encontram por pareamento com código (QR Code, link ou texto).
@@ -26,6 +28,9 @@ const BASE = SITE_URL ? new URL(SITE_URL).pathname.replace(/\/+$/, '') : '';
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
 if (APP_URL && !/^https:\/\//.test(APP_URL)) throw new Error('ERASO_APP_URL precisa começar com https://');
+const configApp = readFileSync(join(RAIZ, 'app', 'config.js'), 'utf8');
+const SERVIDOR = (process.env.ERASO_SERVIDOR_URL || (/servidor:\s*'([^']*)'/.exec(configApp) || [])[1] || '').trim().replace(/\/+$/, '');
+if (SERVIDOR && !/^https:\/\/[a-z0-9.-]+(:\d+)?$/i.test(SERVIDOR)) throw new Error('ERASO_SERVIDOR_URL precisa ser um endereço https:// sem caminho (ex.: https://eraso-sinal.exemplo.workers.dev)');
 
 rmSync(SAIDA, { recursive: true, force: true });
 mkdirSync(SAIDA, { recursive: true });
@@ -37,7 +42,9 @@ writeFileSync(join(SAIDA, '.nojekyll'), '');
 const paginas = readdirSync(SAIDA).filter((f) => f.endsWith('.html')).sort();
 
 /** O Pages não permite definir cabeçalhos; a política de conteúdo do aplicativo vai em <meta>. Espelha a do servidor (server/servidor.mjs). */
-const CSP_APP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'";
+const CONECTAR = SERVIDOR ? `'self' ${SERVIDOR} ${SERVIDOR.replace(/^https/, 'wss')}` : "'self'";
+const CSP_APP = `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src ${CONECTAR}; base-uri 'none'; form-action 'self'; object-src 'none'`;
+if (process.env.ERASO_SERVIDOR_URL) writeFileSync(join(SAIDA, 'app', 'config.js'), configApp.replace(/servidor:\s*'[^']*'/, `servidor: '${SERVIDOR}'`), 'utf8');
 const appIndex = join(SAIDA, 'app', 'index.html');
 writeFileSync(appIndex, readFileSync(appIndex, 'utf8').replace('<head>', `<head>\n<meta http-equiv="Content-Security-Policy" content="${CSP_APP}">`), 'utf8');
 let linksReescritos = 0;
@@ -91,4 +98,4 @@ const restantes = paginas.filter((f) => /(?:href|src)="\.\.\//.test(readFileSync
 if (restantes.length) throw new Error(`Links para fora do site em: ${restantes.join(', ')}`);
 if (!existsSync(join(SAIDA, 'index.html'))) throw new Error('index.html não foi gerado');
 
-console.log(`Site montado em ${SAIDA}: ${paginas.length} páginas + 404.html, ${linksReescritos} links do aplicativo reescritos (${APP_URL ? 'para ' + APP_URL : 'para app/index.html'}), app/ incluído${SITE_URL ? `, base ${BASE || '/'}` : ''}.`);
+console.log(`Site montado em ${SAIDA}: ${paginas.length} páginas + 404.html, ${linksReescritos} links do aplicativo reescritos (${APP_URL ? 'para ' + APP_URL : 'para app/index.html'}), app/ incluído, ${SERVIDOR ? 'serviço na nuvem: ' + SERVIDOR : 'sem serviço na nuvem (só pareamento por código)'}${SITE_URL ? `, base ${BASE || '/'}` : ''}.`);

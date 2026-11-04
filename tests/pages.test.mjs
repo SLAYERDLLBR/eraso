@@ -88,6 +88,13 @@ try {
     verdade(!/href="app\/index\.html"/.test(readFileSync(join(PASTA, 'index.html'), 'utf8')), 'ainda aponta para o app local');
     const r = spawnSync(process.execPath, [join(RAIZ, 'scripts', 'build-pages.mjs'), SAIDA], { env: { ...process.env, ERASO_APP_URL: 'http://inseguro.test' }, encoding: 'utf8' }); verdade(r.status !== 0, 'deveria recusar endereço sem HTTPS');
   });
+  await teste('com o endereço do serviço na nuvem: config.js recebe o endereço e a política de conteúdo libera só ele (https e wss)', async () => {
+    montar({ SITE_URL: `https://exemplo.github.io${BASE}`, ERASO_SERVIDOR_URL: 'https://eraso-sinal.exemplo.workers.dev/' });
+    const cfg = readFileSync(join(PASTA, 'app', 'config.js'), 'utf8'); verdade(/servidor: 'https:\/\/eraso-sinal\.exemplo\.workers\.dev'/.test(cfg), 'config.js: ' + cfg.slice(-120));
+    const app = readFileSync(join(PASTA, 'app', 'index.html'), 'utf8'); verdade(/connect-src 'self' https:\/\/eraso-sinal\.exemplo\.workers\.dev wss:\/\/eraso-sinal\.exemplo\.workers\.dev;/.test(app), 'CSP sem o endereço do serviço');
+    for (const ruim of ['http://eraso-sinal.exemplo.workers.dev', 'https://exemplo.dev/caminho', 'javascript:alert(1)', "https://a.dev'; x"]) { const r = spawnSync(process.execPath, [join(RAIZ, 'scripts', 'build-pages.mjs'), SAIDA], { env: { ...process.env, ERASO_SERVIDOR_URL: ruim }, encoding: 'utf8' }); verdade(r.status !== 0, `deveria recusar ${ruim}`); }
+    montar({}); verdade(/servidor: ''/.test(readFileSync(join(PASTA, 'app', 'config.js'), 'utf8')), 'sem a variável, config.js continua vazio'); verdade(/connect-src 'self';/.test(readFileSync(join(PASTA, 'app', 'index.html'), 'utf8')), 'CSP restrita ao próprio site');
+  });
 } finally { rmSync(PASTA, { recursive: true, force: true }); }
 
 console.log(`\n${ok} testes passaram, ${falhas.length} falharam.`);

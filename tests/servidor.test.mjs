@@ -49,7 +49,7 @@ await teste('sem código de sala, o servidor público recusa a conexão', async 
   const lista = await fetch(`${BASE}/api/aparelhos`, { headers: { 'x-forwarded-for': ipFalso() } }); igual(lista.status, 400, 'lista sem sala');
 });
 await teste('código de sala inválido (curto, maiúsculo fora do padrão, símbolos) é recusado', async () => {
-  for (const ruim of ['abc', 'abcdefg', 'ABCD#EFGH', 'x'.repeat(40)]) igual((await conectar(hexId(), ruim)).r.status, 400, `sala "${ruim}"`);
+  for (const ruim of ['abc', 'abcde', 'ABCD#EFGH', 'x'.repeat(40)]) igual((await conectar(hexId(), ruim)).r.status, 400, `sala "${ruim}"`);
 });
 await teste('só se veem aparelhos da mesma sala', async () => {
   const s1 = sala(), s2 = sala(); const a = await abrir(hexId(), s1, { nome: 'A' }), b = await abrir(hexId(), s1, { nome: 'B' }), c = await abrir(hexId(), s2, { nome: 'C' });

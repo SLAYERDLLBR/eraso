@@ -36,6 +36,7 @@ jobs:
         run: |
           npm run verificar-site:offline
           npm run test:qr
+          npm run test:cloudflare
           npm run test:pages
       - name: Configurar o GitHub Pages
         id: pages

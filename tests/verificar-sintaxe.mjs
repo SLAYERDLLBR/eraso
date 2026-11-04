@@ -7,7 +7,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
-const PASTAS = ['server', 'app', 'landing', 'tests', 'docs'];
+const PASTAS = ['server', 'app', 'cloudflare', 'scripts', 'landing', 'tests', 'docs'];
 const IGNORAR = new Set(['node_modules', '.git']);
 
 function arquivos(pasta) {
