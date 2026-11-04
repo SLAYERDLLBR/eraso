@@ -26,9 +26,9 @@ npx wrangler login        # abre o navegador para você autorizar
 npx wrangler deploy       # publica e mostra o endereço, algo como https://eraso-sinal.SEU-SUBDOMINIO.workers.dev
 ```
 
-Na primeira publicação, a Cloudflare pede para escolher o seu subdomínio `workers.dev`. Depois:
+Atenção: na primeira publicação, a Cloudflare registra o seu subdomínio `workers.dev` automaticamente **a partir do começo do e-mail da conta**. Como o endereço ficará público no código do app, troque-o antes no painel (**Workers e Pages › Subdomain**) por um nome neutro e só então publique de novo. Depois:
 
-1. Coloque o endereço mostrado em `app/config.js`, no campo `servidor`, e faça o commit. O site é republicado sozinho.
+1. Coloque o endereço mostrado em `app/config.js`, no campo `servidor`, e faça o commit. O site é republicado sozinho. (Neste projeto o endereço é `https://eraso-sinal.eraso.workers.dev`.)
 2. Confira `https://SEU-ENDERECO/saude`: deve responder `{"ok":true,"servico":"eraso-sinal"}`.
 
 Se o seu site não for `https://slayerdllbr.github.io`, ajuste `ALLOWED_ORIGINS` em `wrangler.toml` antes de publicar.

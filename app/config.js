@@ -6,4 +6,4 @@
  * Se o aplicativo for aberto a partir de um servidor do ERASÓ (npm start), o servidor da própria página tem prioridade.
  * O endereço é público por natureza (o navegador precisa dele): não coloque aqui nenhuma chave nem segredo.
  */
-window.ERASO_CONFIG = { servidor: '' };
+window.ERASO_CONFIG = { servidor: 'https://eraso-sinal.eraso.workers.dev' };

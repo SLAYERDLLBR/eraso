@@ -3,6 +3,7 @@
 // trocam arquivo e usam salas. Não faz parte do `npm test` porque o Wrangler precisa ser baixado (npx).
 //
 // Uso:  npm run test:nuvem
+//       ERASO_URL=https://slayerdllbr.github.io/eraso/app/index.html npm run test:nuvem   (testa o site JÁ PUBLICADO e o serviço real da Cloudflare)
 //       ERASO_WORKER_URL=http://127.0.0.1:8787 npm run test:nuvem   (usa um `wrangler dev` que já esteja rodando)
 //
 // O servidor de arquivos do teste troca config.js (endereço do serviço) e libera o endereço do serviço na política de conteúdo,
@@ -25,20 +26,23 @@ const MIME = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': '
 const procs = [];
 
 // ---------- serviço (Wrangler) ----------
-let WORKER = process.env.ERASO_WORKER_URL || '', wrangler = null, criouVars = false; const dir = join(RAIZ, 'cloudflare'), vars = join(dir, '.dev.vars');
+const PUBLICADO = process.env.ERASO_URL || '';
+let WORKER = PUBLICADO ? 'publicado' : (process.env.ERASO_WORKER_URL || ''), wrangler = null, criouVars = false; const dir = join(RAIZ, 'cloudflare'), vars = join(dir, '.dev.vars');
 if (!WORKER) {
   if (!existsSync(vars)) { writeFileSync(vars, 'ALLOWED_ORIGINS="http://127.0.0.1:*,http://localhost:*"\n'); criouVars = true; }
   const porta = 8800 + Math.floor(Math.random() * 100); WORKER = `http://127.0.0.1:${porta}`;
   wrangler = spawn('npx', ['--yes', 'wrangler@latest', 'dev', '--port', String(porta), '--ip', '127.0.0.1', '--local'], { cwd: dir, shell: true, stdio: 'ignore' });
   for (let i = 0; i < 150; i++) { try { if ((await fetch(`${WORKER}/saude`)).ok) break; } catch { /* ainda subindo */ } await dormir(500); }
 }
-try { igualOuSai((await fetch(`${WORKER}/saude`)).status, 200, 'o serviço não subiu'); } catch (e) { console.error('Não foi possível iniciar o serviço (wrangler dev):', e.message); fim(1); }
+if (!PUBLICADO) try { igualOuSai((await fetch(`${WORKER}/saude`)).status, 200, 'o serviço não subiu'); } catch (e) { console.error('Não foi possível iniciar o serviço (wrangler dev):', e.message); fim(1); }
 function igualOuSai(a, b, m) { if (a !== b) throw new Error(m); }
 function fim(codigo) { if (wrangler) matarArvore(wrangler); if (criouVars) rmSync(vars, { force: true }); rmSync(PASTA, { recursive: true, force: true }); procs.forEach(matarArvore); process.exit(codigo); }
 
 // ---------- site montado como no Pages, servido com o endereço do serviço ----------
-const b = spawnSync(process.execPath, [join(RAIZ, 'scripts', 'build-pages.mjs'), SAIDA], { env: { ...process.env, SITE_URL: '', ERASO_APP_URL: '', ERASO_SERVIDOR_URL: '' }, encoding: 'utf8' });
-if (b.status !== 0) { console.error(b.stderr || b.stdout); fim(1); }
+if (!PUBLICADO) {
+  const b = spawnSync(process.execPath, [join(RAIZ, 'scripts', 'build-pages.mjs'), SAIDA], { env: { ...process.env, SITE_URL: '', ERASO_APP_URL: '', ERASO_SERVIDOR_URL: '' }, encoding: 'utf8' });
+  if (b.status !== 0) { console.error(b.stderr || b.stdout); fim(1); }
+}
 const estatico = (servidorNoConfig) => createServer((req, res) => {
   const caminho = decodeURIComponent(new URL(req.url, 'http://x').pathname);
   if (caminho === `${BASE}/app/config.js`) { res.writeHead(200, { 'content-type': MIME['.js'] }); return res.end(`window.ERASO_CONFIG = { servidor: '${servidorNoConfig}' };`); }
@@ -48,9 +52,9 @@ const estatico = (servidorNoConfig) => createServer((req, res) => {
   if (arq.endsWith(join('app', 'index.html'))) corpo = Buffer.from(corpo.toString('utf8').replace("connect-src 'self'", `connect-src 'self' ${servidorNoConfig} ${servidorNoConfig.replace(/^http/, 'ws')}`));
   res.writeHead(200, { 'content-type': MIME[extname(arq)] || 'application/octet-stream' }); res.end(corpo);
 });
-const srvOk = estatico(WORKER), srvSemServico = estatico('http://127.0.0.1:9'); // o segundo aponta para uma porta fechada
-await Promise.all([srvOk, srvSemServico].map((s) => new Promise((r) => s.listen(0, '127.0.0.1', r))));
-const APP = `http://127.0.0.1:${srvOk.address().port}${BASE}/app/index.html?sem-intro`, APP_SEM = `http://127.0.0.1:${srvSemServico.address().port}${BASE}/app/index.html?sem-intro`;
+const srvOk = PUBLICADO ? null : estatico(WORKER), srvSemServico = PUBLICADO ? null : estatico('http://127.0.0.1:9'); // o segundo aponta para uma porta fechada
+if (!PUBLICADO) await Promise.all([srvOk, srvSemServico].map((s) => new Promise((r) => s.listen(0, '127.0.0.1', r))));
+const APP = PUBLICADO ? `${PUBLICADO}?sem-intro` : `http://127.0.0.1:${srvOk.address().port}${BASE}/app/index.html?sem-intro`, APP_SEM = PUBLICADO ? '' : `http://127.0.0.1:${srvSemServico.address().port}${BASE}/app/index.html?sem-intro`;
 
 async function navegador(rotulo) {
   const porta = 9500 + Math.floor(Math.random() * 400), dados = mkdtempSync(join(tmpdir(), 'edge-nuv-')), downloads = mkdtempSync(join(tmpdir(), 'dl-nuv-'));
@@ -80,15 +84,15 @@ const sha = (buf) => createHash('sha256').update(buf).digest('hex');
 const comOrigem = (url, origem) => new Promise((ok2, erro) => { const u = new URL(url); const r = pedir({ hostname: u.hostname, port: u.port, path: u.pathname + u.search, headers: { origin: origem } }, (res) => { res.resume(); ok2(res.statusCode); }); r.on('error', erro); r.end(); });
 
 const A = await navegador('A'), B = await navegador('B');
-console.log(`\nServiço ${WORKER} · aplicativo ${APP.replace(/\?.*/, '')}\n`);
+console.log(`\nServiço ${PUBLICADO ? '(o do site publicado)' : WORKER} · aplicativo ${APP.replace(/\?.*/, '')}\n`);
 try {
-  await teste('o serviço só aceita o site permitido e responde sem sala a partir do endereço de rede', async () => {
+  if (!PUBLICADO) await teste('o serviço só aceita o site permitido e responde sem sala a partir do endereço de rede', async () => {
     igual(await comOrigem(`${WORKER}/api/config`, 'https://evil.example'), 403, 'config de origem estranha'); igual(await comOrigem(`${WORKER}/api/aparelhos?sala=abc123`, 'https://evil.example'), 403, 'API de origem estranha');
     igual(await comOrigem(`${WORKER}/api/config`, 'http://127.0.0.1:1234'), 200, 'origem permitida');
   });
   await teste('no mesmo Wi-Fi os aparelhos se encontram sozinhos, sem código, sem QR e sem passo nenhum', async () => {
     await A.abrir(); await B.abrir();
-    await ate(async () => (await A.ev('S.net')) === 'conectado' && (await B.ev('S.net')) === 'conectado', 15000, 'conectar ao serviço'); igual(await A.ev('REDE.config.modo'), 'nuvem', 'modo');
+    await ate(async () => (await A.ev('S.net')) === 'conectado' && (await B.ev('S.net')) === 'conectado', 15000, 'conectar ao serviço'); igual(await A.ev('REDE.config.modo'), 'nuvem', 'modo'); if (PUBLICADO) { WORKER = await A.ev('REDE.base'); verdade(/^https:\/\/[a-z0-9.-]+\.workers\.dev$/.test(WORKER), 'o app publicado deveria usar o serviço da Cloudflare: ' + WORKER); }
     await ate(async () => (await A.ev('DEVICES.length')) === 1 && (await B.ev('DEVICES.length')) === 1, 15000, 'descoberta automática');
     igual((await nomes(A))[0], await B.ev('ME.name'), 'A vê B'); igual((await nomes(B))[0], await A.ev('ME.name'), 'B vê A');
     verdade(/nesta rede/.test(await A.ev(`document.querySelector('[data-scan-text]').innerText`)), 'texto de status deveria dizer "nesta rede"');
@@ -115,7 +119,7 @@ try {
     await A.ev('REDE._ws.close()'); await ate(async () => (await A.ev('S.net')) === 'reconectando', 5000, 'estado reconectando');
     await ate(async () => (await A.ev('S.net')) === 'conectado' && (await A.ev('DEVICES.length')) === 1, 15000, 'reconectar');
   });
-  await teste('se o serviço estiver fora do ar, o aplicativo cai no pareamento por QR Code (nada quebra)', async () => {
+  if (!PUBLICADO) await teste('se o serviço estiver fora do ar, o aplicativo cai no pareamento por QR Code (nada quebra)', async () => {
     const C = await navegador('C'); try { await C.abrir(APP_SEM); await ate(async () => (await C.ev('S.net')) === 'manual', 15000, 'modo manual'); igual(await C.ev('REDE.config.modo'), 'manual', 'modo'); verdade(/Pareie o primeiro aparelho/.test(await C.ev(`document.querySelector('[data-grid]').innerText`)), 'tela de pareamento'); igual(C.erros.filter((e) => !/fetch|network|Failed/i.test(e)), [], 'erros em C'); } finally { C.fechar(); }
   });
   await teste('fechar a página tira o aparelho da lista dos outros; sem erro de JavaScript nem violação de política de conteúdo', async () => {

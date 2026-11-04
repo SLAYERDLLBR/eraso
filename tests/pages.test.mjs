@@ -93,7 +93,9 @@ try {
     const cfg = readFileSync(join(PASTA, 'app', 'config.js'), 'utf8'); verdade(/servidor: 'https:\/\/eraso-sinal\.exemplo\.workers\.dev'/.test(cfg), 'config.js: ' + cfg.slice(-120));
     const app = readFileSync(join(PASTA, 'app', 'index.html'), 'utf8'); verdade(/connect-src 'self' https:\/\/eraso-sinal\.exemplo\.workers\.dev wss:\/\/eraso-sinal\.exemplo\.workers\.dev;/.test(app), 'CSP sem o endereço do serviço');
     for (const ruim of ['http://eraso-sinal.exemplo.workers.dev', 'https://exemplo.dev/caminho', 'javascript:alert(1)', "https://a.dev'; x"]) { const r = spawnSync(process.execPath, [join(RAIZ, 'scripts', 'build-pages.mjs'), SAIDA], { env: { ...process.env, ERASO_SERVIDOR_URL: ruim }, encoding: 'utf8' }); verdade(r.status !== 0, `deveria recusar ${ruim}`); }
-    montar({}); verdade(/servidor: ''/.test(readFileSync(join(PASTA, 'app', 'config.js'), 'utf8')), 'sem a variável, config.js continua vazio'); verdade(/connect-src 'self';/.test(readFileSync(join(PASTA, 'app', 'index.html'), 'utf8')), 'CSP restrita ao próprio site');
+    const gravado = (/servidor:\s*'([^']*)'/.exec(readFileSync(join(RAIZ, 'app', 'config.js'), 'utf8')) || [])[1] || '';
+    montar({}); igual((/servidor:\s*'([^']*)'/.exec(readFileSync(join(PASTA, 'app', 'config.js'), 'utf8')) || [])[1], gravado, 'sem a variável, vale o endereço gravado em app/config.js');
+    const csp = /connect-src ([^;]*);/.exec(readFileSync(join(PASTA, 'app', 'index.html'), 'utf8'))[1]; igual(csp, gravado ? `'self' ${gravado} ${gravado.replace(/^https/, 'wss')}` : "'self'", 'a política libera só o endereço gravado');
   });
 } finally { rmSync(PASTA, { recursive: true, force: true }); }
 
