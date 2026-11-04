@@ -73,12 +73,13 @@ async function navegador(rotulo) {
     fechar() { try { send('Page.close'); } catch { /* ok */ } setTimeout(() => { ws.close(); matarArvore(proc); }, 300); } };
 }
 async function ate(fn, ms = 15000, msg = 'condição') { const t0 = Date.now(); for (;;) { let v; try { v = await fn(); } catch (e) { v = false; if (Date.now() - t0 > ms) throw e; } if (v) return v; if (Date.now() - t0 > ms) throw new Error(`Tempo esgotado: ${msg}`); await dormir(100); } }
-let ok = 0; const falhas = [];
+let ok = 0; const falhas = []; let idA = '', idB = '';
 async function teste(nome, fn) { const t0 = Date.now(); try { await fn(); ok++; console.log(`  ✓ ${nome} (${Date.now() - t0} ms)`); } catch (e) { falhas.push([nome, e.message]); console.log(`  ✗ ${nome}\n      ${e.message}`); } }
 const igual = (a, b2, m) => { if (JSON.stringify(a) !== JSON.stringify(b2)) throw new Error(`${m}: esperado ${JSON.stringify(b2)}, obtido ${JSON.stringify(a)}`); };
 const verdade = (c, m) => { if (!c) throw new Error(m); };
 const clicar = (n, sel) => n.ev(`(()=>{const e=document.querySelector(${JSON.stringify(sel)});if(!e)throw new Error('não achei ${sel.replace(/'/g, '')}');e.click();return 1})()`);
-const nomes = (n) => n.ev('DEVICES.map(d=>d.name).sort()');
+const ve = (n, id) => n.ev(`DEVICES.some(d=>d.id===${JSON.stringify(id)}&&d.online)`);
+const naoVe = async (n, id) => !(await ve(n, id));
 const sha = (buf) => createHash('sha256').update(buf).digest('hex');
 /** GET com cabeçalho Origin arbitrário (o fetch do Node não deixa definir esse cabeçalho). */
 const comOrigem = (url, origem) => new Promise((ok2, erro) => { const u = new URL(url); const r = pedir({ hostname: u.hostname, port: u.port, path: u.pathname + u.search, headers: { origin: origem } }, (res) => { res.resume(); ok2(res.statusCode); }); r.on('error', erro); r.end(); });
@@ -93,37 +94,37 @@ try {
   await teste('no mesmo Wi-Fi os aparelhos se encontram sozinhos, sem código, sem QR e sem passo nenhum', async () => {
     await A.abrir(); await B.abrir();
     await ate(async () => (await A.ev('S.net')) === 'conectado' && (await B.ev('S.net')) === 'conectado', 15000, 'conectar ao serviço'); igual(await A.ev('REDE.config.modo'), 'nuvem', 'modo'); if (PUBLICADO) { WORKER = await A.ev('REDE.base'); verdade(/^https:\/\/[a-z0-9.-]+\.workers\.dev$/.test(WORKER), 'o app publicado deveria usar o serviço da Cloudflare: ' + WORKER); }
-    await ate(async () => (await A.ev('DEVICES.length')) === 1 && (await B.ev('DEVICES.length')) === 1, 15000, 'descoberta automática');
-    igual((await nomes(A))[0], await B.ev('ME.name'), 'A vê B'); igual((await nomes(B))[0], await A.ev('ME.name'), 'B vê A');
+    idA = await A.ev('ME.id'); idB = await B.ev('ME.id');
+    await ate(async () => (await ve(A, idB)) && (await ve(B, idA)), 15000, 'descoberta automática');
     verdade(/nesta rede/.test(await A.ev(`document.querySelector('[data-scan-text]').innerText`)), 'texto de status deveria dizer "nesta rede"');
     verdade(await A.ev(`!document.querySelector('.dest-head [data-pair-open]').hidden`), 'o pareamento por QR continua disponível como alternativa');
   });
   await teste('transferência real pela nuvem: arquivo de 3 MB de A chega idêntico em B (o serviço só intermedia o início)', async () => {
-    await A.ev(`(async()=>{const b=new Uint8Array(3*1024*1024);for(let o=0;o<b.length;o+=65536)crypto.getRandomValues(b.subarray(o,o+65536));window.__sha=[...new Uint8Array(await crypto.subtle.digest('SHA-256',b))].map(x=>x.toString(16).padStart(2,'0')).join('');addItems([{name:'pela-nuvem.bin',size:b.length,kind:'file',file:new File([b],'pela-nuvem.bin')}]);document.querySelector('.card[data-dev]').click();return 1})()`);
+    await A.ev(`(async()=>{const b=new Uint8Array(3*1024*1024);for(let o=0;o<b.length;o+=65536)crypto.getRandomValues(b.subarray(o,o+65536));window.__sha=[...new Uint8Array(await crypto.subtle.digest('SHA-256',b))].map(x=>x.toString(16).padStart(2,'0')).join('');addItems([{name:'pela-nuvem.bin',size:b.length,kind:'file',file:new File([b],'pela-nuvem.bin')}]);document.querySelector('.card[data-dev="'+${JSON.stringify(idB)}+'"]').click();return 1})()`);
     await ate(() => B.ev(`!document.querySelector('[data-req-scrim]').hidden`), 20000, 'pedido em B'); await clicar(B, '[data-req-accept]');
     await ate(() => readdirSync(B.downloads).filter((f) => !f.endsWith('.crdownload')).length === 1, 40000, 'arquivo salvo em B');
     const arq = readdirSync(B.downloads).find((f) => !f.endsWith('.crdownload')); igual(sha(readFileSync(join(B.downloads, arq))), await A.ev('window.__sha'), 'SHA-256'); igual(arq, 'pela-nuvem.bin', 'nome');
   });
   await teste('nome novo chega ao outro aparelho e fechar a página tira o aparelho da lista', async () => {
-    await B.ev(`ME.name='Celular da Bia';salvarPrefs();REDE.atualizarPerfil({nome:ME.name});1`); await ate(async () => (await A.ev('DEVICES[0]?.name')) === 'Celular da Bia', 8000, 'nome novo em A');
+    await B.ev(`ME.name='Celular da Bia';salvarPrefs();REDE.atualizarPerfil({nome:ME.name});1`); await ate(async () => (await A.ev(`DEVICES.find(d=>d.id===${JSON.stringify(idB)})?.name`)) === 'Celular da Bia', 8000, 'nome novo em A');
   });
   await teste('salas com código curto: separam, reúnem, e o código tem 6 letras fáceis de digitar', async () => {
     const codigo = await A.ev(`(()=>{const c=novaSala();return c})()`); verdade(/^[a-z2-9]{6}$/.test(codigo), 'código gerado: ' + codigo);
-    await A.ev(`entrarNaSala(${JSON.stringify(codigo)})`); await ate(async () => (await A.ev('DEVICES.length')) === 0 && (await B.ev('DEVICES.length')) === 0, 10000, 'separação');
+    await A.ev(`entrarNaSala(${JSON.stringify(codigo)})`); await ate(async () => (await A.ev('DEVICES.length')) === 0 && (await naoVe(B, idA)), 10000, 'separação (a sala nova é só de A)');
     await ate(async () => new RegExp(`nesta sala ${codigo.toUpperCase()}`).test(await A.ev(`document.querySelector('[data-scan-text]').innerText`)), 10000, 'o código aparece no status');
-    await B.ev(`entrarNaSala(${JSON.stringify(codigo)})`); await ate(async () => (await A.ev('DEVICES.length')) === 1 && (await B.ev('DEVICES.length')) === 1, 10000, 'reencontro na sala');
+    await B.ev(`entrarNaSala(${JSON.stringify(codigo)})`); await ate(async () => (await ve(A, idB)) && (await ve(B, idA)), 10000, 'reencontro na sala');
     igual(await A.ev(`entrarNaSala('abc')`), false, 'código curto demais é recusado'); await A.ev(`entrarNaSala('')`); await B.ev(`entrarNaSala('')`);
-    await ate(async () => (await A.ev('DEVICES.length')) === 1 && (await B.ev('DEVICES.length')) === 1, 10000, 'de volta à rede');
+    await ate(async () => (await ve(A, idB)) && (await ve(B, idA)), 10000, 'de volta à rede');
   });
   await teste('se a conexão com o serviço cai, o aplicativo reconecta sozinho e os aparelhos voltam', async () => {
     await A.ev('REDE._ws.close()'); await ate(async () => (await A.ev('S.net')) === 'reconectando', 5000, 'estado reconectando');
-    await ate(async () => (await A.ev('S.net')) === 'conectado' && (await A.ev('DEVICES.length')) === 1, 15000, 'reconectar');
+    await ate(async () => (await A.ev('S.net')) === 'conectado' && (await ve(A, idB)), 15000, 'reconectar');
   });
   if (!PUBLICADO) await teste('se o serviço estiver fora do ar, o aplicativo cai no pareamento por QR Code (nada quebra)', async () => {
     const C = await navegador('C'); try { await C.abrir(APP_SEM); await ate(async () => (await C.ev('S.net')) === 'manual', 15000, 'modo manual'); igual(await C.ev('REDE.config.modo'), 'manual', 'modo'); verdade(/Pareie o primeiro aparelho/.test(await C.ev(`document.querySelector('[data-grid]').innerText`)), 'tela de pareamento'); igual(C.erros.filter((e) => !/fetch|network|Failed/i.test(e)), [], 'erros em C'); } finally { C.fechar(); }
   });
   await teste('fechar a página tira o aparelho da lista dos outros; sem erro de JavaScript nem violação de política de conteúdo', async () => {
-    B.fechar(); await ate(async () => (await A.ev('DEVICES.length')) === 0, 15000, 'B sair da lista de A');
+    B.fechar(); await ate(() => naoVe(A, idB), 15000, 'B sair da lista de A');
     igual(A.erros, [], 'erros em A'); igual(B.erros, [], 'erros em B');
   });
 } finally { A.fechar(); await dormir(500); }

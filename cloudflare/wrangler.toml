@@ -5,8 +5,8 @@ main = "worker.js"
 compatibility_date = "2025-01-01"
 
 [vars]
-# Sites que podem usar este serviço (lista separada por vírgulas). Só o endereço do site publicado.
-ALLOWED_ORIGINS = "https://slayerdllbr.github.io"
+# Sites que podem usar este serviço (lista separada por vírgulas): o GitHub Pages e a Cloudflare Pages.
+ALLOWED_ORIGINS = "https://slayerdllbr.github.io,https://eraso.pages.dev"
 # Endereço do aplicativo, mostrado na página inicial do serviço (quem abre o endereço no navegador).
 APP_URL = "https://slayerdllbr.github.io/eraso/app/index.html"
 # STUN usado pelos navegadores para descobrir o próprio endereço (padrão: stun.cloudflare.com).
