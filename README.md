@@ -11,7 +11,7 @@ O ERASÓ envia arquivos, imagens, textos e links entre os seus aparelhos (comput
 
 É um **projeto acadêmico de extensão** ligado à Cruzeiro do Sul Virtual. O [LocalSend](https://github.com/localsend/localsend) é a referência funcional; o ERASÓ leva a mesma ideia para a web.
 
-> **Estado do projeto: protótipo funcional (versão 0.3).** A transferência é real e testada, mas o projeto ainda não passou por uma validação em larga escala. Veja [Limitações](#limitações).
+> **Estado do projeto: protótipo funcional (versão 0.5).** A transferência é real e testada, mas o projeto ainda não passou por uma validação em larga escala. Veja [Limitações](#limitações).
 
 <p align="center">
   <img src="landing/assets/app/app-desktop-claro.png" alt="Aplicativo do ERASÓ no computador: tela Compartilhar com três arquivos selecionados e um aparelho encontrado por perto" width="720">
@@ -26,20 +26,20 @@ Quem usa mais de um aparelho costuma passar arquivos de um para o outro enviando
 ## Como funciona
 
 ```
- Sem servidor (site publicado)                    Com servidor (opcional)
+ Padrão: serviço de apresentação (Cloudflare)         Alternativa: sem serviço (QR Code)
 
- Aparelho A ── código (QR, link ou texto) ──► B       A ──┐            ┌── B
-            ◄──── código de resposta ────────                └─ Servidor ─┘
-                                                              (presença e sinalização)
+   Aparelho A ──┐              ┌── Aparelho B         Aparelho A ── código (QR, link ou texto) ──► B
+                └─ Serviço ────┘                                  ◄──── código de resposta ────────
+        (mesmo Wi-Fi ou sala com código de 6 letras)
 
- Depois de apresentados, nos dois modos:
+ Depois de apresentados, nos dois casos:
  Aparelho A ◄════ arquivos e textos, direto (WebRTC, criptografado) ════► Aparelho B
 ```
 
-1. **Apresentação.** Sem servidor, um aparelho gera um **código** (QR Code, link ou texto) com os dados da conexão; o outro o aplica e mostra um código de resposta, que o primeiro lê com a câmera ou cola. Com um servidor do ERASÓ (opcional), os aparelhos aparecem sozinhos na mesma rede ou na mesma sala.
+1. **Apresentação.** Um serviço leve na Cloudflare avisa aos aparelhos quem está por perto: no mesmo Wi-Fi eles aparecem **sozinhos**; em redes diferentes, usam uma **sala** com código de 6 letras. Se o serviço estiver fora do ar ou a rede o bloquear, os dois aparelhos trocam um **código** (QR Code, link ou texto): um gera, o outro aplica e devolve uma resposta, que o primeiro lê com a câmera ou cola.
 2. Ao enviar, o destino vê um pedido (quem envia e o quê) e aceita, recusa, pula ou renomeia itens. Um PIN opcional é conferido pelo próprio destino.
 3. Os bytes seguem **direto entre os dois navegadores**, por um canal WebRTC criptografado (DTLS), com controle de fluxo e conferência de integridade (CRC32).
-4. **Nenhum servidor recebe nem guarda** arquivos ou textos. O servidor opcional só conhece nome, tipo e sistema de cada aparelho, na memória, enquanto o aparelho está conectado.
+4. **Nenhum servidor recebe nem guarda** arquivos ou textos. O serviço só conhece nome, tipo e sistema de cada aparelho, na memória, enquanto o aparelho está conectado. Quem preferir pode rodar o próprio servidor ([Node.js](docs/etapa4/HOSPEDAGEM.md)).
 
 ## Capturas
 
