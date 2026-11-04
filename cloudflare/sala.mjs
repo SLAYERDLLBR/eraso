@@ -53,6 +53,10 @@ export async function tratar(request, env) {
   const ok = origemPermitida(origem, permitidas), cabecalhos = ok ? cors(origem) : {};
   if (request.method === 'OPTIONS') return ok ? new Response(null, { status: 204, headers: cabecalhos }) : new Response(null, { status: 403 });
   if (url.pathname === '/saude') return json({ ok: true, servico: 'eraso-sinal' });
+  if (url.pathname === '/') { // quem abre o endereço do serviço no navegador recebe um aviso e o caminho para o aplicativo
+    const app = String(env.APP_URL || '').replace(/[<>"']/g, '');
+    return new Response(`<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ERASÓ · serviço de apresentação</title><meta name="robots" content="noindex"><body style="font:16px/1.5 system-ui,sans-serif;max-width:34rem;margin:12vh auto;padding:0 20px;color:#13201A;background:#F7F2E8"><h1 style="font-size:1.4rem">ERASÓ</h1><p>Este é o <strong>serviço de apresentação</strong> do ERASÓ: ele só ajuda os aparelhos a se encontrarem e não tem página própria. Os arquivos e textos nunca passam por aqui.</p>${app ? `<p><a href="${app}" style="color:#A8410F">Abrir o aplicativo</a></p>` : ''}</body></html>`, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'public, max-age=3600', 'x-content-type-options': 'nosniff', 'content-security-policy': "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'" } });
+  }
   if (url.pathname === '/api/config') {
     if (!ok) return json({ erro: 'origem não permitida' }, 403);
     const ice = [{ urls: String(env.STUN || 'stun:stun.cloudflare.com:3478').split(',').map((s) => s.trim()).filter(Boolean) }];

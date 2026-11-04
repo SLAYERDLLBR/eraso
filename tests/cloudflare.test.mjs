@@ -59,6 +59,11 @@ await teste('configuração só para o site permitido, com STUN padrão e CORS; 
   const t = await (await tratar(new Request('https://w/api/config', { headers: { origin: SITE } }), { ...env, TURN_URL: 'turn:t.example:3478', TURN_USER: 'u', TURN_CRED: 'c' })).json(); igual(t.iceServers[1].username, 'u', 'TURN configurado');
   igual((await tratar(new Request('https://w/api/config', { headers: { origin: 'https://evil.example' } }), env)).status, 403, 'origem estranha'); igual((await tratar(new Request('https://w/api/config'), env)).status, 403, 'sem origem');
 });
+await teste('a página inicial do serviço explica o que ele é e leva ao aplicativo, sem executar nada de fora', async () => {
+  const r = await tratar(new Request('https://w/'), { ...env, APP_URL: 'https://slayerdllbr.github.io/eraso/app/index.html' }); igual(r.status, 200, 'status'); const t = await r.text();
+  verdade(/serviço de apresentação/.test(t) && t.includes('href="https://slayerdllbr.github.io/eraso/app/index.html"'), 'texto e link do aplicativo'); verdade(/default-src 'none'/.test(r.headers.get('content-security-policy')), 'política de conteúdo restrita');
+  const x = await (await tratar(new Request('https://w/'), { ...env, APP_URL: 'https://a.example/"><script>alert(1)</script>' })).text(); verdade(!/<script>/.test(x), 'o endereço do app é higienizado');
+});
 await teste('pré-verificação CORS, saúde e rotas inexistentes', async () => {
   const o = await tratar(new Request('https://w/api/sinal', { method: 'OPTIONS', headers: { origin: SITE } }), env); igual(o.status, 204, 'OPTIONS'); verdade(/content-type/.test(o.headers.get('access-control-allow-headers')), 'headers permitidos');
   igual((await tratar(new Request('https://w/api/sinal', { method: 'OPTIONS', headers: { origin: 'https://evil.example' } }), env)).status, 403, 'OPTIONS de origem estranha');
