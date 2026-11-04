@@ -3,7 +3,7 @@
 // Arquivos de teste são criados em disco, escolhidos pelo seletor de arquivos da própria página, enviados por WebRTC,
 // salvos pelo navegador na pasta de downloads e conferidos byte a byte.
 
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { mkdtempSync, writeFileSync, readFileSync, readdirSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -12,6 +12,7 @@ import { iniciar } from '../server/servidor.mjs';
 
 const EDGE = process.env.EDGE || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 const dormir = (ms) => new Promise((r) => setTimeout(r, ms));
+const matarArvore = (p) => { try { if (process.platform === 'win32') spawnSync('taskkill', ['/PID', String(p.pid), '/T', '/F'], { stdio: 'ignore' }); else p.kill(); } catch { /* já encerrado */ } };
 const srv = await iniciar(0); const PORTA = srv.address().port; const BASE = `http://127.0.0.1:${PORTA}`; const APP = `${BASE}/app/index.html?sem-intro`;
 const procs = [];
 const sha = (b) => createHash('sha256').update(b).digest('hex');
@@ -33,7 +34,7 @@ async function navegador(rotulo) {
     async ev(expr) { const r = await send('Runtime.evaluate', { expression: expr, returnByValue: true, awaitPromise: true }); if (r.result.exceptionDetails) throw new Error(`[${rotulo}] erro na página: ` + (r.result.exceptionDetails.exception?.description || r.result.exceptionDetails.text).split('\n')[0]); return r.result.result.value; },
     async abrir(url = APP) { await send('Page.navigate', { url }); await dormir(1200); },
     async escolherArquivos(seletor, caminhos) { const { result: { root } } = await send('DOM.getDocument'); const { result: { nodeId } } = await send('DOM.querySelector', { nodeId: root.nodeId, selector: seletor }); await send('DOM.setFileInputFiles', { nodeId, files: caminhos }); },
-    fechar() { ws.close(); proc.kill(); } };
+    fechar() { try { send('Page.close'); } catch { /* ok */ } setTimeout(() => { ws.close(); matarArvore(proc); }, 300); } };
   return nav;
 }
 async function ate(fn, ms = 15000, msg = 'condição') { const t0 = Date.now(); for (;;) { let v; try { v = await fn(); } catch (e) { v = false; if (Date.now() - t0 > ms) throw e; } if (v) return v; if (Date.now() - t0 > ms) throw new Error(`Tempo esgotado esperando: ${msg}`); await dormir(120); } }
@@ -285,7 +286,7 @@ await teste('diagnóstico: as verificações usam o estado real', async () => {
   const r = JSON.parse(await A.ev('JSON.stringify(DIAG.results)')); igual(r.srv.s, 'ok', 'servidor'); igual(r.nav.s, 'ok', 'navegador'); igual(r.par.s, 'warn', 'sem outros aparelhos agora (B saiu)');
 });
 
-A.fechar(); srv.close(); procs.forEach((p) => p.kill());
+A.fechar(); srv.close(); procs.forEach(matarArvore);
 try { rmSync(pasta, { recursive: true, force: true }); } catch { /* ok */ }
 console.log(`\n${ok} testes passaram, ${falhas.length} falharam.`);
 if (falhas.length) { falhas.forEach(([n, m]) => console.log(` - ${n}: ${m}`)); process.exit(1); }

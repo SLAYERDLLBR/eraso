@@ -2,7 +2,7 @@
 // Uso:  node tests/rede.test.mjs        (Windows, Edge instalado; defina EDGE=caminho para outro navegador Chromium)
 // Nada é simulado: os arquivos são gerados aleatoriamente, enviados por WebRTC e conferidos por CRC32 no destino.
 
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
@@ -11,6 +11,7 @@ import { iniciar } from '../server/servidor.mjs';
 
 const EDGE = process.env.EDGE || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 const dormir = (ms) => new Promise((r) => setTimeout(r, ms));
+const matarArvore = (p) => { try { if (process.platform === 'win32') spawnSync('taskkill', ['/PID', String(p.pid), '/T', '/F'], { stdio: 'ignore' }); else p.kill(); } catch { /* já encerrado */ } };
 const srv = await iniciar(0, { extras: ['tests'] }); const PORTA = srv.address().port; const URL_ = `http://127.0.0.1:${PORTA}`;
 const processos = [];
 
@@ -24,7 +25,7 @@ async function navegador() {
   await send('Page.enable'); await send('Runtime.enable'); await send('Page.navigate', { url: `${URL_}/tests/pagina-teste.html` }); await dormir(700);
   return {
     async ev(expr) { const r = await send('Runtime.evaluate', { expression: expr, returnByValue: true, awaitPromise: true }); if (r.result.exceptionDetails) throw new Error('Erro na página: ' + (r.result.exceptionDetails.exception?.description || r.result.exceptionDetails.text)); return r.result.result.value; },
-    fechar() { ws.close(); proc.kill(); },
+    fechar() { try { send('Page.close'); } catch { /* ok */ } setTimeout(() => { ws.close(); matarArvore(proc); }, 300); },
   };
 }
 async function ate(fn, ms = 15000, msg = 'condição') { const t0 = Date.now(); for (;;) { const v = await fn(); if (v) return v; if (Date.now() - t0 > ms) throw new Error(`Tempo esgotado esperando: ${msg}`); await dormir(100); } }
@@ -140,7 +141,7 @@ await teste('fechar o navegador de destino remove-o da lista dos outros', async 
   B.fechar(); await ate(async () => (await A.ev('registro.aparelhos.length')) === 0, 10000, 'B sair');
 });
 
-A.fechar(); srv.close(); processos.forEach((p) => p.kill());
+A.fechar(); srv.close(); processos.forEach(matarArvore);
 console.log(`\n${ok} testes passaram, ${falhas.length} falharam.`);
 if (falhas.length) { falhas.forEach(([n, m]) => console.log(` - ${n}: ${m}`)); process.exit(1); }
 process.exit(0);

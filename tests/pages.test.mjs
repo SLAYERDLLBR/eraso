@@ -39,11 +39,11 @@ function servir() {
 }
 
 async function rastrear(origem) {
-  const paginas = readdirSync(PASTA).filter((f) => f.endsWith('.html') && f !== '404.html');
+  const paginas = [...readdirSync(PASTA).filter((f) => f.endsWith('.html') && f !== '404.html'), 'app/index.html'];
   const problemas = []; let verificados = 0;
   for (const p of paginas) {
     const html = readFileSync(join(PASTA, p), 'utf8').replace(/<!--[\s\S]*?-->/g, '').replace(/<script>[\s\S]*?<\/script>/g, '');
-    for (const m of html.matchAll(/(?:href|src|poster)="([^"]+)"/g)) {
+    for (const m of html.matchAll(/(?<![\w-])(?:href|src|poster)="([^"]+)"/g)) {
       const u = m[1]; if (/^(https?:|mailto:|data:|#)/.test(u)) continue;
       verificados++;
       const r = await fetch(new URL(u, `${origem}${BASE}/${p}`)); if (r.status !== 200) problemas.push(`${p}: ${u} → ${r.status}`);
@@ -54,12 +54,13 @@ async function rastrear(origem) {
 
 console.log('\nBuild do GitHub Pages');
 try {
-  await teste('o build sem endereço do aplicativo aponta os botões para aplicativo.html e não deixa links para fora do site', async () => {
+  await teste('o build sem servidor aponta os botões para o app publicado junto (app/) e não deixa links para fora do site', async () => {
     const saida = montar({ SITE_URL: `https://exemplo.github.io${BASE}` });
     verdade(/páginas \+ 404\.html/.test(saida), 'resumo do build ausente');
     const index = readFileSync(join(PASTA, 'index.html'), 'utf8');
-    verdade(!/\.\.\/app\//.test(index), 'sobrou link para ../app/'); verdade(/href="aplicativo\.html"/.test(index), 'botão não aponta para aplicativo.html');
+    verdade(!/\.\.\/app\//.test(index), 'sobrou link para ../app/'); verdade(/href="app\/index\.html"/.test(index), 'botão não aponta para app/index.html'); verdade(existsSync(join(PASTA, 'app', 'index.html')) && existsSync(join(PASTA, 'app', 'vendor', 'jsQR.js')), 'app/ não foi incluído');
     for (const f of readdirSync(PASTA).filter((x) => x.endsWith('.html'))) verdade(!/(?:href|src)="\.\.\//.test(readFileSync(join(PASTA, f), 'utf8')), `${f} tem link para fora do site`);
+    const app = readFileSync(join(PASTA, 'app', 'index.html'), 'utf8'); verdade(/http-equiv="Content-Security-Policy"/.test(app) && !/unsafe-eval/.test(app), 'o app deveria ter política de conteúdo em <meta>');
     verdade(!existsSync(join(PASTA, 'tools')), 'a pasta tools/ não deveria ser publicada'); verdade(existsSync(join(PASTA, '.nojekyll')), '.nojekyll ausente');
   });
   const srv = await servir(); const origem = `http://127.0.0.1:${srv.address().port}`;
@@ -68,7 +69,7 @@ try {
     igual(r.problemas, [], `recursos com problema (de ${r.verificados})`);
   });
   await teste('acesso direto às páginas internas funciona e endereço inexistente mostra a 404 com links que funcionam', async () => {
-    for (const p of ['como-funciona.html', 'seguranca.html', 'aplicativo.html']) igual((await fetch(`${origem}${BASE}/${p}`)).status, 200, p);
+    for (const p of ['como-funciona.html', 'seguranca.html', 'aplicativo.html', 'app/index.html']) igual((await fetch(`${origem}${BASE}/${p}`)).status, 200, p);
     const r = await fetch(`${origem}${BASE}/nao/existe/mesmo`); igual(r.status, 404, 'status da 404'); const t = await r.text();
     verdade(/Página não encontrada/.test(t), 'texto da 404'); verdade(new RegExp(`href="${BASE}/index\\.html"`).test(t), 'a 404 deveria apontar para o início com caminho absoluto');
     for (const [, u] of t.matchAll(/(?:href|src)="(\/eraso\/[^"]+)"/g)) igual((await fetch(origem + u)).status, 200, `recurso da 404: ${u}`);
@@ -77,14 +78,14 @@ try {
     const index = readFileSync(join(PASTA, 'index.html'), 'utf8');
     verdade(index.includes(`<link rel="canonical" href="https://exemplo.github.io${BASE}/">`), 'canonical'); verdade(index.includes(`og:image" content="https://exemplo.github.io${BASE}/assets/app/app-desktop-claro.png"`), 'og:image');
     verdade(/summary_large_image/.test(index) && !/content="summary"/.test(index), 'twitter:card');
-    verdade(readFileSync(join(PASTA, 'sitemap.xml'), 'utf8').includes(`https://exemplo.github.io${BASE}/como-funciona.html`), 'sitemap'); verdade(/Sitemap: https:\/\/exemplo\.github\.io\/eraso\/sitemap\.xml/.test(readFileSync(join(PASTA, 'robots.txt'), 'utf8')), 'robots');
+    verdade(readFileSync(join(PASTA, 'sitemap.xml'), 'utf8').includes(`https://exemplo.github.io${BASE}/como-funciona.html`) && readFileSync(join(PASTA, 'sitemap.xml'), 'utf8').includes(`${BASE}/app/index.html`), 'sitemap'); verdade(/Sitemap: https:\/\/exemplo\.github\.io\/eraso\/sitemap\.xml/.test(readFileSync(join(PASTA, 'robots.txt'), 'utf8')), 'robots');
     verdade(!/rel="canonical"/.test(readFileSync(join(PASTA, '404.html'), 'utf8')), '404 não deve ter canonical');
   });
   srv.close();
   await teste('com o endereço do aplicativo definido, os botões apontam para ele (mantendo âncora) e exigem HTTPS', async () => {
     montar({ SITE_URL: `https://exemplo.github.io${BASE}`, ERASO_APP_URL: 'https://app.exemplo.test/app/index.html' });
     const doc = readFileSync(join(PASTA, 'contato.html'), 'utf8'); verdade(/href="https:\/\/app\.exemplo\.test\/app\/index\.html\?sem-intro#diagnostico"/.test(doc), 'link com âncora do diagnóstico');
-    verdade(!/href="aplicativo\.html"/.test(readFileSync(join(PASTA, 'index.html'), 'utf8')), 'ainda aponta para aplicativo.html');
+    verdade(!/href="app\/index\.html"/.test(readFileSync(join(PASTA, 'index.html'), 'utf8')), 'ainda aponta para o app local');
     const r = spawnSync(process.execPath, [join(RAIZ, 'scripts', 'build-pages.mjs'), SAIDA], { env: { ...process.env, ERASO_APP_URL: 'http://inseguro.test' }, encoding: 'utf8' }); verdade(r.status !== 0, 'deveria recusar endereço sem HTTPS');
   });
 } finally { rmSync(PASTA, { recursive: true, force: true }); }

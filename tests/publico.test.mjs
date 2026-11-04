@@ -2,7 +2,7 @@
 // Cobre a tela "Entre numa sala", o convite por link, a descoberta dentro da sala e uma transferência real
 // (o arquivo salvo é comparado byte a byte). Uso:  node tests/publico.test.mjs
 
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { mkdtempSync, readdirSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
@@ -12,6 +12,7 @@ import { fileURLToPath } from 'node:url';
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
 const EDGE = process.env.EDGE || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 const dormir = (ms) => new Promise((r) => setTimeout(r, ms));
+const matarArvore = (p) => { try { if (process.platform === 'win32') spawnSync('taskkill', ['/PID', String(p.pid), '/T', '/F'], { stdio: 'ignore' }); else p.kill(); } catch { /* já encerrado */ } };
 const PORTA = 9800 + Math.floor(Math.random() * 150), BASE = `http://127.0.0.1:${PORTA}`, APP = `${BASE}/app/index.html?sem-intro`;
 const servidor = spawn(process.execPath, [join(RAIZ, 'server', 'servidor.mjs')], { env: { ...process.env, PORT: String(PORTA), ERASO_PUBLICO: '1' }, stdio: 'ignore' });
 for (let i = 0; i < 50; i++) { try { await fetch(`${BASE}/saude`); break; } catch { await dormir(100); } }
@@ -30,7 +31,7 @@ async function navegador(rotulo) {
   await send('Page.setDownloadBehavior', { behavior: 'allow', downloadPath: downloads });
   return { rotulo, erros, downloads,
     async ev(expr) { const r = await send('Runtime.evaluate', { expression: expr, returnByValue: true, awaitPromise: true }); if (r.result.exceptionDetails) throw new Error(`[${rotulo}] erro na página: ` + (r.result.exceptionDetails.exception?.description || r.result.exceptionDetails.text)); return r.result.result.value; },
-    async abrir(url = APP) { await send('Page.navigate', { url }); await dormir(1300); }, fechar() { ws.close(); proc.kill(); } };
+    async abrir(url = APP) { await send('Page.navigate', { url }); await dormir(1300); }, fechar() { ws.close(); matarArvore(proc); } };
 }
 async function ate(fn, ms = 15000, msg = 'condição') { const t0 = Date.now(); for (;;) { let v; try { v = await fn(); } catch (e) { v = false; if (Date.now() - t0 > ms) throw e; } if (v) return v; if (Date.now() - t0 > ms) throw new Error(`Tempo esgotado: ${msg}`); await dormir(100); } }
 let ok = 0; const falhas = [];
