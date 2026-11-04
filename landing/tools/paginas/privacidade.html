@@ -5,7 +5,7 @@
 <h2 id="resumo">Resumo</h2>
 <ul>
   <li>O ERASÓ <strong>não tem conta, cadastro, formulário, cookies nem ferramentas de análise</strong> (Google Analytics ou similares).</li>
-  <li>O aplicativo é entregue como arquivos estáticos (GitHub Pages). O encontro dos aparelhos é feito por um <strong>serviço de apresentação na Cloudflare</strong>, que só vê os dados listados na tabela abaixo, ou por pareamento por QR Code, sem esse serviço.</li>
+  <li>O site e o aplicativo são entregues como arquivos estáticos (GitHub Pages ou Cloudflare Pages, conforme o endereço). O encontro dos aparelhos é feito por um <strong>serviço de apresentação na Cloudflare</strong>, que só vê os dados listados na tabela abaixo, ou por pareamento por QR Code, sem esse serviço.</li>
   <li><strong>Arquivos, textos e links</strong> que você envia vão <strong>direto de um aparelho ao outro</strong>, criptografados. O servidor <strong>não os recebe nem os guarda</strong>.</li>
   <li>O serviço conhece, <strong>apenas em memória e enquanto o aparelho está conectado</strong>: o identificador aleatório do aparelho, o nome, o tipo, o sistema e navegador e o código da sala. O endereço IP serve só para agrupar os aparelhos do mesmo Wi-Fi (vira um código irreversível, não é mostrado nem guardado). O código do serviço <strong>não grava registros</strong>.</li>
   <li>Histórico, Caixa e preferências ficam <strong>no seu navegador</strong>; você pode apagá-los quando quiser.</li>
@@ -36,7 +36,7 @@
       <tr><th scope="row">Mensagens de sinalização (oferta, resposta e candidatos de conexão, que contêm endereços IP de rede)</th><td>Repassadas pelo servidor, sem guardar</td><td>Abrir a conexão direta</td><td><strong>Sim</strong>. O aparelho de destino também recebe o seu endereço de rede, como em qualquer conexão direta</td></tr>
       <tr><th scope="row">Endereço IP e dados técnicos do navegador</th><td>Servidores do Google Fonts</td><td>Entregar as fontes de texto</td><td><strong>Sim</strong>, ao Google (veja a próxima seção)</td></tr>
       <tr><th scope="row">Código de pareamento: nome, tipo e sistema do aparelho, identificador, endereços de rede e impressão digital da conexão</th><td>Mostrado na tela e, se você quiser, copiado ou lido por QR Code</td><td>Abrir a conexão direta sem servidor</td><td><strong>Sim, para quem você mostrar o código</strong>, pelo canal que você escolher (QR Code, mensagem etc.)</td></tr>
-      <tr><th scope="row">Registros de acesso do site e do aplicativo</th><td>GitHub (GitHub Pages) e, no servidor opcional do ERASÓ, o provedor que o hospedar <span class="placeholder">[a definir]</span></td><td>Operação e segurança</td><td><strong>Sim</strong>, ao GitHub, que pode registrar endereço IP e horário dos acessos, conforme a política dele</td></tr>
+      <tr><th scope="row">Registros de acesso do site e do aplicativo</th><td>GitHub (GitHub Pages) ou Cloudflare (Cloudflare Pages), conforme o endereço usado, e, no servidor opcional do ERASÓ, o provedor que o hospedar <span class="placeholder">[a definir]</span></td><td>Operação e segurança</td><td><strong>Sim</strong>, ao GitHub ou à Cloudflare, que podem registrar endereço IP e horário dos acessos, conforme a política de cada um</td></tr>
     </tbody>
   </table>
 </div>
@@ -44,7 +44,7 @@
 
 <h2 id="terceiros">Serviços de terceiros</h2>
 <ul>
-  <li><strong>GitHub Pages.</strong> O site e o aplicativo são entregues pelo GitHub, que pode registrar endereço IP e horário dos acessos, fora do controle do ERASÓ.</li>
+  <li><strong>GitHub Pages e Cloudflare Pages.</strong> O site e o aplicativo ficam publicados nos dois (slayerdllbr.github.io e eraso.pages.dev). Quem os entrega pode registrar endereço IP e horário dos acessos, fora do controle do ERASÓ.</li>
   <li><strong>Cloudflare (serviço de apresentação).</strong> O serviço roda na Cloudflare, que recebe o endereço IP e os dados da tabela e pode registrá-los, conforme a política dela, fora do controle do ERASÓ. O código do serviço não grava endereços, nomes nem conteúdo.</li>
   <li><strong>Servidor próprio do ERASÓ (opcional).</strong> O provedor que o hospedar <span class="placeholder">[a definir]</span> também costuma registrar esses dados.</li>
   <li><strong>STUN</strong> (por padrão, o serviço público da Cloudflare). Para descobrir o endereço público do seu aparelho, o navegador consulta esse serviço, que recebe o seu endereço IP. Ocorre ao parear no site publicado e em servidor público.</li>

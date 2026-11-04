@@ -2,6 +2,15 @@
 
 Segue o formato do [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o versionamento semântico, adaptado à fase de protótipo (versões 0.x podem mudar sem aviso).
 
+## [0.5.2] — 2026-11-04
+
+### Adicionado
+- **Site e aplicativo também na Cloudflare Pages** (https://eraso.pages.dev/), publicados a cada commit em `main` com `npm run build:cloudflare`; cabeçalhos de segurança reais (CSP, HSTS, `nosniff`, câmera só para o próprio site). O GitHub Pages continua no ar.
+- O serviço de apresentação aceita os dois endereços (`ALLOWED_ORIGINS`).
+
+### Alterado
+- Os testes de ponta a ponta na nuvem passam a procurar o aparelho certo pelo identificador: na rede real pode haver outros aparelhos abertos (por exemplo, um celular), e isso não deve quebrar o teste.
+
 ## [0.5.1] — 2026-11-04
 
 ### Adicionado

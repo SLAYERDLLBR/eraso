@@ -1,6 +1,6 @@
 # Migração para a Cloudflare (site, aplicativo e serviço)
 
-> Guia para quando você quiser mover tudo para a Cloudflare, ou ter um endereço próprio. **Nada precisa ser feito agora:** hoje o código e a publicação do site e do aplicativo estão no GitHub, e só o serviço de apresentação roda na Cloudflare (o GitHub não executa servidores). O projeto já está preparado para a mudança.
+> **Estado em 4 de novembro de 2026:** os passos 3.1 a 3.3 já foram feitos. O site e o aplicativo estão publicados **nos dois lugares** (GitHub Pages e Cloudflare Pages, https://eraso.pages.dev/), e o serviço aceita os dois endereços. Faltam, se você quiser: domínio próprio (3.4), escolher qual endereço é o oficial e atualizar os textos (3.5) e desligar o GitHub Pages (3.6). Nada disso é obrigatório.
 
 ## 1. Onde cada parte está hoje
 

@@ -156,8 +156,8 @@ Documentos do projeto: guia de uso, política de privacidade (rascunho) e págin
 ## Links oficiais
 
 - Repositório: <https://github.com/SLAYERDLLBR/eraso>
-- Site institucional (GitHub Pages): <https://slayerdllbr.github.io/eraso/>
-- Aplicativo: <https://slayerdllbr.github.io/eraso/app/index.html>
+- Site institucional: <https://slayerdllbr.github.io/eraso/> (GitHub Pages) e <https://eraso.pages.dev/> (Cloudflare Pages)
+- Aplicativo: <https://slayerdllbr.github.io/eraso/app/index.html> e <https://eraso.pages.dev/app/>
 - Serviço de apresentação (Cloudflare): `https://eraso-sinal.eraso.workers.dev/saude`. Código em [cloudflare/](cloudflare/README.md).
 - Servidor próprio opcional: [docs/etapa4/HOSPEDAGEM.md](docs/etapa4/HOSPEDAGEM.md).
 
