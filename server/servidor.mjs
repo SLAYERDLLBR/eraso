@@ -81,7 +81,7 @@ const CSP = montarCsp();
 function cabecalhos(res, comCsp = true) {
   res.setHeader('x-content-type-options', 'nosniff'); res.setHeader('referrer-policy', 'no-referrer'); res.setHeader('x-frame-options', 'SAMEORIGIN');
   if (comCsp) res.setHeader('content-security-policy', CSP);
-  res.setHeader('permissions-policy', 'camera=(), microphone=(), geolocation=()');
+  res.setHeader('permissions-policy', 'camera=(self), microphone=(), geolocation=()');
   if (PUBLICO) res.setHeader('strict-transport-security', 'max-age=15552000');
 }
 

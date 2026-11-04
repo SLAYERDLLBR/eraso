@@ -2,9 +2,15 @@
 
 Aplicativo web (HTML/CSS/JS puros, sem dependências) que envia arquivos, textos e links **entre aparelhos reais na mesma rede**. Não existe nenhum aparelho, pedido, histórico ou transferência fictícios: o que aparece na tela é o estado verdadeiro da conexão.
 
-## Como executar
+## Como usar
 
-É preciso o servidor local (Node.js 18 ou superior), na raiz do projeto:
+**Sem servidor** (por exemplo, no GitHub Pages): abra o `index.html` nos dois aparelhos e use **Parear aparelho**. Um aparelho gera um código (QR Code, link ou texto), o outro o aplica e devolve uma resposta; depois disso os arquivos vão direto de um para o outro. O aplicativo percebe sozinho que não há servidor (a rota `/api/config` não existe).
+
+**Com servidor** (descoberta automática): veja abaixo.
+
+## Como executar o servidor
+
+O servidor é opcional. Requer Node.js 18 ou superior, na raiz do projeto:
 
 ```bash
 node server/servidor.mjs

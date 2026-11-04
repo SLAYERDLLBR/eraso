@@ -96,7 +96,8 @@ const IDB={db:null,abrir(){return this.db||(this.db=new Promise((ok,erro)=>{if(!
   async tx(modo,fn){const db=await this.abrir();return new Promise((ok,erro)=>{const t=db.transaction('caixa',modo),st=t.objectStore('caixa'),req=fn(st);t.oncomplete=()=>ok(req&&req.result);t.onerror=()=>erro(t.error);t.onabort=()=>erro(t.error)})},
   todos(){return this.tx('readonly',s=>s.getAll())},gravar(it){return this.tx('readwrite',s=>s.put(it))},apagar(id){return this.tx('readwrite',s=>s.delete(id))}};
 const devIcon=t=>({phone:'phone',tablet:'tablet',laptop:'laptop',monitor:'monitor',browser:'browser'}[t]||'laptop');
-const routeBadge=(d,compact)=>d.route==='local'?`<span class="badge local">${svgI('local','s16')}${compact?'':'Local'}</span>`:`<span class="badge offline">${svgI('offline','s16')}Offline${d.seen?' · '+d.seen:''}</span>`;
+const redeOk=()=>S.net==='conectado'||S.net==='manual'; // com servidor conectado ou em modo sem servidor (pareamento)
+const routeBadge=(d,compact)=>d.route==='local'?`<span class="badge local">${svgI('local','s16')}${compact?'':(S.net==='manual'?'Pareado':'Local')}</span>`:`<span class="badge offline">${svgI('offline','s16')}Offline${d.seen?' · '+d.seen:''}</span>`;
 
 /* ===================== Marca: estado global (MOTION_SPEC §6) ===================== */
 let brandTimer;
@@ -104,7 +105,7 @@ function computeBrand(){if(S.transfers.some(t=>t.status==='active')||S.sending)r
 function setBrand(state,label){
   clearTimeout(brandTimer);
   $$('[data-brand]').forEach(b=>{b.dataset.state=state;});
-  const txt=label||({idle:S.net!=='conectado'?'Sem conexão com o servidor':S.visible?'Pronto · visível na rede':'Pronto · oculto',syncing:'Sincronizando…',transferring:'Transferindo…',done:'Tudo certo',attention:'Algo precisa de atenção',request:'Pedido recebido',opening:'Ficando visível…'}[state]);
+  const txt=label||({idle:S.net==='manual'?'Pronto · modo sem servidor':S.net!=='conectado'?'Sem conexão com o servidor':S.visible?'Pronto · visível na rede':'Pronto · oculto',syncing:'Sincronizando…',transferring:'Transferindo…',done:'Tudo certo',attention:'Algo precisa de atenção',request:'Pedido recebido',opening:'Ficando visível…'}[state]);
   $('[data-brand-status]').textContent=txt;
   if(['done','attention','request','opening'].includes(state)){brandTimer=setTimeout(()=>setBrand(computeBrand()),state==='opening'?900:1400)}
 }
@@ -129,11 +130,11 @@ addEventListener('hashchange',()=>{const h=location.hash.slice(1);go(h==='sobre'
 
 /* ===================== Este aparelho ===================== */
 const AUTO={off:'Sempre perguntar',fav:'Somente favoritos',all:'Qualquer aparelho da rede'};
-const NET_TXT={conectado:'visível na rede',conectando:'conectando ao servidor…',reconectando:'reconectando ao servidor…',desconectado:'sem conexão com o servidor','sem-webrtc':'navegador sem suporte a conexão direta','outra-aba':'aberto em outra aba','sem-sala':'escolha uma sala'};
-function statusLocal(){return S.net!=='conectado'?NET_TXT[S.net]||'sem conexão':S.visible?'visível na rede':'oculto'}
+const NET_TXT={conectado:'visível na rede',conectando:'conectando ao servidor…',reconectando:'reconectando ao servidor…',desconectado:'sem conexão com o servidor','sem-webrtc':'navegador sem suporte a conexão direta','outra-aba':'aberto em outra aba','sem-sala':'escolha uma sala',manual:'sem servidor: pareie por código'};
+function statusLocal(){return S.net==='manual'?'modo sem servidor':S.net!=='conectado'?NET_TXT[S.net]||'sem conexão':S.visible?'visível na rede':'oculto'}
 function renderThisDevice(){
   $$('[data-this-device]').forEach(el=>{el.innerHTML=`
-    <div class="td-head"><span class="td-icon">${svgI(devIcon(ME.type))}<span class="dot ${S.visible&&S.net==='conectado'?'':'off'}"></span></span>
+    <div class="td-head"><span class="td-icon">${svgI(devIcon(ME.type))}<span class="dot ${S.visible&&redeOk()?'':'off'}"></span></span>
       <div><div class="td-name"><button class="td-name-btn" data-open-me title="Detalhes deste aparelho">${esc(ME.name)}</button></div><div class="td-sub">Este aparelho · ${statusLocal()}</div></div></div>
     <div class="td-row"><span>Visível</span><button class="switch" role="switch" aria-checked="${S.visible}" aria-label="Visível na rede" data-vis></button></div>
     <div class="td-row stack"><label>Receber automaticamente de</label><select class="select" data-auto aria-label="Receber automaticamente">${Object.entries(AUTO).map(([k,v])=>`<option value="${k}" ${S.auto===k?'selected':''}>${v}</option>`).join('')}</select></div>
@@ -232,7 +233,7 @@ function sincronizarAparelhos(lista){
   $('[data-scan-text]').textContent=statusBusca();
   renderGrid();renderMultiBar();if(S.view==='dispositivos')renderDevList();if(INSP.kind==='device')renderInspector();
 }
-function statusBusca(){if(S.net!=='conectado')return NET_TXT[S.net]?NET_TXT[S.net][0].toUpperCase()+NET_TXT[S.net].slice(1):'Sem conexão';const n=DEVICES.filter(d=>d.online).length;const onde=SALA?'sala':'rede';return n===0?`Nenhum aparelho encontrado nesta ${onde}`:`${n} ${n===1?'aparelho encontrado':'aparelhos encontrados'} nesta ${onde} · agora`}
+function statusBusca(){if(S.net==='manual'){const n=DEVICES.filter(d=>d.online).length;return n===0?'Nenhum aparelho pareado. Use “Parear aparelho”':`${n} ${n===1?'aparelho pareado':'aparelhos pareados'} · conectado${n===1?'':'s'}`}if(S.net!=='conectado')return NET_TXT[S.net]?NET_TXT[S.net][0].toUpperCase()+NET_TXT[S.net].slice(1):'Sem conexão';const n=DEVICES.filter(d=>d.online).length;const onde=SALA?'sala':'rede';return n===0?`Nenhum aparelho encontrado nesta ${onde}`:`${n} ${n===1?'aparelho encontrado':'aparelhos encontrados'} nesta ${onde} · agora`}
 function cardHTML(d,i){
   return `<button class="card ${d.online?'':'offline'} ${S.picked.has(d.id)?'selected':''}" data-dev="${d.id}" style="animation-delay:${Math.min(i,8)*30}ms"
     aria-label="${S.mode==='many'?'Selecionar':'Enviar para'} ${esc(d.name)}, ${esc(d.meta)}, ${d.online?'rota local, online':'offline'}">
@@ -250,6 +251,7 @@ function renderGrid(){
     let vazio;
     if(S.q&&DEVICES.some(daAba))vazio=`<h3>Nenhum aparelho corresponde à busca</h3><p style="margin:0">Nada em “${esc(S.q)}”. A busca vale para o nome, o sistema, o tipo e o ID do aparelho.</p><div class="row-end" style="justify-content:center"><button class="btn btn-secondary btn-sm" data-dev-clear>Limpar busca</button></div>`;
     else if(S.tab==='fav')vazio=`<h3>Nenhum favorito ainda</h3><p style="margin:0">Toque no coração de um aparelho para encontrá-lo mais rápido. Favoritos offline continuam na lista.</p>`;
+    else if(S.net==='manual')vazio=`<h3>Pareie o primeiro aparelho</h3><p style="margin:0">Este endereço funciona sem servidor: um aparelho gera um código e o outro o lê (QR Code, link ou texto). Depois disso, os arquivos vão direto de um aparelho ao outro.</p><div class="row-end" style="justify-content:center"><button class="btn btn-primary btn-sm" data-pair-open>${svgI('qr','s16')}Parear aparelho</button></div>`;
     else if(S.net==='sem-sala')vazio=`<h3>Entre numa sala</h3><p style="margin:0">Para encontrar os seus aparelhos, use o mesmo código de sala em todos eles. Crie um código novo e envie o convite para o outro aparelho, ou digite o código que você já tem.</p><div class="row-end" style="justify-content:center;gap:8px;flex-wrap:wrap"><input class="ren" data-sala-input placeholder="código ou link de convite" maxlength="200" aria-label="Código da sala" style="width:230px"><button class="btn btn-primary btn-sm" data-sala-entrar>Entrar</button><button class="btn btn-secondary btn-sm" data-sala-gerar>Criar sala nova</button></div>`;
     else if(S.net!=='conectado')vazio=`<h3>${S.net==='conectando'||S.net==='reconectando'?'Conectando ao servidor local…':'Sem conexão com o servidor local'}</h3><p style="margin:0">${S.net==='sem-webrtc'?'Este navegador não permite conexão direta entre aparelhos. Use uma versão atual do Chrome, Edge, Firefox ou Safari.':S.net==='outra-aba'?'O ERASÓ já está aberto em outra aba deste navegador. Feche a outra aba e recarregue esta.':'O ERASÓ precisa do servidor local para encontrar aparelhos. Confira se ele está em execução e se este aparelho está na mesma rede.'}</p><div class="row-end" style="justify-content:center"><button class="btn btn-secondary btn-sm" data-scan>${svgI('refresh','s16')}Tentar novamente</button><button class="btn btn-ghost btn-sm" data-goto-diag>Diagnosticar</button></div>`;
     else vazio=`<h3>Nenhum aparelho encontrado</h3><p style="margin:0">Abra o ERASÓ em outro aparelho conectado à mesma rede, no endereço <span class="mono">${esc(location.origin)}</span>. Ele aparece aqui assim que ficar visível.</p><div class="row-end" style="justify-content:center"><button class="btn btn-secondary btn-sm" data-scan>${svgI('refresh','s16')}Buscar novamente</button><button class="btn btn-ghost btn-sm" data-goto-diag>Diagnosticar</button></div>`;
@@ -312,7 +314,7 @@ function sendTo(d){
   if(!S.selection.length){nudgeComposer();return}
   if(S.sending){toast('Aguarde a resposta do envio atual');return}
   const itens=S.selection.map(s=>({...s}));if(!validarSelecao(itens))return;
-  if(S.net!=='conectado'){toast('Sem conexão com o servidor local. Use "Diagnosticar" para ver o que houve.');return}
+  if(!redeOk()){toast('Sem conexão com o servidor local. Use "Diagnosticar" para ver o que houve.');return}
   S.sending=true;refreshBrand();closeEditor();
   const panel=$('[data-send-panel]');$('[data-tray]').hidden=true;panel.hidden=false;
   panel.innerHTML=`<div class="send-panel">
@@ -327,7 +329,7 @@ function sendTo(d){
   const envio=tratarEnvio(d,itens,{painel:panel});
   panel.querySelector('[data-send-cancel]').onclick=()=>{if(['recusado','falhou','cancelado','concluido'].includes(envio.status))envio._fecharPainel();else envio.cancelar()};
 }
-function iniciarEnvio(d,itens,o={}){if(!validarSelecao(itens))return null;if(S.net!=='conectado'){toast('Sem conexão com o servidor local.');return null}return tratarEnvio(d,itens,{painel:null,inline:!!o.inline})}
+function iniciarEnvio(d,itens,o={}){if(!validarSelecao(itens))return null;if(!redeOk()){toast('Sem conexão com o servidor local.');return null}return tratarEnvio(d,itens,{painel:null,inline:!!o.inline})}
 function tratarEnvio(d,itens,{painel,inline=false}){
   const total=itens.reduce((a,s)=>a+s.size,0);let t=null,fechado=false;
   const st=()=>painel&&painel.querySelector('[data-send-status]');
@@ -639,7 +641,7 @@ function renderInspector(){const el=$('[data-inspector]');let head='',body='',ba
         ${row('Favorito',`<button class="switch" role="switch" aria-checked="${!!d.fav}" data-insp-fav aria-label="Favorito"></button>`)}
         ${row('Receber automático',S.auto==='fav'?(d.fav?'Sim (favorito)':'Não'):S.auto==='all'?'Sim (qualquer aparelho)':'Não (sempre perguntar)')}</dl></details>`;
     bar=INSP.confirm?`<div class="confirm-box" role="alert"><span>Esquecer <strong>${esc(d.name)}</strong>? Ele sai dos favoritos e some da lista quando estiver offline.</span><div class="row-end"><button class="btn btn-ghost btn-sm" data-insp-cancel>Cancelar</button><button class="btn btn-danger btn-sm" data-insp-remove>Esquecer</button></div></div>`:
-      `${d.fav?`<button class="btn btn-ghost btn-sm btn-danger-ghost" data-insp-ask>${svgI('trash','s16')}Esquecer</button>`:''}<span class="spacer"></span>${d.online?`<button class="btn btn-primary btn-sm" data-insp-send aria-label="Enviar para ${esc(d.name)}">${svgI('send','s16')}Enviar <kbd>↵</kbd></button>`:'<span class="faint" style="font-size:13px">Offline</span>'}`}
+      `${d.fav?`<button class="btn btn-ghost btn-sm btn-danger-ghost" data-insp-ask>${svgI('trash','s16')}Esquecer</button>`:''}${S.net==='manual'&&d.online?`<button class="btn btn-ghost btn-sm btn-danger-ghost" data-insp-unpair>${svgI('trash','s16')}Desfazer pareamento</button>`:''}<span class="spacer"></span>${d.online?`<button class="btn btn-primary btn-sm" data-insp-send aria-label="Enviar para ${esc(d.name)}">${svgI('send','s16')}Enviar <kbd>↵</kbd></button>`:'<span class="faint" style="font-size:13px">Offline</span>'}`}
   else if(INSP.kind==='activity'){const a=S.activity[INSP.ref];if(!a){closeInspector();return}
     const ic=a.kind==='video'?'video':a.kind==='image'?'image':a.kind==='link'?'link':a.kind==='text'?'text':'file';
     head=`<span class="insp-icon">${svgI(ic,'s24')}</span><div><h2 id="insp-title" tabindex="-1">${esc(a.title)}</h2><div class="meta"><span>${a.dir==='out'?'Enviado':'Recebido'}</span>·<span>${dataHora(a.ts)}</span></div></div>`;
@@ -653,12 +655,12 @@ function renderInspector(){const el=$('[data-inspector]');let head='',body='',ba
         ${a.dir==='in'&&a.kind!=='text'&&a.kind!=='link'&&a.status==='ok'?row('Salvo em','Pasta de downloads do navegador'):''}</dl></details>`;
     bar=`<button class="btn btn-ghost btn-sm btn-danger-ghost" data-insp-delact>${svgI('trash','s16')}Remover do histórico</button><span class="spacer"></span>${a.kind==='text'||a.kind==='link'?`<button class="btn btn-primary btn-sm" data-insp-copy>${svgI('copy','s16')}Copiar</button>`:''}`}
   else if(INSP.kind==='me'){
-    head=`<span class="insp-icon">${svgI(devIcon(ME.type),'s24')}<span class="dot ${S.visible&&S.net==='conectado'?'':'off'}"></span></span><div><h2 id="insp-title" tabindex="-1">${esc(ME.name)}</h2><div class="meta"><span>Este aparelho</span>·<span>${statusLocal()}</span></div></div>`;
+    head=`<span class="insp-icon">${svgI(devIcon(ME.type),'s24')}<span class="dot ${S.visible&&redeOk()?'':'off'}"></span></span><div><h2 id="insp-title" tabindex="-1">${esc(ME.name)}</h2><div class="meta"><span>Este aparelho</span>·<span>${statusLocal()}</span></div></div>`;
     body=`<details open><summary>Identidade</summary>
         <div class="field" style="margin-top:8px"><label for="insp-name" style="font-size:13px;color:var(--text-tertiary);font-weight:400">Nome que os outros veem</label><div class="insp-name"><input id="insp-name" data-insp-name value="${esc(ME.name)}" maxlength="40"><button class="btn btn-secondary btn-sm" data-insp-rename>Salvar</button></div></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn btn-ghost btn-sm" data-insp-randname>${svgI('refresh','s16')}Usar o nome do aparelho</button></div>
         <dl class="mtab">${row('Tipo',TIPOS[ME.type]||'Aparelho')}${row('Sistema · navegador',esc(ME.os))}${row('Identificador',esc(ME.id),true)}${row('Sala',SALA?esc(SALA):'Rede toda (sem sala)',!!SALA)}</dl></details>
-      <details open><summary>Conexão</summary><dl class="mtab">${row('Servidor local',esc(location.origin),true)}${row('Estado',esc(NET_TXT[S.net]||S.net))}
+      <details open><summary>Conexão</summary><dl class="mtab">${S.net==='manual'?row('Modo','Sem servidor (pareamento por código)'):row('Servidor local',esc(location.origin),true)}${row('Estado',esc(NET_TXT[S.net]||S.net))}
         ${row('Rota',routeBadge({route:'local'}))}${row('Aparelhos vistos',String(DEVICES.filter(d=>d.online).length))}</dl></details>
       <details><summary>Segurança</summary><dl class="mtab">${row('Criptografia','Conexão direta WebRTC (DTLS)')}${row('Exigir PIN',S.pin?'Sim':'Não')}</dl></details>`;
     bar=`<button class="btn btn-ghost btn-sm" data-goto-diag>${svgI('activity','s16')}Diagnosticar</button><span class="spacer"></span>`}
@@ -671,6 +673,7 @@ $('[data-inspector]').addEventListener('click',async e=>{const t=e.target;
   if(t.closest('[data-insp-rename]')){const v=$('[data-insp-name]').value.trim();if(!v){toast('O nome não pode ficar vazio');return}
     ME.name=v;salvarPrefs();REDE.atualizarPerfil({nome:v}).catch(()=>{});techlog('info',`Nome deste aparelho alterado para "${v}"`);refreshDeviceViews();renderInspector();toast('Nome salvo');return}
   if(t.closest('[data-insp-randname]')){$('[data-insp-name]').value=ErasoRede.nomePadrao(PERFIL,ME.id);$('[data-insp-name]').focus();return}
+  if(t.closest('[data-insp-unpair]')&&d){REDE.desligar(d.id);toast('Pareamento desfeito');closeInspector();return}
   if(t.closest('[data-insp-test]')&&d){const out=$('[data-insp-test-out]');out.textContent='Testando…';try{const ms=await REDE.testarConexao({id:d.id,nome:d.name});out.textContent=`Conexão direta ok · ${ms} ms`;techlog('info',`Teste com ${d.name}: ${ms} ms`)}catch(err){out.textContent=err.message;techlog('error',`Teste com ${d.name} falhou: ${err.message}`)}return}
   const fv=t.closest('[data-insp-fav]');if(fv&&d){alternarFavorito(d.id,false);fv.setAttribute('aria-checked',String(S.favs.has(d.id)));renderInspector();return}
   if(t.closest('[data-insp-ask]')){INSP.confirm=true;renderInspector();$('[data-insp-cancel]')?.focus();return}
@@ -691,11 +694,12 @@ const DIAG={running:false,results:{},sym:null,symStep:0,symDone:false,logFilter:
 const CHECKS=[
   {id:'nav',t:'Navegador compatível',run:async()=>typeof RTCPeerConnection!=='undefined'&&typeof EventSource!=='undefined'?{s:'ok',d:'Conexão direta entre aparelhos (WebRTC) disponível.'}:{s:'bad',d:'Este navegador não permite conexão direta entre aparelhos. Use uma versão atual do Chrome, Edge, Firefox ou Safari.'}},
   {id:'srv',t:'Servidor local',run:async()=>{
+    if(S.net==='manual')return{s:'ok',d:'Modo sem servidor: os aparelhos se encontram por código (pareamento). Não há servidor a verificar.'};
     const t0=performance.now();try{const r=await fetch('/api/aparelhos',{cache:'no-store'});if(!r.ok)throw new Error('status '+r.status);const ms=Math.round(performance.now()-t0);
       return S.net==='conectado'?{s:'ok',d:`Conectado a ${location.origin} · ${ms} ms.`}:{s:'warn',d:`O servidor responde, mas este aparelho está “${NET_TXT[S.net]||S.net}”.`,a:'Reconectar',fix:async()=>REDE.conectar(),keep:false}}
     catch{return{s:'bad',d:`Sem resposta de ${location.origin}. Confira se o servidor do ERASÓ está em execução e se este aparelho está na mesma rede.`}}}},
   {id:'vis',t:'Este aparelho está visível',run:async()=>S.visible?{s:'ok',d:'Outros aparelhos da rede conseguem te encontrar.'}:{s:'bad',d:'Oculto: ninguém consegue te encontrar nem enviar pedidos.',a:'Ficar visível',fix:async()=>{S.visible=true;salvarPrefs();await REDE.atualizarPerfil({visivel:true});renderThisDevice();refreshBrand()}}},
-  {id:'par',t:'Outros aparelhos na rede',run:async()=>{try{await REDE.buscar()}catch{}const n=DEVICES.filter(d=>d.online).length;return n?{s:'ok',d:`${n} ${n===1?'aparelho visível':'aparelhos visíveis'}: ${DEVICES.filter(d=>d.online).map(d=>d.name).join(', ')}.`}:{s:'warn',d:`Nenhum aparelho encontrado. Abra ${location.origin} em outro aparelho, na mesma rede, e deixe-o visível.`}}},
+  {id:'par',t:'Outros aparelhos na rede',run:async()=>{try{await REDE.buscar()}catch{}const n=DEVICES.filter(d=>d.online).length;if(S.net==='manual'&&!n)return{s:'warn',d:'Nenhum aparelho pareado. Use “Parear aparelho” na tela Compartilhar.'};return n?{s:'ok',d:`${n} ${n===1?'aparelho visível':'aparelhos visíveis'}: ${DEVICES.filter(d=>d.online).map(d=>d.name).join(', ')}.`}:{s:'warn',d:`Nenhum aparelho encontrado. Abra ${location.origin} em outro aparelho, na mesma rede, e deixe-o visível.`}}},
   {id:'dir',t:'Conexão direta com cada aparelho',run:async()=>{const on=DEVICES.filter(d=>d.online);if(!on.length)return{s:'warn',d:'Não há aparelhos para testar.'};
     const res=await Promise.all(on.map(async d=>{try{return[d,await REDE.testarConexao({id:d.id,nome:d.name})]}catch(e){return[d,null,e.message]}}));
     const ruins=res.filter(r=>r[1]==null);res.forEach(r=>techlog(r[1]==null?'error':'info',`Teste com ${r[0].name}: ${r[1]==null?r[2]:r[1]+' ms'}`));
@@ -732,14 +736,14 @@ function renderDiag(){
     <section class="panel" aria-labelledby="d-auto"><div class="panel-head"><h2 id="d-auto">Verificação automática</h2><button class="btn btn-primary btn-sm" data-run-checks>${svgI('refresh','s16')}${Object.keys(DIAG.results).length?'Verificar de novo':'Verificar agora'}</button><p>Confere o navegador, o servidor local, a visibilidade e a conexão direta com cada aparelho encontrado.</p></div><div data-checks></div></section>
     <section class="panel" aria-labelledby="d-sym"><div class="panel-head"><h2 id="d-sym">O que está acontecendo?</h2><p>Escolha a situação para ver um passo a passo.</p></div><div data-symptoms></div></section>
     <details class="panel adv" data-adv><summary>Avançado <span class="faint" style="font-weight:400;font-size:13px">· para quem entende de redes</span></summary><div class="adv-body">
-      <div><h3>Este aparelho</h3><dl class="mtab">${row('Servidor local',esc(location.origin),true)}${row('Identificador',esc(ME.id),true)}${row('Estado',esc(NET_TXT[S.net]||S.net))}${row('Navegador',esc(navigator.userAgent))}</dl></div>
+      <div><h3>Este aparelho</h3><dl class="mtab">${S.net==='manual'?row('Modo','Sem servidor (pareamento por código)'):row('Servidor local',esc(location.origin),true)}${row('Identificador',esc(ME.id),true)}${row('Estado',esc(NET_TXT[S.net]||S.net))}${row('Navegador',esc(navigator.userAgent))}</dl></div>
       <div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px"><h3 style="margin:0;flex:1">Registros técnicos</h3>
         <div class="chips" style="margin:0" data-log-chips>${[['all','Tudo'],['info','Informações'],['err','Avisos e erros']].map(([k,l])=>`<button class="tab" aria-pressed="${DIAG.logFilter===k}" aria-selected="${DIAG.logFilter===k}" data-logf="${k}">${l}</button>`).join('')}</div>
         <button class="btn btn-ghost btn-sm" data-copy-log>${svgI('copy','s16')}Copiar</button></div><pre class="techlog" data-techlog tabindex="0" aria-label="Registros técnicos"></pre></div>
     </div></details>`;
   renderChecks();renderSymptoms();renderTechLog()}
 function report(){const r=CHECKS.map(c=>{const x=DIAG.results[c.id];return `- ${c.t}: ${x?({ok:'OK',warn:'ATENÇÃO',bad:'PROBLEMA',running:'…'}[x.s])+(x.d?': '+x.d:''):'não verificado'}`}).join('\n');
-  return `Relatório de conexão do ERASÓ\nAparelho: ${ME.name} · ${ME.os}\nServidor: ${location.origin} · estado: ${NET_TXT[S.net]||S.net}\n${r}\nSituação escolhida: ${SYMPTOMS.find(s=>s.id===DIAG.sym)?.t||'não informada'}\n\nÚltimos registros:\n${TECHLOG.slice(-8).map(l=>`${l.t} ${l.type.toUpperCase()} ${l.msg}`).join('\n')}`}
+  return `Relatório de conexão do ERASÓ\nAparelho: ${ME.name} · ${ME.os}\nServidor: ${S.net==='manual'?'sem servidor (pareamento por código)':location.origin} · estado: ${NET_TXT[S.net]||S.net}\n${r}\nSituação escolhida: ${SYMPTOMS.find(s=>s.id===DIAG.sym)?.t||'não informada'}\n\nÚltimos registros:\n${TECHLOG.slice(-8).map(l=>`${l.t} ${l.type.toUpperCase()} ${l.msg}`).join('\n')}`}
 const copiar=(txt,ok)=>navigator.clipboard?.writeText(txt).then(()=>toast(ok),()=>toast('O navegador bloqueou a cópia. Selecione o texto e copie manualmente.'));
 $('[data-diag]').addEventListener('click',async e=>{const t=e.target;
   if(t.closest('[data-run-checks]')){runChecks();t.closest('[data-run-checks]').lastChild.textContent='Verificar de novo';return}
@@ -831,6 +835,7 @@ function syncSettingsSwitches(){$$('[data-pin-switch]').forEach(b=>b.setAttribut
 function renderSettingsBits(){syncSettingsSwitches();
   const si=$('[data-sala-input]',$('[data-settings]'));if(si&&document.activeElement!==si)si.value=SALA;
   const sd=$('[data-sala-desc]');if(sd)sd.textContent=REDE.config.salaObrigatoria?'Só aparelhos com o mesmo código se veem. Mantenha o código em segredo.':'Opcional. Sem código, todos os aparelhos da rede se veem. Com um código, só quem usa o mesmo código aparece.';
+  const sr=$('[data-sala-row]');if(sr)sr.hidden=REDE.config.modo==='manual';
   const sc=$('[data-sala-copiar]'),ss=$('[data-sala-sair]');if(sc)sc.hidden=!SALA;if(ss)ss.hidden=!SALA;
 const n=$('[data-set-name]');if(n&&document.activeElement!==n)n.value=ME.name;
   const r=$('[data-retention]');if(r)r.value=String(S.retention);requestAnimationFrame(()=>$$('[data-settings] .seg').forEach(placeInd))}
@@ -917,9 +922,22 @@ document.addEventListener('keydown',e=>{
 /* foco preso no pedido */
 $('[data-req]').addEventListener('keydown',e=>{if(e.key!=='Tab')return;const f=$$('button:not([disabled]),a[href]',$('[data-req]'));if(!f.length)return;const first=f[0],last=f[f.length-1];if(e.shiftKey&&document.activeElement===first){last.focus();e.preventDefault()}else if(!e.shiftKey&&document.activeElement===last){first.focus();e.preventDefault()}});
 
+/* ===================== Pareamento (modo sem servidor) ===================== */
+// Se a página está em /algo/app/…, o prefixo "/algo" é o endereço-base do site (ex.: GitHub Pages em /eraso/). Em servidor próprio, é vazio.
+const BASE_URL=(location.pathname.match(/^(.*?)\/app\//)||['',''])[1];
+let CODIGO_NA_URL=(location.hash.match(/^#p=([A-Za-z0-9._-]+)/)||[])[1]||'';
+const VEIO_COM_CODIGO=!!CODIGO_NA_URL; // quem chega por um convite vai direto ao pareamento; a introdução fica para depois
+if(CODIGO_NA_URL)history.replaceState(null,'',location.pathname+location.search); // o código não fica na barra de endereço nem no histórico
+const PAREAMENTO=ErasoPareamento.criar({
+  get REDE(){return REDE},openModal,closeModal,svgI,esc,toast,copiar:(t,ok)=>copiar(t,ok),
+  linkBase:()=>`${location.origin}${location.pathname}`,
+  aoLigar:(perfil)=>{closeModal();toast(`Pareado com ${perfil.nome}. Já dá para enviar.`);techlog('info',`Pareado com ${perfil.nome}`)}});
+function pareamentoPendente(){if(!CODIGO_NA_URL)return;const c=CODIGO_NA_URL;CODIGO_NA_URL='';go('compartilhar');setTimeout(()=>PAREAMENTO.abrirComCodigo(c),300)}
+document.addEventListener('click',e=>{if(e.target.closest('[data-pair-open]'))PAREAMENTO.abrir()});
+
 /* ===================== Rede (presença e conexão direta reais) ===================== */
-const REDE=new ErasoRede.Rede({sala:SALA,perfil:{id:ME.id,nome:ME.name,tipo:ME.type,so:ME.os},visivel:S.visible,
-  onStatus:(s)=>{S.net=s;if(['desconectado','outra-aba','sem-webrtc','sem-sala'].includes(s))sincronizarAparelhos([]);renderThisDevice();$('[data-scan-text]').textContent=statusBusca();refreshBrand();renderGrid();if(INSP.kind==='me')renderInspector()},
+const REDE=new ErasoRede.Rede({base:BASE_URL,sala:SALA,perfil:{id:ME.id,nome:ME.name,tipo:ME.type,so:ME.os},visivel:S.visible,
+  onStatus:(s)=>{S.net=s;if(['desconectado','outra-aba','sem-webrtc','sem-sala'].includes(s))sincronizarAparelhos([]);const bp=$('[data-pair-open]');if(bp)bp.hidden=s!=='manual';const sr0=$('[data-sala-row]');if(sr0)sr0.hidden=s==='manual';const bs=$('.dest-head [data-scan]');if(bs)bs.hidden=s==='manual';if(s==='manual')pareamentoPendente();renderThisDevice();$('[data-scan-text]').textContent=statusBusca();refreshBrand();renderGrid();if(INSP.kind==='me')renderInspector()},
   onAparelhos:sincronizarAparelhos,onPedido:pedidoChegou,log:(t,m)=>techlog(t==='error'?'error':t==='warn'?'warn':'info',m)});
 aplicarRede();
 
@@ -939,4 +957,4 @@ Promise.race([ErasoRede.detalharPerfil(PERFIL),new Promise(r=>setTimeout(r,800))
   ME.os=PERFIL.meta;REDE.perfil.so=ME.os;
   if(ME.name===NOME_SEM_MODELO&&PERFIL.modelo){ME.name=ErasoRede.nomePadrao(PERFIL,ME.id);REDE.perfil.nome=ME.name;salvarPrefs();renderThisDevice()}
 }).finally(()=>REDE.conectar());
-let onbDone=false;try{onbDone=!!localStorage.getItem('eraso-onboarded')}catch{}if(!onbDone&&!/[?&]sem-intro/.test(location.search))setTimeout(openOnboarding,500);
+let onbDone=false;try{onbDone=!!localStorage.getItem('eraso-onboarded')}catch{}if(!onbDone&&!VEIO_COM_CODIGO&&!/[?&]sem-intro/.test(location.search))setTimeout(openOnboarding,500);
