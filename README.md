@@ -7,7 +7,7 @@
 ![Sem npm install](https://img.shields.io/badge/npm%20install-n%C3%A3o%20precisa-brightgreen)
 ![Estado: protótipo funcional](https://img.shields.io/badge/estado-prot%C3%B3tipo%20funcional-orange)
 
-O ERASÓ envia arquivos, imagens, textos e links entre os seus aparelhos (computador, celular, tablet) **direto de um navegador ao outro**, sem instalar nada e sem passar o conteúdo por nenhum servidor. **Abra o aplicativo e pareie os aparelhos por QR Code: https://slayerdllbr.github.io/eraso/app/index.html** É a alternativa para quem hoje manda arquivo para si mesmo pelo WhatsApp Web.
+O ERASÓ envia arquivos, imagens, textos e links entre os seus aparelhos (computador, celular, tablet) **direto de um navegador ao outro**, sem instalar nada e sem passar o conteúdo por nenhum servidor. **Abra o aplicativo nos dois aparelhos: no mesmo Wi-Fi eles se encontram sozinhos. https://slayerdllbr.github.io/eraso/app/index.html** É a alternativa para quem hoje manda arquivo para si mesmo pelo WhatsApp Web.
 
 É um **projeto acadêmico de extensão** ligado à Cruzeiro do Sul Virtual. O [LocalSend](https://github.com/localsend/localsend) é a referência funcional; o ERASÓ leva a mesma ideia para a web.
 
@@ -66,7 +66,9 @@ HTML, CSS e JavaScript puros no navegador (sem framework e **sem `npm install`**
 
 ### Direto no navegador, sem instalar nada
 
-Abra **<https://slayerdllbr.github.io/eraso/app/index.html>** nos dois aparelhos (computador e celular, por exemplo) e pareie-os:
+Abra **<https://slayerdllbr.github.io/eraso/app/index.html>** nos dois aparelhos (computador e celular, por exemplo). **No mesmo Wi-Fi eles aparecem um para o outro sozinhos**: toque no aparelho para enviar. Em redes diferentes, toque em **Criar sala** e abra o link de convite no outro aparelho (ou digite o código de 6 letras).
+
+Se o serviço de apresentação estiver fora do ar ou a rede o bloquear, use o pareamento por QR Code:
 
 1. Em um aparelho, toque em **Parear aparelho › Gerar o meu código**. Aparecem um QR Code, um link e um texto.
 2. No outro, aponte a câmera para o QR Code (o ERASÓ abre já com o código) ou use **Tenho um código ou link** e cole o texto. Ele mostra um código de resposta.
@@ -155,8 +157,9 @@ Documentos do projeto: guia de uso, política de privacidade (rascunho) e págin
 
 - Repositório: <https://github.com/SLAYERDLLBR/eraso>
 - Site institucional (GitHub Pages): <https://slayerdllbr.github.io/eraso/>
-- Aplicativo (sem servidor, com pareamento por código): <https://slayerdllbr.github.io/eraso/app/index.html>
-- Servidor opcional de descoberta automática: ainda sem endereço público. Veja [docs/etapa4/HOSPEDAGEM.md](docs/etapa4/HOSPEDAGEM.md).
+- Aplicativo: <https://slayerdllbr.github.io/eraso/app/index.html>
+- Serviço de apresentação (Cloudflare): `https://eraso-sinal.eraso.workers.dev/saude`. Código em [cloudflare/](cloudflare/README.md).
+- Servidor próprio opcional: [docs/etapa4/HOSPEDAGEM.md](docs/etapa4/HOSPEDAGEM.md).
 
 ## Publicação do site
 

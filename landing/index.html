@@ -10,7 +10,7 @@
 <meta property="og:title" content="ERASÓ: compartilhe arquivos entre seus aparelhos">
 <meta property="og:description" content="Envie arquivos, textos e links entre celular e computador, direto de um navegador ao outro. Protótipo funcional de um projeto de extensão universitária.">
 <meta name="twitter:card" content="summary">
-<meta name="description" content="Envie arquivos, textos e links entre celular e computador, direto de um navegador ao outro, sem instalar nada. Pareamento por QR Code. Protótipo funcional de um projeto de extensão universitária.">
+<meta name="description" content="Envie arquivos, textos e links entre celular e computador, direto de um navegador ao outro, sem instalar nada. No mesmo Wi-Fi, os aparelhos se encontram sozinhos. Protótipo funcional de um projeto de extensão universitária.">
 <script>
   // Tema antes da pintura (mesmo comportamento da referência: preferência salva ou do sistema)
   try {
@@ -113,7 +113,7 @@
     <div class="container text-center">
       <p><a class="badge" href="sobre.html#estado">Protótipo funcional · Projeto de extensão universitária</a></p>
       <h1>Compartilhe arquivos entre seus aparelhos.<br><span class="accent">De uma ponta à outra.</span></h1>
-      <p class="subtitle">Envie arquivos, textos e links entre celular e computador, direto de um navegador ao outro, sem instalar nada e sem servidor no meio.</p>
+      <p class="subtitle">Envie arquivos, textos e links entre celular e computador, direto de um navegador ao outro, sem instalar nada. No mesmo Wi-Fi, os aparelhos se encontram sozinhos.</p>
       <div class="hero-ctas">
         <a href="../app/index.html" class="btn btn-primary btn-lg">Acessar o ERASÓ</a>
         <a href="#how-it-works" class="btn btn-secondary btn-lg">Ver como funciona</a>
@@ -153,8 +153,8 @@
       <div class="grid grid-4 features-grid">
         <div class="card feature-card">
           <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-remote"/></svg></div>
-          <h3>Pareamento por código</h3>
-          <p>Sem servidor: um aparelho mostra um QR Code, o outro o lê e devolve uma resposta. Com servidor, os aparelhos aparecem sozinhos na mesma rede ou sala.</p>
+          <h3>Encontro automático</h3>
+          <p>No mesmo Wi-Fi os aparelhos aparecem sozinhos. Em outras redes, use uma sala com código de 6 letras ou o pareamento por QR Code.</p>
         </div>
         <div class="card feature-card">
           <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg></div>
@@ -236,7 +236,7 @@
       <line class="d-dash" x1="150" y1="236" x2="318" y2="96"/>
       <line class="d-dash" x1="610" y1="236" x2="442" y2="96"/>
       <rect class="d-box" x="270" y="20" width="220" height="76" rx="14"/>
-      <text class="d-t" x="380" y="53" text-anchor="middle">Servidor ERASÓ (opcional)</text>
+      <text class="d-t" x="380" y="53" text-anchor="middle">Serviço de apresentação (Cloudflare)</text>
       <text class="d-s" x="380" y="75" text-anchor="middle">presença e sinalização</text>
       <text class="d-s" x="168" y="150" text-anchor="end">avisa que está aqui</text>
       <text class="d-s" x="592" y="150">recebe a lista de aparelhos</text>
@@ -283,7 +283,7 @@
       <text class="d-s" x="108" y="286">criptografados</text>
       <rect class="d-box" x="226" y="190" width="100" height="100" rx="14"/>
       <text class="d-t" x="276" y="220" text-anchor="middle">Servidor</text>
-      <text class="d-s" x="276" y="238" text-anchor="middle">(opcional)</text>
+      <text class="d-s" x="276" y="238" text-anchor="middle">Cloudflare</text>
       <text class="d-s" x="276" y="258" text-anchor="middle">presença e</text>
       <text class="d-s" x="276" y="276" text-anchor="middle">sinalização</text>
       <line class="d-dot" x1="276" y1="290" x2="276" y2="330"/>
@@ -292,7 +292,7 @@
       <text class="d-s" x="276" y="367" text-anchor="middle">opcional</text>
     </svg>
   </div>
-  <figcaption class="diagram-caption">Diagrama conceitual. Sem servidor, os aparelhos trocam um código; com servidor, ele só apresenta os aparelhos. O conteúdo segue direto entre os navegadores.</figcaption>
+  <figcaption class="diagram-caption">Diagrama conceitual. O serviço só apresenta os aparelhos (sem ele, eles trocam um código); o conteúdo segue direto entre os navegadores.</figcaption>
 </figure>
 <!--/parcial-->
       <div class="table-wrap">
@@ -301,7 +301,8 @@
           <thead><tr><th scope="col">Camada</th><th scope="col">Tecnologia</th><th scope="col">Função</th></tr></thead>
           <tbody>
             <tr><th scope="row">Interface</th><td>HTML, CSS e JavaScript puros</td><td>Aplicativo e site, sem framework e sem etapa de compilação.</td></tr>
-            <tr><th scope="row">Servidor (opcional)</th><td>Node.js 18+, sem dependências</td><td>Presença dos aparelhos por eventos SSE e repasse da sinalização, para quem quer descoberta automática.</td></tr>
+            <tr><th scope="row">Serviço de apresentação</th><td>Cloudflare Workers e Durable Objects (WebSocket)</td><td>Presença dos aparelhos e repasse da sinalização, no plano gratuito. Também há uma versão em Node.js 18+ para rodar na própria rede.</td></tr>
+            <tr><th scope="row">Servidor próprio (opcional)</th><td>Node.js 18+, sem dependências</td><td>Presença dos aparelhos por eventos SSE e repasse da sinalização, para quem quer descoberta automática.</td></tr>
             <tr><th scope="row">Pareamento sem servidor</th><td>QR Code (gerador próprio) e jsQR (leitura)</td><td>O código da conexão vai em QR Code, link ou texto; a câmera lê o QR Code no próprio aparelho.</td></tr>
             <tr><th scope="row">Conexão entre aparelhos</th><td>WebRTC (canal de dados, DTLS)</td><td>Transferência direta e criptografada de arquivos, textos e links.</td></tr>
             <tr><th scope="row">Entre redes diferentes</th><td>STUN e, se necessário, TURN</td><td>Descoberta do endereço público e retransmissão. O TURN ainda <span class="placeholder">[a definir]</span>.</td></tr>
@@ -334,7 +335,7 @@
         <h2 class="section-title text-center" id="t-faq">Perguntas frequentes</h2>
         <div class="faq-list">
           <div class="card faq-item"><h3 class="faq-question">Preciso instalar alguma coisa?</h3><p>Não. O ERASÓ funciona no navegador, direto do endereço do site. Não há versão para computador.</p></div>
-          <div class="card faq-item"><h3 class="faq-question">Funciona sem internet?</h3><p>O site precisa de internet para abrir. Depois de aberto, o pareamento por código não usa servidor do ERASÓ; entre redes diferentes, o aparelho consulta um servidor STUN público para descobrir o próprio endereço. O conteúdo vai direto entre os aparelhos.</p></div>
+          <div class="card faq-item"><h3 class="faq-question">Funciona sem internet?</h3><p>O site e o encontro dos aparelhos precisam de internet. O encontro usa um serviço leve na Cloudflare (ou o pareamento por QR Code, que não usa serviço nenhum); entre redes diferentes, o aparelho também consulta um servidor STUN público. O conteúdo vai direto entre os aparelhos.</p></div>
           <div class="card faq-item"><h3 class="faq-question">É seguro?</h3><p>O conteúdo vai direto entre os aparelhos, criptografado, sem passar pelo servidor, e cada pedido precisa ser aprovado. É possível exigir PIN. O projeto ainda não passou por auditoria independente; a página <a href="seguranca.html">Segurança</a> informa o que existe e o que não existe.</p></div>
           <div class="card faq-item"><h3 class="faq-question">Onde os arquivos são salvos?</h3><p>Na pasta de downloads do navegador. O navegador define a pasta; o ERASÓ não tem seletor de pasta.</p></div>
           <div class="card faq-item"><h3 class="faq-question">O que é a Caixa?</h3><p>Um espaço neste aparelho para guardar textos, links e arquivos, com prazo de 1, 7 ou 30 dias. Ela não é sincronizada entre aparelhos.</p></div>

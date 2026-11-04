@@ -1,6 +1,9 @@
-<!--meta {"file":"aplicativo.html","nav":"aplicativo","title":"Acessar o aplicativo","lead":"O aplicativo roda direto no navegador. Para os aparelhos se encontrarem, há duas formas: pareamento por código ou servidor.","desc":"Como usar o aplicativo do ERASÓ: pareamento por código (sem servidor) ou aparelhos encontrados automaticamente por um servidor na rede local ou em salas.","notice":{"label":"Dois modos de uso","html":"<p>No site publicado, o aplicativo funciona <strong>sem servidor</strong>, com pareamento por código. A descoberta automática de aparelhos exige um servidor do ERASÓ, que ainda não tem endereço público.</p>"}} -->
-<h2 id="sem-servidor">Sem servidor: pareamento por código</h2>
-<p>Este é o modo do site publicado. Um navegador não consegue procurar outros aparelhos sozinho, então os dois aparelhos trocam um código uma vez:</p>
+<!--meta {"file":"aplicativo.html","nav":"aplicativo","title":"Acessar o aplicativo","lead":"O aplicativo roda direto no navegador. Os aparelhos se encontram sozinhos no mesmo Wi-Fi; em outras redes, use uma sala com código ou o pareamento por QR Code.","desc":"Como usar o aplicativo do ERASÓ: pareamento por código (sem servidor) ou aparelhos encontrados automaticamente por um servidor na rede local ou em salas.","notice":{"label":"Como os aparelhos se encontram","html":"<p>Abra o aplicativo nos dois aparelhos. No mesmo Wi-Fi, eles aparecem sozinhos. Em redes diferentes, crie uma sala com código ou pareie por QR Code.</p>"}} -->
+<h2 id="automatico">No mesmo Wi-Fi e em salas</h2>
+<p>Abra o aplicativo nos dois aparelhos, conectados ao mesmo Wi-Fi: eles aparecem em <em>Por perto</em> sozinhos. Para aparelhos em redes diferentes, toque em <em>Criar sala</em> em um deles e abra o link de convite no outro (ou digite o código de 6 letras). O encontro é feito por um serviço leve na Cloudflare, que só apresenta os aparelhos; os arquivos vão direto de um para o outro.</p>
+
+<h2 id="sem-servidor">Sem o serviço: pareamento por QR Code</h2>
+<p>Se a rede bloquear o serviço, ou se você preferir não usá-lo, os dois aparelhos podem trocar um código uma vez:</p>
 <ol class="flow">
   <li><strong>Abra o aplicativo nos dois aparelhos</strong>Em <em>Compartilhar</em>, toque em <em>Parear aparelho</em>.</li>
   <li><strong>Gere o código em um deles</strong>Escolha <em>Gerar o meu código</em>. O aparelho mostra um QR Code, um link e um texto.</li>
@@ -10,8 +13,8 @@
 <p>Pronto: os dois ficam ligados e os arquivos vão direto de um para o outro, criptografados. A ligação dura enquanto as duas páginas ficarem abertas; ao fechar uma delas, é preciso parear de novo. Não há contas nem lista de aparelhos guardada.</p>
 <p>O código contém os endereços de rede e a impressão digital da conexão. Mostre-o apenas à pessoa que vai parear e use-o uma vez. Em redes diferentes, o aparelho consulta um servidor STUN público para descobrir o próprio endereço; redes muito restritas podem exigir um servidor de retransmissão (TURN), que ainda <span class="placeholder">[a definir]</span>.</p>
 
-<h2 id="com-servidor">Com servidor: aparelhos encontrados automaticamente</h2>
-<p>Se o aplicativo for aberto a partir de um servidor do ERASÓ, os aparelhos aparecem sozinhos: na mesma rede (modo local) ou na mesma sala com código (modo público). O servidor só apresenta os aparelhos; os arquivos continuam indo direto. É preciso o <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a> 18 ou superior:</p>
+<h2 id="com-servidor">Servidor próprio, opcional</h2>
+<p>Quem preferir pode rodar o próprio servidor de apresentação na rede local, com o mesmo funcionamento. É preciso o <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a> 18 ou superior:</p>
 <pre><code>git clone https://github.com/SLAYERDLLBR/eraso.git
 cd eraso
 npm start</code></pre>

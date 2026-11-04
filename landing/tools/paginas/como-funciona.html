@@ -9,15 +9,16 @@
 <!--parcial:fluxo-->
 
 <h2 id="encontro">Como os aparelhos se encontram</h2>
-<p>Navegadores não conseguem procurar outros aparelhos sozinhos, então alguém precisa fazer a primeira apresentação. O ERASÓ oferece duas formas. Sem servidor, as duas pontas trocam um <strong>código</strong>. Com servidor, cada navegador avisa um <strong>servidor</strong> leve que está ali, e ele informa aos outros quem está disponível e repassa as mensagens iniciais da conexão.</p>
+<p>Navegadores não conseguem procurar outros aparelhos sozinhos, então alguém precisa fazer a primeira apresentação. O ERASÓ oferece três formas. Pelo <strong>serviço de apresentação</strong> (um serviço leve na Cloudflare), cada navegador avisa que está ali, e o serviço informa aos outros quem está no mesmo Wi-Fi ou na mesma sala e repassa as mensagens iniciais da conexão. Sem o serviço, as duas pontas trocam um <strong>código</strong> (QR Code, link ou texto).</p>
 <div class="table-wrap">
   <table class="data-table">
     <caption class="sr-only">Formas de encontrar aparelhos</caption>
     <thead><tr><th scope="col">Forma</th><th scope="col">Quando usar</th><th scope="col">Como funciona</th></tr></thead>
     <tbody>
-      <tr><th scope="row">Pareamento por código</th><td>Sem servidor. É o modo do site publicado.</td><td>Um aparelho gera um QR Code, um link e um texto; o outro os aplica e mostra um código de resposta, que o primeiro lê com a câmera ou cola. A ligação dura enquanto as duas páginas ficam abertas.</td></tr>
-      <tr><th scope="row">Mesma rede</th><td>Servidor rodando na rede local (modo local).</td><td>Todos os aparelhos que abrem o mesmo endereço, na mesma rede, aparecem em “Por perto”.</td></tr>
-      <tr><th scope="row">Sala com código</th><td>Aparelhos em redes diferentes, com o servidor público do projeto.</td><td>Você cria um código e abre o link de convite no outro aparelho. Só quem usa o mesmo código se vê.</td></tr>
+      <tr><th scope="row">Mesma rede (automático)</th><td>Padrão no site publicado.</td><td>Abra o aplicativo nos dois aparelhos, no mesmo Wi-Fi: eles aparecem em “Por perto” sozinhos, sem código. O serviço usa o endereço de saída da rede só para agrupar os aparelhos, sem mostrá-lo nem guardá-lo.</td></tr>
+      <tr><th scope="row">Sala com código</th><td>Aparelhos em redes diferentes.</td><td>Você cria um código de 6 letras e abre o link de convite no outro aparelho, ou digita o código. Só quem usa o mesmo código se vê.</td></tr>
+      <tr><th scope="row">Pareamento por código (QR)</th><td>Sem o serviço, ou como alternativa se a rede o bloquear.</td><td>Um aparelho gera um QR Code, um link e um texto; o outro os aplica e mostra um código de resposta, que o primeiro lê com a câmera ou cola. A ligação dura enquanto as duas páginas ficam abertas.</td></tr>
+      <tr><th scope="row">Servidor próprio (opcional)</th><td>Quem quer rodar o próprio servidor na rede local.</td><td>Mesmo funcionamento do serviço de apresentação, com <code>npm start</code>. Veja <a href="aplicativo.html#com-servidor">Acessar o aplicativo</a>.</td></tr>
     </tbody>
   </table>
 </div>
@@ -56,7 +57,7 @@
     <thead><tr><th scope="col">Recurso</th><th scope="col">Situação</th><th scope="col">Observação</th></tr></thead>
     <tbody>
       <tr><th scope="row">Pareamento por código, sem servidor</th><td><span class="chip chip-done">Funciona</span></td><td>Testado com navegadores reais, inclusive a leitura do QR Code. Dura enquanto as páginas ficam abertas.</td></tr>
-      <tr><th scope="row">Descoberta automática na mesma rede ou sala</th><td><span class="chip chip-done">Funciona</span></td><td>Exige um servidor do ERASÓ, que ainda não tem endereço público.</td></tr>
+      <tr><th scope="row">Descoberta automática na mesma rede ou sala</th><td><span class="chip chip-done">Funciona</span></td><td>Pelo serviço de apresentação na Cloudflare (plano gratuito, com limites de uso). Se ele estiver fora do ar, o aplicativo usa o pareamento por QR Code.</td></tr>
       <tr><th scope="row">Envio de arquivos, pastas, textos e links</th><td><span class="chip chip-done">Funciona</span></td><td>Limite de 2 GB por pedido; o arquivo recebido fica na memória do navegador até terminar.</td></tr>
       <tr><th scope="row">Aprovação, PIN, cancelamento e histórico</th><td><span class="chip chip-done">Funciona</span></td><td>Histórico e Caixa ficam só neste aparelho.</td></tr>
       <tr><th scope="row">Conexão entre redes diferentes</th><td><span class="chip chip-proto">Depende da rede</span></td><td>Usa STUN; redes restritas exigem um servidor TURN, que ainda <span class="placeholder">[a definir]</span>.</td></tr>

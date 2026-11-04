@@ -1,6 +1,6 @@
 <!--meta {"file":"documentacao.html","nav":"documentacao","title":"Documentação e guia de utilização","lead":"Como usar o ERASÓ, atalhos, acessibilidade e onde está a documentação técnica.","desc":"Guia de utilização do ERASÓ (enviar, receber, salas, Caixa, configurações, diagnóstico, atalhos) e índice da documentação técnica.","notice":{"label":"Sobre este guia","html":"<p>O guia descreve o aplicativo como ele funciona hoje, em versão de protótipo funcional. O que ainda não existe está listado em <a href=\"como-funciona.html#o-que-existe\">Como funciona</a>.</p>"}} -->
 <h2 id="guia">Guia de utilização</h2>
-<p>Abra o <a href="../app/index.html">aplicativo</a> no computador e no celular. Sem servidor (como no site publicado), pareie os dois por código, veja <a href="#parear">Parear sem servidor</a>. Com um servidor do ERASÓ, os dois precisam estar no mesmo Wi-Fi ou na mesma <a href="#salas">sala</a>. Para pular a introdução, use o endereço com <code>?sem-intro</code> no final.</p>
+<p>Abra o <a href="../app/index.html">aplicativo</a> no computador e no celular. No mesmo Wi-Fi, os aparelhos aparecem um para o outro sozinhos. Em redes diferentes, use uma <a href="#salas">sala com código</a> ou o <a href="#parear">pareamento por QR Code</a>. Para pular a introdução, use o endereço com <code>?sem-intro</code> no final.</p>
 
 <h3 id="comecar">Primeiro uso</h3>
 <ol>
@@ -9,7 +9,7 @@
   <li>A navegação tem cinco destinos: <strong>Compartilhar</strong>, <strong>Caixa</strong>, <strong>Atividade</strong>, <strong>Dispositivos</strong> e <strong>Configurações</strong>, na barra lateral (computador) ou na barra inferior (celular).</li>
 </ol>
 
-<h3 id="parear">Parear sem servidor</h3>
+<h3 id="parear">Parear por QR Code</h3>
 <ol class="flow">
   <li><strong>Abra o aplicativo nos dois aparelhos</strong>Em <em>Compartilhar</em>, toque em <em>Parear aparelho</em>.</li>
   <li><strong>Gere o código em um deles</strong><em>Gerar o meu código</em> mostra um QR Code, um link e um texto, com botões para copiar.</li>
@@ -19,7 +19,7 @@
 <p>O pareamento dura enquanto as duas páginas ficarem abertas. Para desfazê-lo antes, abra os detalhes do aparelho (ⓘ) e escolha <em>Desfazer pareamento</em>. A câmera só funciona em endereço seguro (HTTPS) e só é usada enquanto você mantém a leitura aberta; as imagens não são gravadas nem enviadas. O código contém endereços de rede: mostre-o só a quem vai parear.</p>
 
 <h3 id="salas">Salas</h3>
-<p>Quando o servidor é público, o aplicativo pede um <strong>código de sala</strong>: só aparelhos com o mesmo código se enxergam. Escolha <em>Criar sala nova</em> e abra o <strong>link de convite</strong> no outro aparelho, ou digite um código que você já tem. Em <em>Configurações › Sala</em> é possível copiar o convite e sair da sala. Em um servidor na rede local, a sala é opcional: sem código, todos os aparelhos da rede se veem. Trate o código como uma senha de grupo.</p>
+<p>Sem código, você vê os aparelhos que saem para a internet pelo mesmo Wi-Fi. Com um <strong>código de sala</strong>, só aparelhos com o mesmo código se enxergam, de qualquer rede. Escolha <em>Criar sala</em> (o código tem 6 letras) e abra o <strong>link de convite</strong> no outro aparelho, ou digite o código. Em <em>Configurações › Sala</em> é possível copiar o convite e sair da sala. Em redes grandes, como a de uma instituição, o aplicativo avisa que há aparelhos demais e pede uma sala. O código evita encontros por acaso, mas não é uma senha forte: não o divulgue.</p>
 
 <h3 id="enviar">Enviar</h3>
 <ol class="flow">

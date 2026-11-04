@@ -2,6 +2,19 @@
 
 Segue o formato do [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o versionamento semântico, adaptado à fase de protótipo (versões 0.x podem mudar sem aviso).
 
+## [0.5.0] — 2026-11-04
+
+Os aparelhos passam a se encontrar **sozinhos**, sem códigos e sem QR Code.
+
+### Adicionado
+- **Serviço de apresentação na Cloudflare** (`cloudflare/`): Worker com Durable Object e WebSocket com hibernação, no plano gratuito. No mesmo Wi-Fi os aparelhos aparecem sozinhos (a sala é escolhida pelo hash do endereço de saída, que não é mostrado nem guardado); salas com código de 6 letras reúnem aparelhos de qualquer rede. Token por aparelho, origem permitida, limite de 20 aparelhos por sala (a rede grande recebe aviso e a sugestão de criar uma sala).
+- O aplicativo usa o serviço quando o endereço está em `app/config.js`; se o serviço não responder, cai no pareamento por QR Code. O pareamento por QR continua disponível como alternativa.
+- Testes: lógica do serviço em Node (13), ponta a ponta com o Wrangler local e dois navegadores (8, `npm run test:nuvem`), build do Pages com a política de conteúdo liberando só o endereço do serviço.
+
+### Alterado
+- Códigos de sala passam a ter de 6 a 32 caracteres (o aplicativo gera 6 na nuvem e 10 em servidores próprios).
+- O servidor Node passa a ser opcional também para quem quer rodar o próprio serviço na rede local.
+
 ## [0.4.0] — 2026-11-03
 
 O aplicativo passa a funcionar **sem servidor**, direto no GitHub Pages.
