@@ -2,6 +2,13 @@
 
 Segue o formato do [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o versionamento semântico, adaptado à fase de protótipo (versões 0.x podem mudar sem aviso).
 
+## [0.5.1] — 2026-11-04
+
+### Adicionado
+- Build para a **Cloudflare Pages** (`npm run build:cloudflare`): além do site, escreve `_headers` com política de conteúdo por cabeçalho HTTP (hashes dos scripts do site; aplicativo liberando só o serviço), `nosniff`, HSTS e câmera só para o próprio site.
+- [Guia de migração para a Cloudflare](docs/etapa5/MIGRACAO_CLOUDFLARE.md): projeto na Cloudflare Pages, liberação do novo endereço no serviço, domínio próprio e como desligar o GitHub Pages.
+- Página inicial no endereço do serviço da Cloudflare (antes, um erro em JSON).
+
 ## [0.5.0] — 2026-11-04
 
 Os aparelhos passam a se encontrar **sozinhos**, sem códigos e sem QR Code.
