@@ -73,11 +73,12 @@ const NOME_SEM_MODELO=ErasoRede.nomePadrao(PERFIL,PREFS.id);
 if(!PREFS.name||NOMES_ANTIGOS.includes(PREFS.name))PREFS.name=NOME_SEM_MODELO;
 if(PREFS.auto==='mine')PREFS.auto='fav';
 // Sala: código secreto compartilhado pelos aparelhos que devem se ver. Pode vir de um link de convite (?sala=…).
-const SALA_OK=/^[a-z0-9]{8,32}$/;
+const SALA_OK=/^[a-z0-9]{6,32}$/;
 const salaDoTexto=t=>{t=String(t||'').trim();const m=/[?&]sala=([A-Za-z0-9]+)/.exec(t);return(m?m[1]:t).toLowerCase()};
 let SALA=SALA_OK.test(PREFS.sala)?PREFS.sala:'';
 {const c=salaDoTexto((location.search.match(/[?&]sala=[A-Za-z0-9]+/)||[''])[0]);if(SALA_OK.test(c)&&/[?&]sala=/.test(location.search))SALA=c}
-const novaSala=()=>{const a='abcdefghjkmnpqrstuvwxyz23456789',b=crypto.getRandomValues(new Uint8Array(10));return Array.from(b,x=>a[x%a.length]).join('')};
+const novaSala=()=>{const a='abcdefghjkmnpqrstuvwxyz23456789',n=REDE.config.modo==='nuvem'?6:10,b=crypto.getRandomValues(new Uint8Array(n));return Array.from(b,x=>a[x%a.length]).join('')}; // 6 letras na nuvem (fáceis de digitar); 10 nos servidores próprios
+const enderecoServidor=()=>REDE.base||location.origin;
 const conviteDaSala=()=>`${location.origin}${location.pathname}?sala=${SALA}`;
 const ME={id:PREFS.id,name:PREFS.name,type:PERFIL.tipo,os:PERFIL.meta};
 let DEVICES=[];
@@ -130,7 +131,7 @@ addEventListener('hashchange',()=>{const h=location.hash.slice(1);go(h==='sobre'
 
 /* ===================== Este aparelho ===================== */
 const AUTO={off:'Sempre perguntar',fav:'Somente favoritos',all:'Qualquer aparelho da rede'};
-const NET_TXT={conectado:'visível na rede',conectando:'conectando ao servidor…',reconectando:'reconectando ao servidor…',desconectado:'sem conexão com o servidor','sem-webrtc':'navegador sem suporte a conexão direta','outra-aba':'aberto em outra aba','sem-sala':'escolha uma sala',manual:'sem servidor: pareie por código'};
+const NET_TXT={conectado:'visível na rede',conectando:'conectando ao servidor…',reconectando:'reconectando ao servidor…',desconectado:'sem conexão com o servidor','sem-webrtc':'navegador sem suporte a conexão direta','outra-aba':'aberto em outra aba','sem-sala':'escolha uma sala','rede-grande':'rede grande demais: use uma sala','sala-cheia':'sala cheia',manual:'sem servidor: pareie por código'};
 function statusLocal(){return S.net==='manual'?'modo sem servidor':S.net!=='conectado'?NET_TXT[S.net]||'sem conexão':S.visible?'visível na rede':'oculto'}
 function renderThisDevice(){
   $$('[data-this-device]').forEach(el=>{el.innerHTML=`
@@ -233,7 +234,7 @@ function sincronizarAparelhos(lista){
   $('[data-scan-text]').textContent=statusBusca();
   renderGrid();renderMultiBar();if(S.view==='dispositivos')renderDevList();if(INSP.kind==='device')renderInspector();
 }
-function statusBusca(){if(S.net==='manual'){const n=DEVICES.filter(d=>d.online).length;return n===0?'Nenhum aparelho pareado. Use “Parear aparelho”':`${n} ${n===1?'aparelho pareado':'aparelhos pareados'} · conectado${n===1?'':'s'}`}if(S.net!=='conectado')return NET_TXT[S.net]?NET_TXT[S.net][0].toUpperCase()+NET_TXT[S.net].slice(1):'Sem conexão';const n=DEVICES.filter(d=>d.online).length;const onde=SALA?'sala':'rede';return n===0?`Nenhum aparelho encontrado nesta ${onde}`:`${n} ${n===1?'aparelho encontrado':'aparelhos encontrados'} nesta ${onde} · agora`}
+function statusBusca(){if(S.net==='manual'){const n=DEVICES.filter(d=>d.online).length;return n===0?'Nenhum aparelho pareado. Use “Parear aparelho”':`${n} ${n===1?'aparelho pareado':'aparelhos pareados'} · conectado${n===1?'':'s'}`}if(S.net!=='conectado')return NET_TXT[S.net]?NET_TXT[S.net][0].toUpperCase()+NET_TXT[S.net].slice(1):'Sem conexão';const n=DEVICES.filter(d=>d.online).length;const onde=SALA?`sala ${SALA.toUpperCase()}`:'rede';return n===0?`Nenhum aparelho encontrado nesta ${onde}`:`${n} ${n===1?'aparelho encontrado':'aparelhos encontrados'} nesta ${onde} · agora`}
 function cardHTML(d,i){
   return `<button class="card ${d.online?'':'offline'} ${S.picked.has(d.id)?'selected':''}" data-dev="${d.id}" style="animation-delay:${Math.min(i,8)*30}ms"
     aria-label="${S.mode==='many'?'Selecionar':'Enviar para'} ${esc(d.name)}, ${esc(d.meta)}, ${d.online?'rota local, online':'offline'}">
@@ -252,8 +253,10 @@ function renderGrid(){
     if(S.q&&DEVICES.some(daAba))vazio=`<h3>Nenhum aparelho corresponde à busca</h3><p style="margin:0">Nada em “${esc(S.q)}”. A busca vale para o nome, o sistema, o tipo e o ID do aparelho.</p><div class="row-end" style="justify-content:center"><button class="btn btn-secondary btn-sm" data-dev-clear>Limpar busca</button></div>`;
     else if(S.tab==='fav')vazio=`<h3>Nenhum favorito ainda</h3><p style="margin:0">Toque no coração de um aparelho para encontrá-lo mais rápido. Favoritos offline continuam na lista.</p>`;
     else if(S.net==='manual')vazio=`<h3>Pareie o primeiro aparelho</h3><p style="margin:0">Este endereço funciona sem servidor: um aparelho gera um código e o outro o lê (QR Code, link ou texto). Depois disso, os arquivos vão direto de um aparelho ao outro.</p><div class="row-end" style="justify-content:center"><button class="btn btn-primary btn-sm" data-pair-open>${svgI('qr','s16')}Parear aparelho</button></div>`;
+    else if(S.net==='rede-grande'||S.net==='sala-cheia')vazio=`<h3>${S.net==='rede-grande'?'Esta rede tem aparelhos demais':'Esta sala está cheia'}</h3><p style="margin:0">${S.net==='rede-grande'?'Para não mostrar tantos aparelhos de uma vez, o ERASÓ só os lista automaticamente em redes pequenas.':'A sala atingiu o limite de aparelhos.'} Crie uma sala nova e abra o link de convite no outro aparelho, ou digite o código de uma sala.</p><div class="row-end" style="justify-content:center;gap:8px;flex-wrap:wrap"><input class="ren" data-sala-input placeholder="código da sala" maxlength="200" aria-label="Código da sala" style="width:200px"><button class="btn btn-primary btn-sm" data-sala-entrar>Entrar</button><button class="btn btn-secondary btn-sm" data-sala-gerar>Criar sala nova</button></div>`;
     else if(S.net==='sem-sala')vazio=`<h3>Entre numa sala</h3><p style="margin:0">Para encontrar os seus aparelhos, use o mesmo código de sala em todos eles. Crie um código novo e envie o convite para o outro aparelho, ou digite o código que você já tem.</p><div class="row-end" style="justify-content:center;gap:8px;flex-wrap:wrap"><input class="ren" data-sala-input placeholder="código ou link de convite" maxlength="200" aria-label="Código da sala" style="width:230px"><button class="btn btn-primary btn-sm" data-sala-entrar>Entrar</button><button class="btn btn-secondary btn-sm" data-sala-gerar>Criar sala nova</button></div>`;
     else if(S.net!=='conectado')vazio=`<h3>${S.net==='conectando'||S.net==='reconectando'?'Conectando ao servidor local…':'Sem conexão com o servidor local'}</h3><p style="margin:0">${S.net==='sem-webrtc'?'Este navegador não permite conexão direta entre aparelhos. Use uma versão atual do Chrome, Edge, Firefox ou Safari.':S.net==='outra-aba'?'O ERASÓ já está aberto em outra aba deste navegador. Feche a outra aba e recarregue esta.':'O ERASÓ precisa do servidor local para encontrar aparelhos. Confira se ele está em execução e se este aparelho está na mesma rede.'}</p><div class="row-end" style="justify-content:center"><button class="btn btn-secondary btn-sm" data-scan>${svgI('refresh','s16')}Tentar novamente</button><button class="btn btn-ghost btn-sm" data-goto-diag>Diagnosticar</button></div>`;
+    else if(REDE.config.modo==='nuvem')vazio=`<h3>Nenhum aparelho encontrado${SALA?' nesta sala':' nesta rede'}</h3><p style="margin:0">${SALA?`Abra o ERASÓ em outro aparelho e entre na sala <strong class="mono">${esc(SALA.toUpperCase())}</strong> (o link de convite está em Configurações).`:'Abra o ERASÓ em outro aparelho conectado ao mesmo Wi-Fi: ele aparece aqui sozinho. Em redes diferentes, crie uma sala com código.'}</p><div class="row-end" style="justify-content:center;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" data-sala-gerar>${svgI('plus','s16')}Criar sala</button><button class="btn btn-secondary btn-sm" data-pair-open>${svgI('qr','s16')}Parear por QR Code</button></div>`;
     else vazio=`<h3>Nenhum aparelho encontrado</h3><p style="margin:0">Abra o ERASÓ em outro aparelho conectado à mesma rede, no endereço <span class="mono">${esc(location.origin)}</span>. Ele aparece aqui assim que ficar visível.</p><div class="row-end" style="justify-content:center"><button class="btn btn-secondary btn-sm" data-scan>${svgI('refresh','s16')}Buscar novamente</button><button class="btn btn-ghost btn-sm" data-goto-diag>Diagnosticar</button></div>`;
     g.innerHTML=`<div class="empty" style="grid-column:1/-1">${trailSVG('pending')}${vazio}</div>`;hydrateIcons(g);return}
   g.innerHTML=list.map(cardHTML).join('');
@@ -286,7 +289,7 @@ async function scan(){if(S.scanning)return;S.scanning=true;$('[data-scan-status]
   try{await REDE.buscar();techlog('info','Busca concluída')}catch(e){techlog('error',`Busca falhou: ${e.message}`);toast(`Não foi possível buscar: ${e.message}`)}
   S.scanning=false;$('[data-scan-status]').classList.remove('scanning');$('[data-scan-text]').textContent=statusBusca();refreshBrand();renderGrid()}
 function tirarSalaDaUrl(){if(!/[?&]sala=/.test(location.search))return;const u=new URLSearchParams(location.search);u.delete('sala');const q=u.toString();history.replaceState(null,'',location.pathname+(q?'?'+q:'')+location.hash)}
-function entrarNaSala(texto){const c=salaDoTexto(texto);if(c&&!SALA_OK.test(c)){toast('O código da sala tem de 8 a 32 letras minúsculas e números.');return false}
+function entrarNaSala(texto){const c=salaDoTexto(texto);if(c&&!SALA_OK.test(c)){toast('O código da sala tem de 6 a 32 letras minúsculas e números.');return false}
   SALA=c;salvarPrefs();tirarSalaDaUrl();REDE.entrarNaSala(SALA);techlog('info',SALA?'Entrou na sala':'Saiu da sala');renderSettingsBits();if(INSP.kind==='me')renderInspector();return true}
 document.addEventListener('click',e=>{const t=e.target;
   if(t.closest('[data-sala-entrar]')){const i=t.closest('[data-grid],.set-row')?.querySelector('[data-sala-input]')||$('[data-sala-input]');if(!i||!i.value.trim()){toast('Digite o código da sala ou crie uma nova.');return}if(entrarNaSala(i.value))toast('Você entrou na sala');return}
@@ -660,7 +663,7 @@ function renderInspector(){const el=$('[data-inspector]');let head='',body='',ba
         <div class="field" style="margin-top:8px"><label for="insp-name" style="font-size:13px;color:var(--text-tertiary);font-weight:400">Nome que os outros veem</label><div class="insp-name"><input id="insp-name" data-insp-name value="${esc(ME.name)}" maxlength="40"><button class="btn btn-secondary btn-sm" data-insp-rename>Salvar</button></div></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn btn-ghost btn-sm" data-insp-randname>${svgI('refresh','s16')}Usar o nome do aparelho</button></div>
         <dl class="mtab">${row('Tipo',TIPOS[ME.type]||'Aparelho')}${row('Sistema · navegador',esc(ME.os))}${row('Identificador',esc(ME.id),true)}${row('Sala',SALA?esc(SALA):'Rede toda (sem sala)',!!SALA)}</dl></details>
-      <details open><summary>Conexão</summary><dl class="mtab">${S.net==='manual'?row('Modo','Sem servidor (pareamento por código)'):row('Servidor local',esc(location.origin),true)}${row('Estado',esc(NET_TXT[S.net]||S.net))}
+      <details open><summary>Conexão</summary><dl class="mtab">${S.net==='manual'?row('Modo','Sem servidor (pareamento por código)'):row(REDE.config.modo==='nuvem'?'Serviço na nuvem':'Servidor local',esc(enderecoServidor()),true)}${row('Estado',esc(NET_TXT[S.net]||S.net))}
         ${row('Rota',routeBadge({route:'local'}))}${row('Aparelhos vistos',String(DEVICES.filter(d=>d.online).length))}</dl></details>
       <details><summary>Segurança</summary><dl class="mtab">${row('Criptografia','Conexão direta WebRTC (DTLS)')}${row('Exigir PIN',S.pin?'Sim':'Não')}</dl></details>`;
     bar=`<button class="btn btn-ghost btn-sm" data-goto-diag>${svgI('activity','s16')}Diagnosticar</button><span class="spacer"></span>`}
@@ -695,9 +698,9 @@ const CHECKS=[
   {id:'nav',t:'Navegador compatível',run:async()=>typeof RTCPeerConnection!=='undefined'&&typeof EventSource!=='undefined'?{s:'ok',d:'Conexão direta entre aparelhos (WebRTC) disponível.'}:{s:'bad',d:'Este navegador não permite conexão direta entre aparelhos. Use uma versão atual do Chrome, Edge, Firefox ou Safari.'}},
   {id:'srv',t:'Servidor local',run:async()=>{
     if(S.net==='manual')return{s:'ok',d:'Modo sem servidor: os aparelhos se encontram por código (pareamento). Não há servidor a verificar.'};
-    const t0=performance.now();try{const r=await fetch('/api/aparelhos',{cache:'no-store'});if(!r.ok)throw new Error('status '+r.status);const ms=Math.round(performance.now()-t0);
-      return S.net==='conectado'?{s:'ok',d:`Conectado a ${location.origin} · ${ms} ms.`}:{s:'warn',d:`O servidor responde, mas este aparelho está “${NET_TXT[S.net]||S.net}”.`,a:'Reconectar',fix:async()=>REDE.conectar(),keep:false}}
-    catch{return{s:'bad',d:`Sem resposta de ${location.origin}. Confira se o servidor do ERASÓ está em execução e se este aparelho está na mesma rede.`}}}},
+    const t0=performance.now();try{const r=await fetch(`${REDE.base}/api/aparelhos?sala=${encodeURIComponent(SALA)}`,{cache:'no-store'});if(!r.ok)throw new Error('status '+r.status);const ms=Math.round(performance.now()-t0);
+      return S.net==='conectado'?{s:'ok',d:`Conectado a ${enderecoServidor()} · ${ms} ms.`}:{s:'warn',d:`O servidor responde, mas este aparelho está “${NET_TXT[S.net]||S.net}”.`,a:'Reconectar',fix:async()=>REDE.conectar(),keep:false}}
+    catch{return{s:'bad',d:`Sem resposta de ${enderecoServidor()}. Confira a conexão com a internet e, se o servidor for o seu, se ele está em execução.`}}}},
   {id:'vis',t:'Este aparelho está visível',run:async()=>S.visible?{s:'ok',d:'Outros aparelhos da rede conseguem te encontrar.'}:{s:'bad',d:'Oculto: ninguém consegue te encontrar nem enviar pedidos.',a:'Ficar visível',fix:async()=>{S.visible=true;salvarPrefs();await REDE.atualizarPerfil({visivel:true});renderThisDevice();refreshBrand()}}},
   {id:'par',t:'Outros aparelhos na rede',run:async()=>{try{await REDE.buscar()}catch{}const n=DEVICES.filter(d=>d.online).length;if(S.net==='manual'&&!n)return{s:'warn',d:'Nenhum aparelho pareado. Use “Parear aparelho” na tela Compartilhar.'};return n?{s:'ok',d:`${n} ${n===1?'aparelho visível':'aparelhos visíveis'}: ${DEVICES.filter(d=>d.online).map(d=>d.name).join(', ')}.`}:{s:'warn',d:`Nenhum aparelho encontrado. Abra ${location.origin} em outro aparelho, na mesma rede, e deixe-o visível.`}}},
   {id:'dir',t:'Conexão direta com cada aparelho',run:async()=>{const on=DEVICES.filter(d=>d.online);if(!on.length)return{s:'warn',d:'Não há aparelhos para testar.'};
@@ -743,7 +746,7 @@ function renderDiag(){
     </div></details>`;
   renderChecks();renderSymptoms();renderTechLog()}
 function report(){const r=CHECKS.map(c=>{const x=DIAG.results[c.id];return `- ${c.t}: ${x?({ok:'OK',warn:'ATENÇÃO',bad:'PROBLEMA',running:'…'}[x.s])+(x.d?': '+x.d:''):'não verificado'}`}).join('\n');
-  return `Relatório de conexão do ERASÓ\nAparelho: ${ME.name} · ${ME.os}\nServidor: ${S.net==='manual'?'sem servidor (pareamento por código)':location.origin} · estado: ${NET_TXT[S.net]||S.net}\n${r}\nSituação escolhida: ${SYMPTOMS.find(s=>s.id===DIAG.sym)?.t||'não informada'}\n\nÚltimos registros:\n${TECHLOG.slice(-8).map(l=>`${l.t} ${l.type.toUpperCase()} ${l.msg}`).join('\n')}`}
+  return `Relatório de conexão do ERASÓ\nAparelho: ${ME.name} · ${ME.os}\nServidor: ${S.net==='manual'?'sem servidor (pareamento por código)':enderecoServidor()} · estado: ${NET_TXT[S.net]||S.net}\n${r}\nSituação escolhida: ${SYMPTOMS.find(s=>s.id===DIAG.sym)?.t||'não informada'}\n\nÚltimos registros:\n${TECHLOG.slice(-8).map(l=>`${l.t} ${l.type.toUpperCase()} ${l.msg}`).join('\n')}`}
 const copiar=(txt,ok)=>navigator.clipboard?.writeText(txt).then(()=>toast(ok),()=>toast('O navegador bloqueou a cópia. Selecione o texto e copie manualmente.'));
 $('[data-diag]').addEventListener('click',async e=>{const t=e.target;
   if(t.closest('[data-run-checks]')){runChecks();t.closest('[data-run-checks]').lastChild.textContent='Verificar de novo';return}
@@ -834,7 +837,7 @@ function syncSettingsSwitches(){$$('[data-pin-switch]').forEach(b=>b.setAttribut
   const linha=$('[data-pin-row]');if(linha)linha.hidden=!S.pin;const c=$('[data-pin-code]');if(c&&document.activeElement!==c)c.value=S.pinCode}
 function renderSettingsBits(){syncSettingsSwitches();
   const si=$('[data-sala-input]',$('[data-settings]'));if(si&&document.activeElement!==si)si.value=SALA;
-  const sd=$('[data-sala-desc]');if(sd)sd.textContent=REDE.config.salaObrigatoria?'Só aparelhos com o mesmo código se veem. Mantenha o código em segredo.':'Opcional. Sem código, todos os aparelhos da rede se veem. Com um código, só quem usa o mesmo código aparece.';
+  const sd=$('[data-sala-desc]');if(sd)sd.textContent=REDE.config.salaObrigatoria?'Só aparelhos com o mesmo código se veem. Mantenha o código em segredo.':REDE.config.modo==='nuvem'?'Opcional. Sem código, aparecem os aparelhos do mesmo Wi-Fi. Com um código, só quem usa o mesmo código aparece, de qualquer rede.':'Opcional. Sem código, todos os aparelhos da rede se veem. Com um código, só quem usa o mesmo código aparece.';
   const sr=$('[data-sala-row]');if(sr)sr.hidden=REDE.config.modo==='manual';
   const sc=$('[data-sala-copiar]'),ss=$('[data-sala-sair]');if(sc)sc.hidden=!SALA;if(ss)ss.hidden=!SALA;
 const n=$('[data-set-name]');if(n&&document.activeElement!==n)n.value=ME.name;
@@ -937,7 +940,7 @@ document.addEventListener('click',e=>{if(e.target.closest('[data-pair-open]'))PA
 
 /* ===================== Rede (presença e conexão direta reais) ===================== */
 const REDE=new ErasoRede.Rede({base:BASE_URL,sala:SALA,perfil:{id:ME.id,nome:ME.name,tipo:ME.type,so:ME.os},visivel:S.visible,
-  onStatus:(s)=>{S.net=s;if(['desconectado','outra-aba','sem-webrtc','sem-sala'].includes(s))sincronizarAparelhos([]);const bp=$('[data-pair-open]');if(bp)bp.hidden=s!=='manual';const sr0=$('[data-sala-row]');if(sr0)sr0.hidden=s==='manual';const bs=$('.dest-head [data-scan]');if(bs)bs.hidden=s==='manual';if(s==='manual')pareamentoPendente();renderThisDevice();$('[data-scan-text]').textContent=statusBusca();refreshBrand();renderGrid();if(INSP.kind==='me')renderInspector()},
+  onStatus:(s)=>{S.net=s;const bp=$('[data-pair-open]');if(bp)bp.hidden=!(s==='manual'||REDE.config.modo==='nuvem');const sr0=$('[data-sala-row]');if(sr0)sr0.hidden=s==='manual';const bs=$('.dest-head [data-scan]');if(bs)bs.hidden=s==='manual';if(s==='manual')pareamentoPendente();renderThisDevice();$('[data-scan-text]').textContent=statusBusca();refreshBrand();renderGrid();if(INSP.kind==='me')renderInspector()},
   onAparelhos:sincronizarAparelhos,onPedido:pedidoChegou,log:(t,m)=>techlog(t==='error'?'error':t==='warn'?'warn':'info',m)});
 aplicarRede();
 

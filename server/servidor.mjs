@@ -86,7 +86,7 @@ function cabecalhos(res, comCsp = true) {
 }
 
 // ---------- presença ----------
-const SALA_OK = /^[a-z0-9]{8,32}$/;
+const SALA_OK = /^[a-z0-9]{6,32}$/;
 const ID_OK = /^[a-f0-9]{8,32}$/;
 const limpo = (v, max = 60) => String(v ?? '').replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, max);
 const publico = (a) => ({ id: a.id, nome: a.nome, tipo: a.tipo, so: a.so });
@@ -125,7 +125,7 @@ async function api(req, res, url) {
   if (req.method === 'GET' && rota === '/api/eventos') {
     const q = url.searchParams, id = q.get('id') || '', sala = salaDe(q.get('sala'));
     if (!ID_OK.test(id)) return json(res, 400, { erro: 'identificador inválido' });
-    if (sala === null) return json(res, 400, { erro: PUBLICO && !q.get('sala') ? 'informe o código da sala' : 'código de sala inválido (8 a 32 letras minúsculas e números)' });
+    if (sala === null) return json(res, 400, { erro: PUBLICO && !q.get('sala') ? 'informe o código da sala' : 'código de sala inválido (6 a 32 letras minúsculas e números)' });
     const antigo = aparelhos.get(id);
     if (!antigo) {
       if (aparelhos.size >= LIMITES.totalMax) return json(res, 503, { erro: 'servidor cheio, tente mais tarde' });

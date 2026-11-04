@@ -1,6 +1,7 @@
 /* ERASÓ · camada de rede do navegador.
  *
- * Presença e sinalização passam pelo servidor local (server/servidor.mjs); os arquivos e textos viajam
+ * Presença e sinalização passam por um servidor do ERASÓ: o servidor local (server/servidor.mjs) ou o serviço na nuvem
+ * (cloudflare/, usado pelo aplicativo publicado no GitHub Pages); os arquivos e textos viajam
  * DIRETAMENTE entre os dois navegadores por um canal de dados WebRTC (criptografado por DTLS). O servidor
  * nunca recebe o conteúdo.
  *
@@ -139,10 +140,10 @@
      *   onStatus?:Function, onAparelhos?:Function, onPedido?:Function, log?:Function}} o
      */
     constructor(o) {
-      this.base = o.base || ''; this.perfil = { ...o.perfil }; this.visivel = o.visivel !== false; this.sala = o.sala || ''; this.iceServers = []; this.config = { modo: 'local', salaObrigatoria: false }; this._token = ''; this._geracao = 0;
+      this.base = o.base || ''; this.base0 = this.base; this.perfil = { ...o.perfil }; this.visivel = o.visivel !== false; this.sala = o.sala || ''; this.iceServers = []; this.config = { modo: 'local', salaObrigatoria: false }; this._token = ''; this._geracao = 0;
       this.onStatus = o.onStatus || (() => {}); this.onAparelhos = o.onAparelhos || (() => {}); this.onPedido = o.onPedido || (() => {}); this.log = o.log || (() => {});
       this.aparelhos = []; this.estado = 'desconectado'; this.pin = ''; this.verificarEnvio = true; this.verificarRecebimento = true;
-      this._sessoes = new Map(); this._pinErros = new Map(); this._es = null; this._ligacoes = new Map(); this._convites = new Set();
+      this._sessoes = new Map(); this._pinErros = new Map(); this._es = null; this._ligacoes = new Map(); this._convites = new Set(); this._presenca = []; this._ws = null; this._tentativas = 0;
     }
 
     // ---------- presença ----------
@@ -158,27 +159,65 @@
       });
     }
     async _carregarConfig() {
-      try {
-        const r = await fetch(`${this.base}/api/config`, { cache: 'no-store' });
+      const ler = async (base) => {
+        const r = await fetch(`${base}/api/config`, { cache: 'no-store' });
         let c = null; if (r.ok && /json/.test(r.headers.get('content-type') || '')) { try { c = await r.json(); } catch { c = null; } }
-        if (c) { this.config = { modo: c.modo, salaObrigatoria: !!c.salaObrigatoria }; this.iceServers = Array.isArray(c.iceServers) ? c.iceServers : []; }
-        else if (r.status === 404 || r.status === 405 || r.ok) { this.config = { modo: 'manual', salaObrigatoria: false }; this.iceServers = STUN_PADRAO; } // este endereço não tem servidor do ERASÓ (ex.: GitHub Pages)
+        return { r, c };
+      };
+      const aplicar = (base, c) => { this.base = base; this.config = { modo: c.modo, salaObrigatoria: !!c.salaObrigatoria, transporte: c.transporte || 'sse' }; this.iceServers = Array.isArray(c.iceServers) ? c.iceServers : []; };
+      const nuvem = String((window.ERASO_CONFIG && window.ERASO_CONFIG.servidor) || '').replace(/\/+$/, '');
+      let semServidorAqui = false;
+      try {
+        const { r, c } = await ler(this.base0);
+        if (c) return aplicar(this.base0, c);
+        semServidorAqui = r.status === 404 || r.status === 405 || r.ok; // este endereço não tem servidor do ERASÓ (ex.: GitHub Pages)
       } catch { /* sem rede ou servidor fora do ar: o EventSource mostra o erro */ }
+      if (semServidorAqui && nuvem) {
+        try { const { c } = await ler(nuvem); if (c) return aplicar(nuvem, c); } catch { /* serviço na nuvem indisponível: cai no pareamento por código */ }
+        this.log('warn', 'Serviço na nuvem indisponível; usando o pareamento por código');
+      }
+      if (semServidorAqui) { this.config = { modo: 'manual', salaObrigatoria: false, transporte: 'sse' }; this.iceServers = STUN_PADRAO; }
     }
     _abrir() {
+      if (this.config.transporte === 'ws') return this._abrirWs();
       const p = this.perfil, q = new URLSearchParams({ id: p.id, nome: p.nome, tipo: p.tipo, so: p.so, visivel: this.visivel ? '1' : '0', sala: this.sala });
       const es = new EventSource(`${this.base}/api/eventos?${q}`); this._es = es;
       es.onopen = () => this._estado('conectado');
       es.onerror = () => { if (es.readyState === 2) this._estado('desconectado'); else this._estado('reconectando'); };
       es.addEventListener('ola', (e) => { try { this._token = JSON.parse(e.data).token || ''; } catch { /* sem token */ } this._estado('conectado'); });
       es.addEventListener('substituido', () => { es.close(); this._es = null; this._estado('outra-aba'); });
-      es.addEventListener('aparelhos', (e) => { this.aparelhos = JSON.parse(e.data).filter((a) => a.id !== p.id); this.onAparelhos(this.aparelhos); });
+      es.addEventListener('aparelhos', (e) => { this._presenca = JSON.parse(e.data).filter((a) => a.id !== p.id); this._anunciar(); });
       es.addEventListener('sinal', (e) => this._sinalRecebido(JSON.parse(e.data)));
     }
+    /** Serviço na nuvem: WebSocket (as conexões ociosas não consomem tempo de execução). Reconecta sozinho, com espera crescente. */
+    _abrirWs() {
+      const p = this.perfil, geracao = this._geracao, u = new URL(this.base + '/api/ws'); u.protocol = u.protocol === 'https:' ? 'wss:' : 'ws:';
+      for (const [k, v] of Object.entries({ id: p.id, nome: p.nome, tipo: p.tipo, so: p.so, visivel: this.visivel ? '1' : '0', sala: this.sala })) u.searchParams.set(k, v);
+      const ws = new WebSocket(u); this._ws = ws; let bat = null, intencional = false;
+      const cair = () => {
+        clearInterval(bat); if (this._ws === ws) this._ws = null; if (intencional || geracao !== this._geracao) return;
+        this._estado('reconectando'); const espera = Math.min(15000, 1500 * 2 ** Math.min(this._tentativas++, 4));
+        setTimeout(() => { if (geracao === this._geracao && !this._ws) this._abrirWs(); }, espera);
+      };
+      ws.onopen = () => { bat = setInterval(() => { try { ws.send('ping'); } catch { /* fechando */ } }, 25000); };
+      ws.onerror = () => {}; ws.onclose = cair;
+      ws.onmessage = (e) => {
+        if (e.data === 'pong') return; let m; try { m = JSON.parse(e.data); } catch { return; }
+        if (m.ev === 'ola') { this._token = (m.dados && m.dados.token) || ''; this._tentativas = 0; this._estado('conectado'); }
+        else if (m.ev === 'aparelhos') { this._presenca = (m.dados || []).filter((a) => a.id !== p.id); this._anunciar(); }
+        else if (m.ev === 'sinal') this._sinalRecebido(m.dados);
+        else if (m.ev === 'substituido') { intencional = true; try { ws.close(); } catch { /* ok */ } this._ws = null; this._estado('outra-aba'); }
+        else if (m.ev === 'erro') { intencional = true; try { ws.close(); } catch { /* ok */ } this._ws = null; this._estado(m.dados && m.dados.motivo === 'rede-grande' ? 'rede-grande' : m.dados && m.dados.motivo === 'sala-cheia' ? 'sala-cheia' : 'desconectado'); }
+      };
+    }
     /** Entra numa sala (ou sai, com ''). Reconecta já na sala nova. */
-    entrarNaSala(sala) { this.sala = sala || ''; this.aparelhos = []; this.onAparelhos([]); this.conectar(); }
-    desconectar() { this._geracao++; if (this._es) { this._es.close(); this._es = null; } this._estado('desconectado'); }
-    _estado(s) { if (this.estado === s) return; this.estado = s; this.log('info', `Conexão com o servidor: ${s}`); this.onStatus(s); }
+    entrarNaSala(sala) { this.sala = sala || ''; this._presenca = []; this._anunciar(); this.conectar(); }
+    desconectar() { this._geracao++; if (this._es) { this._es.close(); this._es = null; } if (this._ws) { const w = this._ws; this._ws = null; w.onclose = null; try { w.close(); } catch { /* ok */ } } this._estado('desconectado'); }
+    _estado(s) {
+      if (this.estado === s) return; this.estado = s; this.log('info', `Conexão com o servidor: ${s}`);
+      if (['desconectado', 'outra-aba', 'sem-webrtc', 'sem-sala', 'rede-grande', 'sala-cheia'].includes(s) && this._presenca.length) { this._presenca = []; this._anunciar(); } // sem servidor, ninguém é visto; as ligações por código continuam
+      this.onStatus(s);
+    }
     async atualizarPerfil(parcial) {
       Object.assign(this.perfil, parcial.nome !== undefined ? { nome: parcial.nome } : {}); if (parcial.visivel !== undefined) this.visivel = parcial.visivel;
       if (this.estado === 'manual') { for (const l of this._ligacoes.values()) { try { l.ctl.send(JSON.stringify({ t: 'perfil', nome: this.perfil.nome })); } catch { /* ligação fechada */ } } return; }
@@ -188,17 +227,17 @@
     async buscar() {
       if (this.estado === 'manual') { this._anunciar(); return this.aparelhos; }
       const r = await fetch(`${this.base}/api/aparelhos?sala=${encodeURIComponent(this.sala)}`, { cache: 'no-store' });
-      if (!r.ok) throw new Error('O servidor local não respondeu.');
-      this.aparelhos = (await r.json()).aparelhos.filter((a) => a.id !== this.perfil.id); this.onAparelhos(this.aparelhos); return this.aparelhos;
+      if (!r.ok) throw new Error('O servidor não respondeu.');
+      this._presenca = (await r.json()).aparelhos.filter((a) => a.id !== this.perfil.id); this._anunciar(); return this.aparelhos;
     }
     async _post(rota, corpo) {
-      let r; try { r = await fetch(this.base + rota, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...corpo, token: this._token }) }); } catch { throw new Error('Sem conexão com o servidor local.'); }
+      let r; try { r = await fetch(`${this.base}${rota}?sala=${encodeURIComponent(this.sala)}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...corpo, token: this._token }) }); } catch { throw new Error('Sem conexão com o servidor.'); }
       if (!r.ok) { let m = ''; try { m = (await r.json()).erro; } catch { /* sem corpo */ } throw new Error(m || `Erro ${r.status}`); }
     }
     _sinal(para, kind, sessao, dados) { return this._post('/api/sinal', { de: this.perfil.id, para, kind, sessao, dados }); }
 
     // ---------- pareamento manual (sem servidor) ----------
-    _anunciar() { this.aparelhos = [...this._ligacoes.values()].map((l) => ({ ...l.perfil })); this.onAparelhos(this.aparelhos); }
+    _anunciar() { const vistos = new Set(this._presenca.map((a) => a.id)); this.aparelhos = [...this._presenca, ...[...this._ligacoes.values()].filter((l) => !vistos.has(l.perfil.id)).map((l) => ({ ...l.perfil }))]; this.onAparelhos(this.aparelhos); }
     _perfilDoCodigo() { const p = this.perfil; return [p.id, p.nome, p.tipo, p.so]; }
     _aguardarCandidatos(pc, ms = 4000) {
       return new Promise((ok) => {
