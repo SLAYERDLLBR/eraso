@@ -21,6 +21,8 @@ jobs:
         run: npm run verificar-sintaxe
       - name: Testes do servidor (salas, autenticação, limites, cabeçalhos)
         run: npm run test:servidor
+      - name: Testes do gerador de QR Code
+        run: npm run test:qr
       - name: Páginas do site em dia com os modelos
         run: |
           npm run gerar-site

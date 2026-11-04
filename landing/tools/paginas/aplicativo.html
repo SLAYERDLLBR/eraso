@@ -1,20 +1,23 @@
-<!--meta {"file":"aplicativo.html","nav":"aplicativo","title":"Acessar o aplicativo","lead":"O aplicativo precisa de um servidor próprio. Este site é estático e não o executa.","desc":"Como acessar o aplicativo do ERASÓ: ele depende de um servidor de presença e sinalização, que não roda em hospedagem estática. Veja como executá-lo na sua rede.","notice":{"label":"Estado atual","html":"<p>Ainda não há um endereço público para o aplicativo. Quando houver, os botões “Acessar o ERASÓ” deste site passarão a apontar para ele.</p>"}} -->
-<h2 id="por-que">Por que o aplicativo não abre a partir daqui</h2>
-<p>Para que os aparelhos se encontrem, o ERASÓ usa um servidor leve de presença e sinalização, feito em Node.js. Este site é publicado em hospedagem estática, que só entrega arquivos e não executa programas; por isso, o aplicativo não funciona a partir dele. Sem o servidor, os aparelhos não se enxergam.</p>
-<p>O servidor <strong>não recebe nem guarda</strong> os arquivos e textos enviados: eles seguem direto de um navegador ao outro. A arquitetura está em <a href="como-funciona.html#direto">Como funciona</a>.</p>
+<!--meta {"file":"aplicativo.html","nav":"aplicativo","title":"Acessar o aplicativo","lead":"O aplicativo roda direto no navegador. Para os aparelhos se encontrarem, há duas formas: pareamento por código ou servidor.","desc":"Como usar o aplicativo do ERASÓ: pareamento por código (sem servidor) ou aparelhos encontrados automaticamente por um servidor na rede local ou em salas.","notice":{"label":"Dois modos de uso","html":"<p>No site publicado, o aplicativo funciona <strong>sem servidor</strong>, com pareamento por código. A descoberta automática de aparelhos exige um servidor do ERASÓ, que ainda não tem endereço público.</p>"}} -->
+<h2 id="sem-servidor">Sem servidor: pareamento por código</h2>
+<p>Este é o modo do site publicado. Um navegador não consegue procurar outros aparelhos sozinho, então os dois aparelhos trocam um código uma vez:</p>
+<ol class="flow">
+  <li><strong>Abra o aplicativo nos dois aparelhos</strong>Em <em>Compartilhar</em>, toque em <em>Parear aparelho</em>.</li>
+  <li><strong>Gere o código em um deles</strong>Escolha <em>Gerar o meu código</em>. O aparelho mostra um QR Code, um link e um texto.</li>
+  <li><strong>Leia no outro aparelho</strong>Aponte a câmera do celular para o QR Code (ele abre o ERASÓ já com o código) ou cole o link ou o texto em <em>Tenho um código ou link</em>.</li>
+  <li><strong>Devolva a resposta</strong>O segundo aparelho mostra um código de resposta. No primeiro, leia-o com <em>Ler com a câmera</em> ou cole o texto, e toque em <em>Conectar</em>.</li>
+</ol>
+<p>Pronto: os dois ficam ligados e os arquivos vão direto de um para o outro, criptografados. A ligação dura enquanto as duas páginas ficarem abertas; ao fechar uma delas, é preciso parear de novo. Não há contas nem lista de aparelhos guardada.</p>
+<p>O código contém os endereços de rede e a impressão digital da conexão. Mostre-o apenas à pessoa que vai parear e use-o uma vez. Em redes diferentes, o aparelho consulta um servidor STUN público para descobrir o próprio endereço; redes muito restritas podem exigir um servidor de retransmissão (TURN), que ainda <span class="placeholder">[a definir]</span>.</p>
 
-<h2 id="executar">Como executar na sua rede</h2>
-<p>É preciso o <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a> 18 ou superior e o <a href="https://git-scm.com" target="_blank" rel="noopener">Git</a>. No terminal:</p>
+<h2 id="com-servidor">Com servidor: aparelhos encontrados automaticamente</h2>
+<p>Se o aplicativo for aberto a partir de um servidor do ERASÓ, os aparelhos aparecem sozinhos: na mesma rede (modo local) ou na mesma sala com código (modo público). O servidor só apresenta os aparelhos; os arquivos continuam indo direto. É preciso o <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a> 18 ou superior:</p>
 <pre><code>git clone https://github.com/SLAYERDLLBR/eraso.git
 cd eraso
 npm start</code></pre>
-<p>O terminal mostra os endereços da sua rede, como <code>http://192.168.0.12:8780/app/index.html</code>. Abra o <strong>mesmo endereço</strong> no computador e no celular, no mesmo Wi-Fi. Os aparelhos aparecem um para o outro na lista “Por perto”.</p>
-<p>Se não se encontrarem, a tela <em>Diagnóstico</em> do aplicativo mostra o motivo. Redes com isolamento de clientes, comuns em Wi-Fi de instituições e de visitantes, impedem a conexão direta.</p>
-
-<h2 id="internet">Para usar fora da rede local</h2>
-<p>O servidor tem um modo público, com salas protegidas por código, pensado para ser hospedado em um serviço que execute Node.js, com HTTPS. O passo a passo, as variáveis de ambiente e as limitações (por exemplo, redes restritas que exigem um servidor de retransmissão) estão no <a href="https://github.com/SLAYERDLLBR/eraso/blob/main/docs/etapa4/HOSPEDAGEM.md" target="_blank" rel="noopener">guia de hospedagem</a>, no repositório.</p>
+<p>O terminal mostra os endereços da sua rede, como <code>http://192.168.0.12:8780/app/index.html</code>. Abra o mesmo endereço nos dois aparelhos, no mesmo Wi-Fi. O passo a passo para hospedar o servidor está no <a href="https://github.com/SLAYERDLLBR/eraso/blob/main/docs/etapa4/HOSPEDAGEM.md" target="_blank" rel="noopener">guia de hospedagem</a>.</p>
 
 <div class="cta-row">
-  <a class="btn btn-primary" href="https://github.com/SLAYERDLLBR/eraso" target="_blank" rel="noopener">Ver o repositório</a>
+  <a class="btn btn-primary" href="../app/index.html">Abrir o aplicativo</a>
   <a class="btn btn-secondary" href="como-funciona.html">Ver como funciona</a>
 </div>

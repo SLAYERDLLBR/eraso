@@ -1,6 +1,6 @@
 {
   "name": "eraso",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "ERASÓ: envio de arquivos, textos e links entre os seus aparelhos, direto de um navegador ao outro.",
   "type": "module",
@@ -10,14 +10,16 @@
   "scripts": {
     "start": "node server/servidor.mjs",
     "start:publico": "node server/servidor.mjs --publico",
-    "test": "node tests/servidor.test.mjs && node tests/pages.test.mjs && node tests/rede.test.mjs && node tests/app.test.mjs && node tests/publico.test.mjs",
+    "test": "node tests/qr.test.mjs && node tests/servidor.test.mjs && node tests/pages.test.mjs && node tests/rede.test.mjs && node tests/app.test.mjs && node tests/publico.test.mjs && node tests/manual.test.mjs",
     "test:servidor": "node tests/servidor.test.mjs",
     "verificar-site": "node landing/tools/verificar-links.mjs",
     "verificar-site:offline": "node landing/tools/verificar-links.mjs --sem-externos",
     "gerar-site": "node landing/tools/gerar-paginas.mjs",
     "verificar-sintaxe": "node tests/verificar-sintaxe.mjs",
     "build:pages": "node scripts/build-pages.mjs _site",
-    "test:pages": "node tests/pages.test.mjs"
+    "test:pages": "node tests/pages.test.mjs",
+    "test:qr": "node tests/qr.test.mjs",
+    "test:manual": "node tests/manual.test.mjs"
   },
   "keywords": [
     "webrtc",

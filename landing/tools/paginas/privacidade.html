@@ -5,6 +5,7 @@
 <h2 id="resumo">Resumo</h2>
 <ul>
   <li>O ERASÓ <strong>não tem conta, cadastro, formulário, cookies nem ferramentas de análise</strong> (Google Analytics ou similares).</li>
+  <li>No site publicado <strong>não há servidor do ERASÓ</strong>: o aplicativo é entregue como arquivos estáticos e os aparelhos se pareiam trocando um código.</li>
   <li><strong>Arquivos, textos e links</strong> que você envia vão <strong>direto de um aparelho ao outro</strong>, criptografados. O servidor <strong>não os recebe nem os guarda</strong>.</li>
   <li>O servidor conhece, <strong>apenas em memória e enquanto o aparelho está conectado</strong>: o identificador aleatório do aparelho, o nome, o tipo, o sistema e navegador, o código da sala e o endereço IP (usado para limitar abusos). O código do servidor <strong>não grava registros</strong>.</li>
   <li>Histórico, Caixa e preferências ficam <strong>no seu navegador</strong>; você pode apagá-los quando quiser.</li>
@@ -34,16 +35,18 @@
       <tr><th scope="row">Identificador, nome, tipo, sistema e navegador do aparelho, código da sala, visibilidade e endereço IP</th><td>Memória do servidor, enquanto o aparelho está conectado</td><td>Mostrar o aparelho aos outros da mesma rede ou sala; limitar abusos</td><td><strong>Sim, ao servidor</strong>. Identificador, nome, tipo e sistema também são mostrados aos aparelhos da mesma sala</td></tr>
       <tr><th scope="row">Mensagens de sinalização (oferta, resposta e candidatos de conexão, que contêm endereços IP de rede)</th><td>Repassadas pelo servidor, sem guardar</td><td>Abrir a conexão direta</td><td><strong>Sim</strong>. O aparelho de destino também recebe o seu endereço de rede, como em qualquer conexão direta</td></tr>
       <tr><th scope="row">Endereço IP e dados técnicos do navegador</th><td>Servidores do Google Fonts</td><td>Entregar as fontes de texto</td><td><strong>Sim</strong>, ao Google (veja a próxima seção)</td></tr>
-      <tr><th scope="row">Registros de acesso do servidor</th><td>Provedor de hospedagem <span class="placeholder">[a definir]</span></td><td>Operação e segurança</td><td><strong>Sim</strong>, ao provedor, quando o site for publicado</td></tr>
+      <tr><th scope="row">Código de pareamento: nome, tipo e sistema do aparelho, identificador, endereços de rede e impressão digital da conexão</th><td>Mostrado na tela e, se você quiser, copiado ou lido por QR Code</td><td>Abrir a conexão direta sem servidor</td><td><strong>Sim, para quem você mostrar o código</strong>, pelo canal que você escolher (QR Code, mensagem etc.)</td></tr>
+      <tr><th scope="row">Registros de acesso do site e do aplicativo</th><td>GitHub (GitHub Pages) e, no servidor opcional do ERASÓ, o provedor que o hospedar <span class="placeholder">[a definir]</span></td><td>Operação e segurança</td><td><strong>Sim</strong>, ao GitHub, que pode registrar endereço IP e horário dos acessos, conforme a política dele</td></tr>
     </tbody>
   </table>
 </div>
-<p>Outros pontos verificados no código: o aplicativo lê a área de transferência <em>só</em> quando você aciona “Colar” e escreve nela <em>só</em> quando você aciona “Copiar” (o navegador pode pedir permissão); <strong>não usa câmera, microfone, localização nem notificações</strong>. O servidor envia ao navegador uma política de segurança de conteúdo que restringe de onde o site pode carregar recursos.</p>
+<p>Outros pontos verificados no código: o aplicativo lê a área de transferência <em>só</em> quando você aciona “Colar” e escreve nela <em>só</em> quando você aciona “Copiar” (o navegador pode pedir permissão); <strong>não usa microfone, localização nem notificações</strong>. A câmera só é ligada quando você aciona “Ler com a câmera”, no pareamento, para ler um QR Code: as imagens são processadas no próprio aparelho, não são gravadas nem enviadas, e a câmera é desligada ao terminar. O servidor envia ao navegador uma política de segurança de conteúdo que restringe de onde o site pode carregar recursos.</p>
 
 <h2 id="terceiros">Serviços de terceiros</h2>
 <ul>
-  <li><strong>Hospedagem.</strong> O provedor que hospedar o servidor <span class="placeholder">[a definir]</span> costuma registrar endereço IP e horário dos acessos, fora do controle do ERASÓ.</li>
-  <li><strong>STUN</strong> (por padrão, o serviço público da Cloudflare). Para descobrir o endereço público do seu aparelho, o navegador consulta esse serviço, que recebe o seu endereço IP. Só ocorre em servidor público.</li>
+  <li><strong>GitHub Pages.</strong> O site e o aplicativo são entregues pelo GitHub, que pode registrar endereço IP e horário dos acessos, fora do controle do ERASÓ.</li>
+  <li><strong>Servidor do ERASÓ (opcional).</strong> O provedor que o hospedar <span class="placeholder">[a definir]</span> também costuma registrar esses dados.</li>
+  <li><strong>STUN</strong> (por padrão, o serviço público da Cloudflare). Para descobrir o endereço público do seu aparelho, o navegador consulta esse serviço, que recebe o seu endereço IP. Ocorre ao parear no site publicado e em servidor público.</li>
   <li><strong>TURN</strong> (opcional, <span class="placeholder">[a definir]</span>). Se for usado, retransmite o tráfego quando a conexão direta falha. O operador vê endereços e volume de dados, não o conteúdo, que continua criptografado de ponta a ponta.</li>
   <li><strong>Google Fonts.</strong> Ao abrir qualquer página, seu navegador solicita as fontes a <code>fonts.googleapis.com</code> e <code>fonts.gstatic.com</code>. O Google recebe, nessa solicitação, seu endereço IP e dados técnicos do navegador, conforme a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">política de privacidade do Google</a>. Empacotar as fontes no próprio site é uma decisão pendente.</li>
   <li><strong>Links externos</strong> (ONU, GitHub, Apache e outros). Ao clicar, você sai do ERASÓ e passa a seguir as regras do outro site.</li>

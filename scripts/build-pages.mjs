@@ -5,12 +5,13 @@
 // Variáveis de ambiente (todas opcionais):
 //   SITE_URL      endereço público do site, sem barra final (ex.: https://usuario.github.io/eraso). Com ele, as páginas
 //                 ganham <link rel="canonical">, og:url e og:image, e o build gera sitemap.xml e robots.txt.
-//   ERASO_APP_URL endereço público do aplicativo (servidor do ERASÓ). Os botões "Acessar o ERASÓ" passam a apontar para ele.
-//                 Sem ele, apontam para a página aplicativo.html, que explica por que o aplicativo não roda em hospedagem
-//                 estática e como executá-lo.
+//   ERASO_APP_URL endereço público de um servidor do ERASÓ (opcional). Os botões "Acessar o ERASÓ" passam a apontar para ele.
+//                 Sem ele, apontam para o aplicativo publicado junto com o site (app/), que funciona sem servidor: os aparelhos
+//                 se encontram por pareamento com código (QR Code, link ou texto).
 //
 // O site usa apenas links relativos, então funciona em qualquer subcaminho (usuario.github.io/eraso/) sem "base path".
 // Não há roteamento no navegador: cada página é um arquivo .html real, e 404.html cobre endereços inexistentes.
+// O aplicativo (app/) vai junto, sem alterações, e detecta sozinho que não há servidor (a rota /api/config responde 404).
 
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -30,16 +31,22 @@ rmSync(SAIDA, { recursive: true, force: true });
 mkdirSync(SAIDA, { recursive: true });
 // tools/ é código de geração do site; não é publicado
 cpSync(ORIGEM, SAIDA, { recursive: true, filter: (origem) => !/[\\/]tools([\\/]|$)/.test(origem) });
+cpSync(join(RAIZ, 'app'), join(SAIDA, 'app'), { recursive: true });
 writeFileSync(join(SAIDA, '.nojekyll'), '');
 
 const paginas = readdirSync(SAIDA).filter((f) => f.endsWith('.html')).sort();
+
+/** O Pages não permite definir cabeçalhos; a política de conteúdo do aplicativo vai em <meta>. Espelha a do servidor (server/servidor.mjs). */
+const CSP_APP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'";
+const appIndex = join(SAIDA, 'app', 'index.html');
+writeFileSync(appIndex, readFileSync(appIndex, 'utf8').replace('<head>', `<head>\n<meta http-equiv="Content-Security-Policy" content="${CSP_APP}">`), 'utf8');
 let linksReescritos = 0;
 
 /** Os botões do site apontam para ../app/index.html (válido quando o servidor do ERASÓ serve o site). Aqui não existe /app/. */
 function reescreverLinksDoApp(html) {
   return html.replace(/href="\.\.\/app\/index\.html([^"]*)"/g, (_, sufixo) => {
     linksReescritos++;
-    if (!APP_URL) return 'href="aplicativo.html"';
+    if (!APP_URL) return `href="app/index.html${sufixo}"`;
     const u = new URL(APP_URL);
     const q = sufixo.match(/^(\?[^#]*)?(#.*)?$/) || [];
     if (q[1] && !u.search) u.search = q[1];
@@ -75,7 +82,7 @@ const quatroZeroQuatro = abs(topo).replace(/<title>[^<]*<\/title>/, '<title>Pág
 writeFileSync(join(SAIDA, '404.html'), quatroZeroQuatro.replace('</head>', '<meta name="robots" content="noindex">\n</head>'), 'utf8');
 
 if (SITE_URL) {
-  const urls = paginas.map((f) => `${SITE_URL}/${f === 'index.html' ? '' : f}`);
+  const urls = [...paginas.map((f) => `${SITE_URL}/${f === 'index.html' ? '' : f}`), `${SITE_URL}/app/index.html`];
   writeFileSync(join(SAIDA, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${esc(u)}</loc></url>`).join('\n')}\n</urlset>\n`);
   writeFileSync(join(SAIDA, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 }
@@ -84,4 +91,4 @@ const restantes = paginas.filter((f) => /(?:href|src)="\.\.\//.test(readFileSync
 if (restantes.length) throw new Error(`Links para fora do site em: ${restantes.join(', ')}`);
 if (!existsSync(join(SAIDA, 'index.html'))) throw new Error('index.html não foi gerado');
 
-console.log(`Site montado em ${SAIDA}: ${paginas.length} páginas + 404.html, ${linksReescritos} links do aplicativo reescritos (${APP_URL ? 'para ' + APP_URL : 'para aplicativo.html'})${SITE_URL ? `, base ${BASE || '/'}` : ''}.`);
+console.log(`Site montado em ${SAIDA}: ${paginas.length} páginas + 404.html, ${linksReescritos} links do aplicativo reescritos (${APP_URL ? 'para ' + APP_URL : 'para app/index.html'}), app/ incluído${SITE_URL ? `, base ${BASE || '/'}` : ''}.`);

@@ -153,6 +153,7 @@
       <tr><th scope="row">Conteúdo não passa pelo servidor</th><td><span class="chip chip-done">Implementada</span></td><td>O servidor só repassa a sinalização; não recebe, não guarda e não registra arquivos nem textos.</td></tr>
       <tr><th scope="row">Aprovação de cada pedido de recebimento</th><td><span class="chip chip-done">Implementada</span></td><td>Aceitar, recusar, pular e renomear. Aparelhos ocultos recusam pedidos.</td></tr>
       <tr><th scope="row">PIN do destinatário</th><td><span class="chip chip-done">Implementada</span></td><td>O destino confere o PIN; três erros bloqueiam novas tentativas por 1 minuto. O PIN fica salvo sem criptografia no navegador do destino.</td></tr>
+      <tr><th scope="row">Pareamento por código, sem servidor</th><td><span class="chip chip-done">Implementada</span></td><td>O código leva a impressão digital da conexão de cada ponta, então a conexão só se completa com o aparelho que gerou o código. Não há servidor no meio. Cada convite vale para uma ligação.</td></tr>
       <tr><th scope="row">Salas com código secreto</th><td><span class="chip chip-done">Implementada</span></td><td>No servidor público, só aparelhos com o mesmo código se veem e trocam sinalização. Códigos gerados pelo aplicativo têm 10 caracteres aleatórios.</td></tr>
       <tr><th scope="row">Autenticação de cada aparelho no servidor</th><td><span class="chip chip-done">Implementada</span></td><td>Cada conexão recebe um token aleatório; sem ele, não é possível sinalizar em nome de outro aparelho nem alterar o nome ou a visibilidade dele.</td></tr>
       <tr><th scope="row">Limites contra abuso no servidor</th><td><span class="chip chip-done">Implementada</span></td><td>Limite de requisições por minuto e de conexões por IP, de aparelhos por sala e de tamanho das mensagens.</td></tr>
@@ -177,6 +178,7 @@
 
 <h2 id="boas-praticas">Boas práticas de uso</h2>
 <ul>
+  <li>No pareamento, <strong>mostre o QR Code pessoalmente</strong> ou envie o código por um canal de confiança. Quem interceptar o convite pode tentar responder antes da pessoa certa; se algo parecer estranho, cancele e gere outro.</li>
   <li>Aceite apenas o que você reconhece. Desconfie de pedidos de aparelhos que você não conhece.</li>
   <li>Use o <strong>código de sala gerado pelo aplicativo</strong> (10 caracteres aleatórios), não uma palavra fácil de adivinhar, e crie um novo para cada grupo.</li>
   <li>Em redes públicas ou compartilhadas (laboratório, biblioteca, Wi-Fi da escola), use PIN e mantenha o recebimento automático em “sempre perguntar”.</li>
@@ -191,6 +193,7 @@
     <caption class="sr-only">Limitações conhecidas</caption>
     <thead><tr><th scope="col">Limitação</th><th scope="col">Efeito</th></tr></thead>
     <tbody>
+      <tr><th scope="row">Convite visto por terceiros</th><td>No pareamento, o código é o convite: quem o obtiver antes do destinatário pode responder primeiro. Ele só vale para uma ligação e o outro lado vê o nome do aparelho que respondeu. Cada recebimento ainda exige a sua aprovação.</td></tr>
       <tr><th scope="row">Servidor confiável para sinalização</th><td>Quem controla o servidor pode ver quem está online e tentar intermediar uma conexão nova. Não consegue ler conexões que ele não intermediou.</td></tr>
       <tr><th scope="row">Quem tem o código da sala entra nela</th><td>Vê nomes e tipos dos aparelhos e pode enviar pedidos. Cada recebimento ainda exige a sua aprovação e o PIN, se ativado.</td></tr>
       <tr><th scope="row">Endereços de rede visíveis para o outro aparelho</th><td>Como em qualquer conexão direta, o aparelho de destino recebe os endereços de rede usados na conexão.</td></tr>
