@@ -1,6 +1,6 @@
 {
   "name": "eraso",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "description": "ERASÓ: envio de arquivos, textos e links entre os seus aparelhos, direto de um navegador ao outro.",
   "type": "module",
@@ -21,7 +21,8 @@
     "test:qr": "node tests/qr.test.mjs",
     "test:manual": "node tests/manual.test.mjs",
     "test:cloudflare": "node tests/cloudflare.test.mjs",
-    "test:nuvem": "node tests/nuvem.test.mjs"
+    "test:nuvem": "node tests/nuvem.test.mjs",
+    "build:cloudflare": "node scripts/build-pages.mjs _site --cloudflare"
   },
   "keywords": [
     "webrtc",

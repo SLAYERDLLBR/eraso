@@ -5,6 +5,8 @@
 // Variáveis de ambiente (todas opcionais):
 //   SITE_URL      endereço público do site, sem barra final (ex.: https://usuario.github.io/eraso). Com ele, as páginas
 //                 ganham <link rel="canonical">, og:url e og:image, e o build gera sitemap.xml e robots.txt.
+//   HOSPEDAGEM=cloudflare (ou a opção --cloudflare)  Para a Cloudflare Pages. Neste modo, o build também escreve o arquivo _headers (a Cloudflare Pages aplica
+//                 cabeçalhos HTTP; o GitHub Pages não): política de conteúdo, nosniff, HSTS etc., como no servidor próprio. O site em si é o mesmo.
 //   ERASO_SERVIDOR_URL  endereço do serviço de presença e sinalização na nuvem (Cloudflare, veja cloudflare/README.md). Sem ele, vale
 //                 o que estiver em app/config.js. Com ele, o aplicativo encontra aparelhos sozinho (mesmo Wi-Fi ou sala).
 //   ERASO_APP_URL endereço público de um servidor do ERASÓ (opcional). Os botões "Acessar o ERASÓ" passam a apontar para ele.
@@ -15,13 +17,15 @@
 // Não há roteamento no navegador: cada página é um arquivo .html real, e 404.html cobre endereços inexistentes.
 // O aplicativo (app/) vai junto, sem alterações, e detecta sozinho que não há servidor (a rota /api/config responde 404).
 
+import { createHash } from 'node:crypto';
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ORIGEM = join(RAIZ, 'landing');
-const SAIDA = join(RAIZ, process.argv[2] || '_site');
+const CLOUDFLARE = process.env.HOSPEDAGEM === 'cloudflare' || process.argv.includes('--cloudflare');
+const SAIDA = join(RAIZ, process.argv.slice(2).find((a) => !a.startsWith('--')) || '_site');
 const SITE_URL = (process.env.SITE_URL || '').replace(/\/+$/, '');
 const APP_URL = (process.env.ERASO_APP_URL || '').trim();
 const BASE = SITE_URL ? new URL(SITE_URL).pathname.replace(/\/+$/, '') : '';
@@ -94,8 +98,23 @@ if (SITE_URL) {
   writeFileSync(join(SAIDA, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 }
 
+if (CLOUDFLARE) {
+  const comum = ['X-Content-Type-Options: nosniff', 'Referrer-Policy: no-referrer', 'X-Frame-Options: SAMEORIGIN', 'Permissions-Policy: camera=(self), microphone=(), geolocation=()', 'Strict-Transport-Security: max-age=15552000'];
+  // Scripts embutidos das páginas entram por hash (como em server/servidor.mjs); o aplicativo só aceita scripts do próprio endereço.
+  const hashes = new Set();
+  for (const f of paginas) for (const m of readFileSync(join(SAIDA, f), 'utf8').matchAll(/<script>([\s\S]*?)<\/script>/g)) hashes.add(`'sha256-${createHash('sha256').update(m[1]).digest('base64')}'`);
+  const cspSite = ["default-src 'self'", `script-src 'self' ${[...hashes].join(' ')}`.trim(), "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com", 'font-src https://fonts.gstatic.com', "img-src 'self' data:", "media-src 'self'", "connect-src 'self'", "frame-ancestors 'self'", "base-uri 'none'", "form-action 'self'", "object-src 'none'"].join('; ');
+  const cspApp = CSP_APP + "; frame-ancestors 'self'";
+  const bloco = (caminho, extra = []) => `${caminho}\n${(caminho === '/*' ? [...comum, ...extra] : extra).map((l) => '  ' + l).join('\n')}\n`;
+  // As regras se somam em caminhos que casam mais de uma vez; por isso a política do site não usa "/*" (ela bloquearia o aplicativo, que fala com o serviço na nuvem).
+  const regras = [bloco('/*'), bloco('/app/*', [`Content-Security-Policy: ${cspApp}`]), bloco('/', [`Content-Security-Policy: ${cspSite}`])];
+  for (const f of paginas.filter((x) => x !== 'index.html')) { regras.push(bloco('/' + f, [`Content-Security-Policy: ${cspSite}`])); regras.push(bloco('/' + f.replace(/\.html$/, ''), [`Content-Security-Policy: ${cspSite}`])); }
+  regras.push(bloco('/index.html', [`Content-Security-Policy: ${cspSite}`]));
+  writeFileSync(join(SAIDA, '_headers'), `# Gerado por scripts/build-pages.mjs (HOSPEDAGEM=cloudflare). Não edite à mão.\n${regras.join('\n')}`, 'utf8');
+}
+
 const restantes = paginas.filter((f) => /(?:href|src)="\.\.\//.test(readFileSync(join(SAIDA, f), 'utf8')));
 if (restantes.length) throw new Error(`Links para fora do site em: ${restantes.join(', ')}`);
 if (!existsSync(join(SAIDA, 'index.html'))) throw new Error('index.html não foi gerado');
 
-console.log(`Site montado em ${SAIDA}: ${paginas.length} páginas + 404.html, ${linksReescritos} links do aplicativo reescritos (${APP_URL ? 'para ' + APP_URL : 'para app/index.html'}), app/ incluído, ${SERVIDOR ? 'serviço na nuvem: ' + SERVIDOR : 'sem serviço na nuvem (só pareamento por código)'}${SITE_URL ? `, base ${BASE || '/'}` : ''}.`);
+console.log(`Site montado em ${SAIDA}: ${paginas.length} páginas + 404.html, ${linksReescritos} links do aplicativo reescritos (${APP_URL ? 'para ' + APP_URL : 'para app/index.html'}), app/ incluído${CLOUDFLARE ? ', _headers da Cloudflare' : ''}, ${SERVIDOR ? 'serviço na nuvem: ' + SERVIDOR : 'sem serviço na nuvem (só pareamento por código)'}${SITE_URL ? `, base ${BASE || '/'}` : ''}.`);

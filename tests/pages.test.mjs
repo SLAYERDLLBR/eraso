@@ -5,6 +5,7 @@
 import { spawnSync } from 'node:child_process';
 import { createServer } from 'node:http';
 import { existsSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { dirname, extname, join, normalize, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -96,6 +97,16 @@ try {
     const gravado = (/servidor:\s*'([^']*)'/.exec(readFileSync(join(RAIZ, 'app', 'config.js'), 'utf8')) || [])[1] || '';
     montar({}); igual((/servidor:\s*'([^']*)'/.exec(readFileSync(join(PASTA, 'app', 'config.js'), 'utf8')) || [])[1], gravado, 'sem a variável, vale o endereço gravado em app/config.js');
     const csp = /connect-src ([^;]*);/.exec(readFileSync(join(PASTA, 'app', 'index.html'), 'utf8'))[1]; igual(csp, gravado ? `'self' ${gravado} ${gravado.replace(/^https/, 'wss')}` : "'self'", 'a política libera só o endereço gravado');
+  });
+  await teste('build para a Cloudflare Pages: _headers com cabeçalhos de segurança, política do site com hashes corretos e do app liberando o serviço', async () => {
+    montar({}); verdade(!existsSync(join(PASTA, '_headers')), 'o build do GitHub não deve gerar _headers');
+    const r = spawnSync(process.execPath, [join(RAIZ, 'scripts', 'build-pages.mjs'), SAIDA, '--cloudflare'], { env: { ...process.env, SITE_URL: '', ERASO_APP_URL: '', ERASO_SERVIDOR_URL: 'https://eraso-sinal.exemplo.workers.dev' }, encoding: 'utf8' }); verdade(r.status === 0, r.stderr || r.stdout);
+    const h = readFileSync(join(PASTA, '_headers'), 'utf8'); const regras = new Map(); let atual = null; for (const l of h.split(String.fromCharCode(10))) { if (l.startsWith('/')) { atual = l.trim(); regras.set(atual, ''); } else if (atual && l.startsWith('  ')) regras.set(atual, regras.get(atual) + l.trim() + String.fromCharCode(10)); } const bloco = (c) => (regras.has(c) ? regras.get(c) : null);
+    const geral = bloco('/*'); verdade(geral && /nosniff/.test(geral) && /Strict-Transport-Security/.test(geral) && /camera=\(self\)/.test(geral) && !/Content-Security-Policy/.test(geral), '/* deve ter só os cabeçalhos comuns');
+    const app = bloco('/app/*'); verdade(app && /connect-src 'self' https:\/\/eraso-sinal\.exemplo\.workers\.dev wss:\/\/eraso-sinal\.exemplo\.workers\.dev/.test(app) && /frame-ancestors 'self'/.test(app) && !/unsafe-eval/.test(app), 'política do app');
+    const index = readFileSync(join(PASTA, 'index.html'), 'utf8'); const inline = /<script>([\s\S]*?)<\/script>/.exec(index)[1]; const hash = `'sha256-${createHash('sha256').update(inline).digest('base64')}'`;
+    for (const rota of ['/', '/index.html', '/como-funciona.html', '/como-funciona']) { const b = bloco(rota); verdade(b && b.includes(hash) && /connect-src 'self';/.test(b) && /frame-ancestors 'self'/.test(b), `política do site em ${rota}`); }
+    verdade(regras.size >= 24, 'deveria haver regras por página');
   });
 } finally { rmSync(PASTA, { recursive: true, force: true }); }
 
