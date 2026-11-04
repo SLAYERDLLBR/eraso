@@ -4,10 +4,10 @@
 
 [![Licença: Apache-2.0](https://img.shields.io/badge/licen%C3%A7a-Apache--2.0-blue.svg)](LICENSE)
 ![Node.js 18+](https://img.shields.io/badge/node-%E2%89%A518-339933)
-![Sem dependências](https://img.shields.io/badge/depend%C3%AAncias-0-brightgreen)
+![Sem npm install](https://img.shields.io/badge/npm%20install-n%C3%A3o%20precisa-brightgreen)
 ![Estado: protótipo funcional](https://img.shields.io/badge/estado-prot%C3%B3tipo%20funcional-orange)
 
-O ERASÓ envia arquivos, imagens, textos e links entre os seus aparelhos (computador, celular, tablet) **direto de um navegador ao outro**, sem instalar nada e sem passar o conteúdo por nenhum servidor. É a alternativa para quem hoje manda arquivo para si mesmo pelo WhatsApp Web.
+O ERASÓ envia arquivos, imagens, textos e links entre os seus aparelhos (computador, celular, tablet) **direto de um navegador ao outro**, sem instalar nada e sem passar o conteúdo por nenhum servidor. **Abra o aplicativo e pareie os aparelhos por QR Code: https://slayerdllbr.github.io/eraso/app/index.html** É a alternativa para quem hoje manda arquivo para si mesmo pelo WhatsApp Web.
 
 É um **projeto acadêmico de extensão** ligado à Cruzeiro do Sul Virtual. O [LocalSend](https://github.com/localsend/localsend) é a referência funcional; o ERASÓ leva a mesma ideia para a web.
 
@@ -26,19 +26,20 @@ Quem usa mais de um aparelho costuma passar arquivos de um para o outro enviando
 ## Como funciona
 
 ```
- Aparelho A ──┐                         ┌── Aparelho B
-  (navegador) │   presença + sinalização │   (navegador)
-              └──────►  Servidor ERASÓ ◄─┘
-                        (só apresenta os aparelhos
-                         e repassa o "aperto de mão")
+ Sem servidor (site publicado)                    Com servidor (opcional)
 
+ Aparelho A ── código (QR, link ou texto) ──► B       A ──┐            ┌── B
+            ◄──── código de resposta ────────                └─ Servidor ─┘
+                                                              (presença e sinalização)
+
+ Depois de apresentados, nos dois modos:
  Aparelho A ◄════ arquivos e textos, direto (WebRTC, criptografado) ════► Aparelho B
 ```
 
-1. Cada navegador com o ERASÓ aberto se registra no servidor e aparece para os outros que estão **na mesma rede** (modo local) ou **na mesma sala** (modo público).
+1. **Apresentação.** Sem servidor, um aparelho gera um **código** (QR Code, link ou texto) com os dados da conexão; o outro o aplica e mostra um código de resposta, que o primeiro lê com a câmera ou cola. Com um servidor do ERASÓ (opcional), os aparelhos aparecem sozinhos na mesma rede ou na mesma sala.
 2. Ao enviar, o destino vê um pedido (quem envia e o quê) e aceita, recusa, pula ou renomeia itens. Um PIN opcional é conferido pelo próprio destino.
 3. Os bytes seguem **direto entre os dois navegadores**, por um canal WebRTC criptografado (DTLS), com controle de fluxo e conferência de integridade (CRC32).
-4. O servidor **nunca recebe nem guarda** arquivos ou textos. Ele só conhece nome, tipo e sistema de cada aparelho, na memória, enquanto o aparelho está conectado.
+4. **Nenhum servidor recebe nem guarda** arquivos ou textos. O servidor opcional só conhece nome, tipo e sistema de cada aparelho, na memória, enquanto o aparelho está conectado.
 
 ## Capturas
 
@@ -59,13 +60,25 @@ Capturas do aplicativo real, com dois navegadores e uma transferência de verdad
 
 ## Tecnologias
 
-HTML, CSS e JavaScript puros no navegador (sem framework e **sem dependências npm**); servidor em **Node.js 18+** (`node:http`, eventos SSE); **WebRTC** (`RTCDataChannel`) para a transferência; `localStorage` e **IndexedDB** para preferências, histórico e Caixa. Os testes controlam navegadores reais (Microsoft Edge) pelo protocolo Chrome DevTools.
+HTML, CSS e JavaScript puros no navegador (sem framework e **sem `npm install`**); gerador de QR Code próprio e a biblioteca [jsQR](app/vendor/README.md) (Apache-2.0, incluída) para ler QR Codes pela câmera; servidor opcional em **Node.js 18+** (`node:http`, eventos SSE); **WebRTC** (`RTCDataChannel`) para a transferência; `localStorage` e **IndexedDB** para preferências, histórico e Caixa. Os testes controlam navegadores reais (Microsoft Edge) pelo protocolo Chrome DevTools.
 
 ## Como executar
 
+### Direto no navegador, sem instalar nada
+
+Abra **<https://slayerdllbr.github.io/eraso/app/index.html>** nos dois aparelhos (computador e celular, por exemplo) e pareie-os:
+
+1. Em um aparelho, toque em **Parear aparelho › Gerar o meu código**. Aparecem um QR Code, um link e um texto.
+2. No outro, aponte a câmera para o QR Code (o ERASÓ abre já com o código) ou use **Tenho um código ou link** e cole o texto. Ele mostra um código de resposta.
+3. No primeiro aparelho, use **Ler com a câmera** (ou cole o código de resposta) e **Conectar**.
+
+Pronto: os dois ficam ligados e os arquivos vão direto de um para o outro. A ligação dura enquanto as duas páginas ficarem abertas. A leitura pela câmera exige HTTPS.
+
+### Com servidor, para descoberta automática (opcional)
+
 Requisitos: [Node.js](https://nodejs.org) 18 ou superior. Não há `npm install`.
 
-### Na rede local (Wi-Fi de casa, por exemplo)
+#### Na rede local (Wi-Fi de casa, por exemplo)
 
 ```bash
 npm start
@@ -75,7 +88,7 @@ O terminal mostra os endereços, como `http://192.168.0.12:8780/app/index.html`.
 
 Se os aparelhos não se encontram, abra **Diagnóstico** no próprio aplicativo. Redes com "isolamento de clientes" (comuns em Wi-Fi de instituições e de visitantes) impedem a conexão direta.
 
-### Pela internet (modo público)
+#### Pela internet (modo público)
 
 ```bash
 npm run start:publico
@@ -113,6 +126,8 @@ São cinco suítes: servidor (salas, autenticação, limites, cabeçalhos, pasta
 ## Limitações
 
 - Redes muito restritivas (alguns Wi-Fi corporativos, dados móveis com CGNAT) só conectam com servidor TURN.
+- O pareamento por código não é guardado: ao fechar uma das páginas, é preciso parear de novo. Não há "Meus aparelhos".
+- O código de convite tem de chegar ao outro aparelho por um canal em que você confie (de preferência, o QR Code pessoalmente).
 - O arquivo recebido fica na memória do navegador até terminar; limite de 2 GB por pedido.
 - O navegador escolhe a pasta de salvamento; não há aplicativo de computador, bandeja nem inicialização com o sistema.
 - Navegadores não revelam o nome da máquina; o nome de fábrica usa modelo ou sistema, navegador e ID.
@@ -140,11 +155,12 @@ Documentos do projeto: guia de uso, política de privacidade (rascunho) e págin
 
 - Repositório: <https://github.com/SLAYERDLLBR/eraso>
 - Site institucional (GitHub Pages): <https://slayerdllbr.github.io/eraso/>
-- Aplicativo: **ainda sem endereço público.** O aplicativo depende do servidor de presença e sinalização (Node.js), que não roda no GitHub Pages. Veja [docs/etapa4/HOSPEDAGEM.md](docs/etapa4/HOSPEDAGEM.md).
+- Aplicativo (sem servidor, com pareamento por código): <https://slayerdllbr.github.io/eraso/app/index.html>
+- Servidor opcional de descoberta automática: ainda sem endereço público. Veja [docs/etapa4/HOSPEDAGEM.md](docs/etapa4/HOSPEDAGEM.md).
 
 ## Publicação do site
 
-O site (`landing/`) é estático e é publicado no GitHub Pages por [`.github/workflows/pages.yml`](.github/workflows/pages.yml), a cada alteração em `main`. O script [`scripts/build-pages.mjs`](scripts/build-pages.mjs) monta a pasta `_site` (`npm run build:pages`), reescreve os botões do aplicativo e gera `404.html`, `sitemap.xml` e `robots.txt`. O site usa só links relativos, então funciona em `usuario.github.io/eraso/` sem configuração de base. Quando o aplicativo tiver endereço público, defina a variável de repositório `ERASO_APP_URL` (Settings › Secrets and variables › Actions › Variables) e os botões "Acessar o ERASÓ" passam a apontar para ele. Para usar domínio próprio, adicione um arquivo `landing/CNAME` com o domínio e configure-o em Settings › Pages.
+O site (`landing/`) e o aplicativo (`app/`) são estáticos e são publicados juntos no GitHub Pages por [`.github/workflows/pages.yml`](.github/workflows/pages.yml), a cada alteração em `main`. O script [`scripts/build-pages.mjs`](scripts/build-pages.mjs) monta a pasta `_site` (`npm run build:pages`) com o site na raiz e o aplicativo em `app/`, aponta os botões para ele e gera `404.html`, `sitemap.xml` e `robots.txt`. O site usa só links relativos, então funciona em `usuario.github.io/eraso/` sem configuração de base. Se um dia houver um servidor do ERASÓ com endereço público, defina a variável de repositório `ERASO_APP_URL` (Settings › Secrets and variables › Actions › Variables) e os botões "Acessar o ERASÓ" passam a apontar para ele. Para usar domínio próprio, adicione um arquivo `landing/CNAME` com o domínio e configure-o em Settings › Pages.
 
 ## Contribuir
 

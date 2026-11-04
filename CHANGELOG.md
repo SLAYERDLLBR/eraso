@@ -2,6 +2,22 @@
 
 Segue o formato do [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o versionamento semântico, adaptado à fase de protótipo (versões 0.x podem mudar sem aviso).
 
+## [0.4.0] — 2026-11-03
+
+O aplicativo passa a funcionar **sem servidor**, direto no GitHub Pages.
+
+### Adicionado
+- **Pareamento por código**: um aparelho gera um convite (QR Code, link e texto), o outro o aplica e devolve uma resposta; depois a ligação fica aberta e cada envio usa um canal novo dentro dela. Sem servidor, sem conta e sem instalação.
+- Gerador de **QR Code** próprio (`app/qr.js`, versões 1 a 40) e leitura pela câmera com a biblioteca jsQR 1.4.0 (Apache-2.0, incluída em `app/vendor/`, carregada só quando necessário).
+- O aplicativo é publicado no GitHub Pages junto com o site (`/app/`), com política de conteúdo em `<meta>`; o aplicativo detecta sozinho que não há servidor.
+- Tela de pareamento, "Desfazer pareamento", modo "sem servidor" no diagnóstico e nos textos de estado.
+- Testes: gerador de QR (jsQR lê de volta cada QR; versões 1 a 40, níveis L e M), ponta a ponta sem servidor com dois navegadores (QR lido da tela, transferência com SHA-256, nome e latência, desfazer pareamento, câmera ausente) e build do Pages com o aplicativo.
+
+### Alterado
+- O servidor passa a permitir a câmera (`Permissions-Policy: camera=(self)`) para o leitor de QR Code.
+- Site, Privacidade, Segurança e README descrevem os dois modos (sem servidor e com servidor).
+- Os testes fecham a página (`Page.close`) antes de encerrar o navegador, o que corrige uma falha intermitente na detecção de saída de aparelho.
+
 ## [0.3.0] — 2026-11-02
 
 Preparação para publicação.

@@ -13,6 +13,8 @@ Este é um projeto acadêmico mantido por estudantes: não há prazo contratual 
 - O conteúdo (arquivos e textos) trafega direto entre os navegadores, criptografado por WebRTC (DTLS). O servidor não o recebe nem o guarda.
 - O servidor conhece, apenas em memória e enquanto o aparelho está conectado: nome, tipo, sistema e identificador do aparelho, e o código da sala.
 - Quem conhece o código de uma sala pode entrar nela e ver os nomes dos aparelhos presentes. Trate o código como segredo e use um código novo para cada grupo.
+- No pareamento sem servidor, o código de convite leva o nome, o tipo, o sistema e o identificador do aparelho, seus endereços de rede e a impressão digital da conexão. Mostre-o apenas a quem vai parear; quem o interceptar antes do destinatário pode tentar responder primeiro.
+- A câmera só é usada para ler QR Code, quando você aciona "Ler com a câmera"; as imagens não são gravadas nem enviadas.
 - Não há contas, senhas nem banco de dados.
 
 ## Escopo

@@ -41,9 +41,10 @@ O site e o aplicativo **estão separados**: pastas, arquivos, responsabilidades 
 | Parte | Compatível? | Motivo |
 |---|---|---|
 | Site institucional (`landing/`) | **Sim** | Arquivos estáticos, links relativos, sem dependência de servidor |
-| Aplicativo (`app/`) | **Não** | Precisa do servidor (`/api/eventos`, `/api/sinal`, `/api/config`) para os aparelhos se encontrarem |
+| Aplicativo (`app/`) com **descoberta automática** | **Não** | Precisa do servidor (`/api/eventos`, `/api/sinal`, `/api/config`) para os aparelhos se encontrarem |
+| Aplicativo (`app/`) com **pareamento por código** | **Sim** | Os dois navegadores trocam o código de conexão (WebRTC sem sinalização por servidor); só usa STUN público |
 
-Decisão: **o site vai para o GitHub Pages; o aplicativo permanece com o servidor Node.js em hospedagem própria** (guia em `docs/etapa4/HOSPEDAGEM.md`). Nada foi removido nem simulado para forçar compatibilidade. O site aponta para o aplicativo por uma variável (`ERASO_APP_URL`); enquanto ela não existir, os botões levam à página `aplicativo.html`, que explica a dependência e como executar na própria rede.
+Decisão (3 de novembro, a pedido do projeto): o aplicativo **funciona no GitHub Pages sem servidor**, por pareamento manual com QR Code, link ou texto. O servidor Node.js continua existindo como **modo opcional** de descoberta automática, que depende de hospedagem própria (guia em `docs/etapa4/HOSPEDAGEM.md`). Nada foi simulado nem removido: o aplicativo detecta que `/api/config` não existe e muda de modo. Limitações do modo sem servidor: o pareamento não sobrevive ao fechar a página; não há lista automática de aparelhos.
 
 ## 6. Funcionalidades que dependem de infraestrutura externa
 
@@ -67,7 +68,7 @@ Nenhum no código servido. Foi removido na etapa 3 e conferido por teste (nenhum
 
 | # | Impedimento | Situação |
 |---|---|---|
-| 1 | Aplicativo sem hospedagem para o servidor | Pendente; o site informa isso com clareza |
+| 1 | Servidor opcional de descoberta automática sem hospedagem | Pendente; não impede o uso (pareamento por código) |
 | 2 | Dados institucionais (curso, orientação, equipe, período, ODS, contato, encarregado) | Pendentes, dependem da equipe; aparecem como "[a definir]" |
 | 3 | Titular dos direitos autorais e titularidade da marca | Pendentes |
 | 4 | Habilitar o GitHub Pages com origem "GitHub Actions" | Ação única do dono do repositório, nas configurações |

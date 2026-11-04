@@ -1,6 +1,6 @@
 # Hospedagem do ERASÓ
 
-> Guia da etapa 4.3. Nada foi publicado ainda: este documento descreve o que hospedar, como configurar e como validar.
+> Guia da etapa 4.3. **O servidor descrito aqui é opcional**: o aplicativo já funciona sem ele no GitHub Pages, por pareamento por código. Hospede o servidor só se quiser descoberta automática de aparelhos (mesma rede ou sala).
 
 ## 1. O que precisa ser hospedado
 
